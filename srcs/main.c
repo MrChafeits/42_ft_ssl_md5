@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <errno.h>
 
 #define RL(x,c) (((x) << (c)) | ((x) >> (32 - (c))))
@@ -280,40 +281,40 @@ void	ft_md5_64(const u32 block[16], u32 digest[4])
 	digest[3] = m[3];
 }
 
-#define HOST_c2l(c,l)	(l =(((unsigned long)(*((c)++)))),		\
-			l|=(((unsigned long)(*((c)++)))<< 8),		\
-			l|=(((unsigned long)(*((c)++)))<<16),		\
-			l|=(((unsigned long)(*((c)++)))<<24),		\
+#define HOST_c2l(c,l)	(l =(((unsigned int)(*((c)++)))),		\
+			l|=(((unsigned int)(*((c)++)))<< 8),		\
+			l|=(((unsigned int)(*((c)++)))<<16),		\
+			l|=(((unsigned int)(*((c)++)))<<24),		\
 			l)
 #define HOST_p_c2l(c,l,n)	{					\
 			switch (n) {					\
-			case 0: l =((unsigned long)(*((c)++)));		\
-			case 1: l|=((unsigned long)(*((c)++)))<< 8;	\
-			case 2: l|=((unsigned long)(*((c)++)))<<16;	\
-			case 3: l|=((unsigned long)(*((c)++)))<<24;	\
+			case 0: l =((unsigned int)(*((c)++)));		\
+			case 1: l|=((unsigned int)(*((c)++)))<< 8;	\
+			case 2: l|=((unsigned int)(*((c)++)))<<16;	\
+			case 3: l|=((unsigned int)(*((c)++)))<<24;	\
 				} }
 #define HOST_p_c2l_p(c,l,sc,len) {					\
 			switch (sc) {					\
-			case 0: l =((unsigned long)(*((c)++)));		\
+			case 0: l =((unsigned int)(*((c)++)));		\
 				if (--len == 0) break;			\
-			case 1: l|=((unsigned long)(*((c)++)))<< 8;	\
+			case 1: l|=((unsigned int)(*((c)++)))<< 8;	\
 				if (--len == 0) break;			\
-			case 2: l|=((unsigned long)(*((c)++)))<<16;	\
+			case 2: l|=((unsigned int)(*((c)++)))<<16;	\
 				} }
 /* NOTE the pointer is not incremented at the end of this */
 #define HOST_c2l_p(c,l,n)	{					\
 			l=0; (c)+=n;					\
 			switch (n) {					\
-			case 3: l =((unsigned long)(*(--(c))))<<16;	\
-			case 2: l|=((unsigned long)(*(--(c))))<< 8;	\
-			case 1: l|=((unsigned long)(*(--(c))));		\
+			case 3: l =((unsigned int)(*(--(c))))<<16;	\
+			case 2: l|=((unsigned int)(*(--(c))))<< 8;	\
+			case 1: l|=((unsigned int)(*(--(c))));		\
 				} }
 #define HOST_l2c(l,c)	(*((c)++)=(unsigned char)(((l))&0xff),	\
 			*((c)++)=(unsigned char)(((l)>> 8)&0xff),	\
 			*((c)++)=(unsigned char)(((l)>>16)&0xff),	\
 			*((c)++)=(unsigned char)(((l)>>24)&0xff),	\
 			l)
-#define MD5_LONG	unsigned long
+#define MD5_LONG	unsigned int
 #define MD5_CBLOCK	64
 #define MD5_LBLOCK	(MD5_CBLOCK/4)
 #define MD5_DIGEST_LENGTH 16
@@ -343,7 +344,7 @@ int		ft_md5_final(u8 *md, t_md5_st *c);
 #define HASH_TRANSFORM ft_md5_transform
 #define HASH_FINAL ft_md5_final
 #define	HASH_MAKE_STRING(c,s)	do {	\
-	unsigned long ll;		\
+	unsigned int ll;		\
 	ll=(c)->A; HOST_l2c(ll,(s));	\
 	ll=(c)->B; HOST_l2c(ll,(s));	\
 	ll=(c)->C; HOST_l2c(ll,(s));	\
@@ -457,10 +458,10 @@ int		ft_md5_final(u8 *md, t_md5_st *c);
 
 int		ft_md5_init(t_md5_st *c)
 {
-	c->A = 0x67452301UL;
-	c->B = 0xefcdab89UL;
-	c->C = 0x98badcfeUL;
-	c->D = 0x10325476UL;
+	c->A = 0x67452301U;
+	c->B = 0xefcdab89U;
+	c->C = 0x98badcfeU;
+	c->D = 0x10325476U;
 	c->Nl = 0;
 	c->Nh = 0;
 	c->num = 0;
@@ -470,10 +471,10 @@ int		ft_md5_init(t_md5_st *c)
 void	ft_md5_block_host_order(t_md5_st *c, const void *data, int num)
 {
 	const MD5_LONG *X;
-	register unsigned long A;
-	register unsigned long B;
-	register unsigned long C;
-	register unsigned long D;
+	register unsigned int A;
+	register unsigned int B;
+	register unsigned int C;
+	register unsigned int D;
 
 	X = data;
 	A = c->A;
@@ -482,77 +483,78 @@ void	ft_md5_block_host_order(t_md5_st *c, const void *data, int num)
 	D = c->D;
 	for (;num--;X+=HASH_LBLOCK) {
 		/* Round 0 */
-		R0(A,B,C,D,X[ 0], 7,0xd76aa478L);
-		R0(D,A,B,C,X[ 1],12,0xe8c7b756L);
-		R0(C,D,A,B,X[ 2],17,0x242070dbL);
-		R0(B,C,D,A,X[ 3],22,0xc1bdceeeL);
-		R0(A,B,C,D,X[ 4], 7,0xf57c0fafL);
-		R0(D,A,B,C,X[ 5],12,0x4787c62aL);
-		R0(C,D,A,B,X[ 6],17,0xa8304613L);
-		R0(B,C,D,A,X[ 7],22,0xfd469501L);
-		R0(A,B,C,D,X[ 8], 7,0x698098d8L);
-		R0(D,A,B,C,X[ 9],12,0x8b44f7afL);
-		R0(C,D,A,B,X[10],17,0xffff5bb1L);
-		R0(B,C,D,A,X[11],22,0x895cd7beL);
-		R0(A,B,C,D,X[12], 7,0x6b901122L);
-		R0(D,A,B,C,X[13],12,0xfd987193L);
-		R0(C,D,A,B,X[14],17,0xa679438eL);
-		R0(B,C,D,A,X[15],22,0x49b40821L);
+		R0(A,B,C,D,X[ 0], 7,0xd76aa478);printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(D,A,B,C,X[ 1],12,0xe8c7b756);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(C,D,A,B,X[ 2],17,0x242070db);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(B,C,D,A,X[ 3],22,0xc1bdceee);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(A,B,C,D,X[ 4], 7,0xf57c0faf);printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(D,A,B,C,X[ 5],12,0x4787c62a);
+		R0(C,D,A,B,X[ 6],17,0xa8304613);
+		R0(B,C,D,A,X[ 7],22,0xfd469501);
+		R0(A,B,C,D,X[ 8], 7,0x698098d8);printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(D,A,B,C,X[ 9],12,0x8b44f7af);
+		R0(C,D,A,B,X[10],17,0xffff5bb1);
+		R0(B,C,D,A,X[11],22,0x895cd7be);
+		R0(A,B,C,D,X[12], 7,0x6b901122);printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(D,A,B,C,X[13],12,0xfd987193);
+		R0(C,D,A,B,X[14],17,0xa679438e);
+		R0(B,C,D,A,X[15],22,0x49b40821);
 		/* Round 1 */
-		R1(A,B,C,D,X[ 1], 5,0xf61e2562L);
-		R1(D,A,B,C,X[ 6], 9,0xc040b340L);
-		R1(C,D,A,B,X[11],14,0x265e5a51L);
-		R1(B,C,D,A,X[ 0],20,0xe9b6c7aaL);
-		R1(A,B,C,D,X[ 5], 5,0xd62f105dL);
-		R1(D,A,B,C,X[10], 9,0x02441453L);
-		R1(C,D,A,B,X[15],14,0xd8a1e681L);
-		R1(B,C,D,A,X[ 4],20,0xe7d3fbc8L);
-		R1(A,B,C,D,X[ 9], 5,0x21e1cde6L);
-		R1(D,A,B,C,X[14], 9,0xc33707d6L);
-		R1(C,D,A,B,X[ 3],14,0xf4d50d87L);
-		R1(B,C,D,A,X[ 8],20,0x455a14edL);
-		R1(A,B,C,D,X[13], 5,0xa9e3e905L);
-		R1(D,A,B,C,X[ 2], 9,0xfcefa3f8L);
-		R1(C,D,A,B,X[ 7],14,0x676f02d9L);
-		R1(B,C,D,A,X[12],20,0x8d2a4c8aL);
+		R1(A,B,C,D,X[ 1], 5,0xf61e2562);printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R1(D,A,B,C,X[ 6], 9,0xc040b340);
+		R1(C,D,A,B,X[11],14,0x265e5a51);
+		R1(B,C,D,A,X[ 0],20,0xe9b6c7aa);
+		R1(A,B,C,D,X[ 5], 5,0xd62f105d);
+		R1(D,A,B,C,X[10], 9,0x02441453);
+		R1(C,D,A,B,X[15],14,0xd8a1e681);
+		R1(B,C,D,A,X[ 4],20,0xe7d3fbc8);
+		R1(A,B,C,D,X[ 9], 5,0x21e1cde6);
+		R1(D,A,B,C,X[14], 9,0xc33707d6);
+		R1(C,D,A,B,X[ 3],14,0xf4d50d87);
+		R1(B,C,D,A,X[ 8],20,0x455a14ed);
+		R1(A,B,C,D,X[13], 5,0xa9e3e905);
+		R1(D,A,B,C,X[ 2], 9,0xfcefa3f8);
+		R1(C,D,A,B,X[ 7],14,0x676f02d9);
+		R1(B,C,D,A,X[12],20,0x8d2a4c8a);
 		/* Round 2 */
-		R2(A,B,C,D,X[ 5], 4,0xfffa3942L);
-		R2(D,A,B,C,X[ 8],11,0x8771f681L);
-		R2(C,D,A,B,X[11],16,0x6d9d6122L);
-		R2(B,C,D,A,X[14],23,0xfde5380cL);
-		R2(A,B,C,D,X[ 1], 4,0xa4beea44L);
-		R2(D,A,B,C,X[ 4],11,0x4bdecfa9L);
-		R2(C,D,A,B,X[ 7],16,0xf6bb4b60L);
-		R2(B,C,D,A,X[10],23,0xbebfbc70L);
-		R2(A,B,C,D,X[13], 4,0x289b7ec6L);
-		R2(D,A,B,C,X[ 0],11,0xeaa127faL);
-		R2(C,D,A,B,X[ 3],16,0xd4ef3085L);
-		R2(B,C,D,A,X[ 6],23,0x04881d05L);
-		R2(A,B,C,D,X[ 9], 4,0xd9d4d039L);
-		R2(D,A,B,C,X[12],11,0xe6db99e5L);
-		R2(C,D,A,B,X[15],16,0x1fa27cf8L);
-		R2(B,C,D,A,X[ 2],23,0xc4ac5665L);
+		R2(A,B,C,D,X[ 5], 4,0xfffa3942);
+		R2(D,A,B,C,X[ 8],11,0x8771f681);
+		R2(C,D,A,B,X[11],16,0x6d9d6122);
+		R2(B,C,D,A,X[14],23,0xfde5380c);
+		R2(A,B,C,D,X[ 1], 4,0xa4beea44);
+		R2(D,A,B,C,X[ 4],11,0x4bdecfa9);
+		R2(C,D,A,B,X[ 7],16,0xf6bb4b60);
+		R2(B,C,D,A,X[10],23,0xbebfbc70);
+		R2(A,B,C,D,X[13], 4,0x289b7ec6);
+		R2(D,A,B,C,X[ 0],11,0xeaa127fa);
+		R2(C,D,A,B,X[ 3],16,0xd4ef3085);
+		R2(B,C,D,A,X[ 6],23,0x04881d05);
+		R2(A,B,C,D,X[ 9], 4,0xd9d4d039);
+		R2(D,A,B,C,X[12],11,0xe6db99e5);
+		R2(C,D,A,B,X[15],16,0x1fa27cf8);
+		R2(B,C,D,A,X[ 2],23,0xc4ac5665);
 		/* Round 3 */
-		R3(A,B,C,D,X[ 0], 6,0xf4292244L);
-		R3(D,A,B,C,X[ 7],10,0x432aff97L);
-		R3(C,D,A,B,X[14],15,0xab9423a7L);
-		R3(B,C,D,A,X[ 5],21,0xfc93a039L);
-		R3(A,B,C,D,X[12], 6,0x655b59c3L);
-		R3(D,A,B,C,X[ 3],10,0x8f0ccc92L);
-		R3(C,D,A,B,X[10],15,0xffeff47dL);
-		R3(B,C,D,A,X[ 1],21,0x85845dd1L);
-		R3(A,B,C,D,X[ 8], 6,0x6fa87e4fL);
-		R3(D,A,B,C,X[15],10,0xfe2ce6e0L);
-		R3(C,D,A,B,X[ 6],15,0xa3014314L);
-		R3(B,C,D,A,X[13],21,0x4e0811a1L);
-		R3(A,B,C,D,X[ 4], 6,0xf7537e82L);
-		R3(D,A,B,C,X[11],10,0xbd3af235L);
-		R3(C,D,A,B,X[ 2],15,0x2ad7d2bbL);
-		R3(B,C,D,A,X[ 9],21,0xeb86d391L);
+		R3(A,B,C,D,X[ 0], 6,0xf4292244);
+		R3(D,A,B,C,X[ 7],10,0x432aff97);
+		R3(C,D,A,B,X[14],15,0xab9423a7);
+		R3(B,C,D,A,X[ 5],21,0xfc93a039);
+		R3(A,B,C,D,X[12], 6,0x655b59c3);
+		R3(D,A,B,C,X[ 3],10,0x8f0ccc92);
+		R3(C,D,A,B,X[10],15,0xffeff47d);
+		R3(B,C,D,A,X[ 1],21,0x85845dd1);
+		R3(A,B,C,D,X[ 8], 6,0x6fa87e4f);
+		R3(D,A,B,C,X[15],10,0xfe2ce6e0);
+		R3(C,D,A,B,X[ 6],15,0xa3014314);
+		R3(B,C,D,A,X[13],21,0x4e0811a1);
+		R3(A,B,C,D,X[ 4], 6,0xf7537e82);
+		R3(D,A,B,C,X[11],10,0xbd3af235);
+		R3(C,D,A,B,X[ 2],15,0x2ad7d2bb);
+		R3(B,C,D,A,X[ 9],21,0xeb86d391);
 		A = c->A += A;
 		B = c->B += B;
 		C = c->C += C;
 		D = c->D += D;
+		printf("END\nA(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
 	}
 }
 
@@ -844,6 +846,8 @@ void	do_fd(int fd)
 		ft_md5_update(&c, buf, (u64)i);
 	}
 	ft_md5_final(&(md[0]), &c);
+	// for (i = 0; i < 8; i++)
+	// 	ft_printf("W[%2d] = %08x\tW[%2d] = %08x\n", i, c.data[i], i+8, c.data[i+8]);
 	pt(md);
 }
 
@@ -1042,7 +1046,7 @@ uint32_t	ft_toint(const uint8_t *b)
 			| ((uint32_t)b[2] << 16)
 			| ((uint32_t)b[3] << 24));
 }
-
+int flippo = 0;
 void	ft_md5(const uint8_t *in, size_t ilen, uint8_t *dgst)
 {
 	uint32_t	h[4];
@@ -1069,8 +1073,10 @@ void	ft_md5(const uint8_t *in, size_t ilen, uint8_t *dgst)
 	offs = 0;
 	while (offs < nlen)
 	{
-		for (i = 0; i < 16; i++)
+		for (i = 0; i < 16; i++) {
 			w[i] = ft_toint(msg + offs + i * 4);
+			// ft_printf("W[%2d] = %08x\n", i, w[i]);
+		}
 		a = h[0];
 		b = h[1];
 		c = h[2];
@@ -1114,6 +1120,11 @@ void	ft_md5(const uint8_t *in, size_t ilen, uint8_t *dgst)
 	ft_tobytes(h[1], dgst + 4);
 	ft_tobytes(h[2], dgst + 8);
 	ft_tobytes(h[3], dgst + 12);
+	if (flippo == 99999) {
+		for (i = 0; i < 4; i++) {
+			ft_printf("W[%2d - %2d] = %08x %08x %08x %08x\n",i*4,i*4+4, w[i*4],w[i*4+1],w[i*4+2],w[i*4+3]);
+		}
+	}
 }
 
 //ft_toint(const uint8_t b[4]) -> uint32_t ret; for fast need u32 block[16];
@@ -1170,7 +1181,7 @@ void	ft_slow_md5(char const *msg, size_t len)
 	size_t	i;
 	u8		res[16];
 
-	for (i = 0; i < 1000000; i++)
+	for (i = 0; i < 100000; i++, flippo++)
 		ft_md5((uint8_t*)msg, len, res);
 	for (i = 0; i < 16; i++)
 		ft_printf("%2.2x", res[i]);
