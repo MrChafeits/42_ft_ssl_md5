@@ -286,6 +286,14 @@ void	ft_md5_64(const u32 block[16], u32 digest[4])
 			l|=(((unsigned int)(*((c)++)))<<16),		\
 			l|=(((unsigned int)(*((c)++)))<<24),		\
 			l)
+// static inline host_c2l(const uint8_t *c, uint64_t l)
+// {
+// 	l = (((unsigned int)(*(c)++)));
+// 	l |= (((unsigned int)(*((c)++)))<< 8);
+// 	l |= (((unsigned int)(*((c)++)))<<16);
+// 	l |= (((unsigned int)(*((c)++)))<<24);
+// 	l;
+// }
 #define HOST_p_c2l(c,l,n)	{					\
 			switch (n) {					\
 			case 0: l =((unsigned int)(*((c)++)));		\
@@ -330,7 +338,7 @@ typedef struct	s_md5_st
 	MD5_LONG	Nl;
 	MD5_LONG	Nh;
 	MD5_LONG	data[16];
-	int	num;
+	int			num;
 }				t_md5_st;
 
 void	ft_md5_block_data_order(t_md5_st *c, const void *data_, int num);
@@ -357,25 +365,13 @@ int		ft_md5_final(u8 *md, t_md5_st *c);
 #define	H(b,c,d)	((b) ^ (c) ^ (d))
 #define	I(b,c,d)	(((~(d)) | (b)) ^ (c))
 #define ROTATE(a,n)	(((a)<<(n))|(((a)&0xffffffff)>>(32-(n))))
-#define R0(a,b,c,d,k,s,t) { \
-	a+=((k)+(t)+F((b),(c),(d))); \
-	a=ROTATE(a,s); \
-	a+=b; };\
+#define R0(a,b,c,d,k,s,t) {a+=((k)+(t)+F((b),(c),(d)));a=ROTATE(a,s);a+=b;};
 
-#define R1(a,b,c,d,k,s,t) { \
-	a+=((k)+(t)+G((b),(c),(d))); \
-	a=ROTATE(a,s); \
-	a+=b; };
+#define R1(a,b,c,d,k,s,t) {a+=((k)+(t)+G((b),(c),(d)));a=ROTATE(a,s);a+=b;};
 
-#define R2(a,b,c,d,k,s,t) { \
-	a+=((k)+(t)+H((b),(c),(d))); \
-	a=ROTATE(a,s); \
-	a+=b; };
+#define R2(a,b,c,d,k,s,t) {a+=((k)+(t)+H((b),(c),(d)));a=ROTATE(a,s);a+=b;};
 
-#define R3(a,b,c,d,k,s,t) { \
-	a+=((k)+(t)+I((b),(c),(d))); \
-	a=ROTATE(a,s); \
-	a+=b; };
+#define R3(a,b,c,d,k,s,t) {a+=((k)+(t)+I((b),(c),(d)));a=ROTATE(a,s);a+=b;};
 #if !defined(DATA_ORDER_IS_BIG_ENDIAN) && !defined(DATA_ORDER_IS_LITTLE_ENDIAN)
 #error "DATA_ORDER must be defined!"
 #endif
@@ -404,16 +400,6 @@ int		ft_md5_final(u8 *md, t_md5_st *c);
 #error "HASH_BLOCK_HOST_ORDER must be defined!"
 #endif
 
-#if 0
-/*
- * Moved below as it's required only if HASH_BLOCK_DATA_ORDER_ALIGNED
- * isn't defined.
- */
-#ifndef HASH_BLOCK_DATA_ORDER
-#error "HASH_BLOCK_DATA_ORDER must be defined!"
-#endif
-#endif
-
 #ifndef HASH_LBLOCK
 #define HASH_LBLOCK	(HASH_CBLOCK/4)
 #endif
@@ -422,31 +408,10 @@ int		ft_md5_final(u8 *md, t_md5_st *c);
 #define HASH_LONG_LOG2	2
 #endif
 #if defined(B_ENDIAN)
-#  if defined(DATA_ORDER_IS_BIG_ENDIAN)
-#    if !defined(HASH_BLOCK_DATA_ORDER_ALIGNED) && HASH_LONG_LOG2==2
-#      define HASH_BLOCK_DATA_ORDER_ALIGNED	HASH_BLOCK_HOST_ORDER
-#    endif
-#  elif defined(DATA_ORDER_IS_LITTLE_ENDIAN)
-#    ifndef HOST_FETCH32
-#      ifdef LE_FETCH32
-#        define HOST_FETCH32(p,l)	LE_FETCH32(p)
-#      elif defined(REVERSE_FETCH32)
-#        define HOST_FETCH32(p,l)	REVERSE_FETCH32(p,l)
-#      endif
-#    endif
-#  endif
 #elif defined(L_ENDIAN)
 #  if defined(DATA_ORDER_IS_LITTLE_ENDIAN)
 #    if !defined(HASH_BLOCK_DATA_ORDER_ALIGNED) && HASH_LONG_LOG2==2
 #      define HASH_BLOCK_DATA_ORDER_ALIGNED	HASH_BLOCK_HOST_ORDER
-#    endif
-#  elif defined(DATA_ORDER_IS_BIG_ENDIAN)
-#    ifndef HOST_FETCH32
-#      ifdef BE_FETCH32
-#        define HOST_FETCH32(p,l)	BE_FETCH32(p)
-#      elif defined(REVERSE_FETCH32)
-#        define HOST_FETCH32(p,l)	REVERSE_FETCH32(p,l)
-#      endif
 #    endif
 #  endif
 #endif
@@ -481,26 +446,27 @@ void	ft_md5_block_host_order(t_md5_st *c, const void *data, int num)
 	B = c->B;
 	C = c->C;
 	D = c->D;
-	for (;num--;X+=HASH_LBLOCK) {
+	while (num--)
+	{
 		/* Round 0 */
-		R0(A,B,C,D,X[ 0], 7,0xd76aa478);printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
-		R0(D,A,B,C,X[ 1],12,0xe8c7b756);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
-		R0(C,D,A,B,X[ 2],17,0x242070db);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
-		R0(B,C,D,A,X[ 3],22,0xc1bdceee);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
-		R0(A,B,C,D,X[ 4], 7,0xf57c0faf);printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(A,B,C,D,X[ 0], 7,0xd76aa478);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(D,A,B,C,X[ 1],12,0xe8c7b756);
+		R0(C,D,A,B,X[ 2],17,0x242070db);
+		R0(B,C,D,A,X[ 3],22,0xc1bdceee);
+		R0(A,B,C,D,X[ 4], 7,0xf57c0faf);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
 		R0(D,A,B,C,X[ 5],12,0x4787c62a);
 		R0(C,D,A,B,X[ 6],17,0xa8304613);
 		R0(B,C,D,A,X[ 7],22,0xfd469501);
-		R0(A,B,C,D,X[ 8], 7,0x698098d8);printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(A,B,C,D,X[ 8], 7,0x698098d8);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
 		R0(D,A,B,C,X[ 9],12,0x8b44f7af);
 		R0(C,D,A,B,X[10],17,0xffff5bb1);
 		R0(B,C,D,A,X[11],22,0x895cd7be);
-		R0(A,B,C,D,X[12], 7,0x6b901122);printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R0(A,B,C,D,X[12], 7,0x6b901122);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
 		R0(D,A,B,C,X[13],12,0xfd987193);
 		R0(C,D,A,B,X[14],17,0xa679438e);
 		R0(B,C,D,A,X[15],22,0x49b40821);
 		/* Round 1 */
-		R1(A,B,C,D,X[ 1], 5,0xf61e2562);printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		R1(A,B,C,D,X[ 1], 5,0xf61e2562);//printf("A(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
 		R1(D,A,B,C,X[ 6], 9,0xc040b340);
 		R1(C,D,A,B,X[11],14,0x265e5a51);
 		R1(B,C,D,A,X[ 0],20,0xe9b6c7aa);
@@ -554,16 +520,16 @@ void	ft_md5_block_host_order(t_md5_st *c, const void *data, int num)
 		B = c->B += B;
 		C = c->C += C;
 		D = c->D += D;
-		printf("END\nA(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
+		X+=HASH_LBLOCK;
+		//printf("END\nA(%08x) B(%08x) C(%08x) D(%08x)\n", A, B, C, D);
 	}
 }
 
-void	ft_md5_block_data_order(t_md5_st *c, const void *data_, int num)
-{
+void	ft_md5_block_data_order(t_md5_st *c, const void *data_, int num) {
 	const u8 *data = data_;
 	register u64 A,B,C,D,l;
 	MD5_LONG XX[MD5_LBLOCK];
-#define X(i) XX[i]
+	#define X(i) XX[i]
 	A = c->A;
 	B = c->B;
 	C = c->C;
@@ -652,7 +618,8 @@ int		ft_md5_update(t_md5_st *c, const void *data_, unsigned long len)
 	register u64 l;
 	int sw,sc,ew,ec;
 
-	if (len == 0) return (1);
+	if (len == 0)
+		return (1);
 	l = (c->Nl + (len << 3)) & 0xffffffffL;
 	if (l < c->Nl)
 		c->Nh++;
@@ -680,8 +647,7 @@ int		ft_md5_update(t_md5_st *c, const void *data_, unsigned long len)
 		else
 		{
 			c->num += len;
-			if ((sc + len) < 4)
-			{
+			if ((sc + len) < 4) {
 				l = p[sw];
 				HOST_p_c2l_p(data, l, sc, len);
 				p[sw] = l;
@@ -710,42 +676,24 @@ int		ft_md5_update(t_md5_st *c, const void *data_, unsigned long len)
 	}
 	sw = len / MD5_CBLOCK;
 	if (sw > 0) {
-#if defined(HASH_BLOCK_DATA_ORDER_ALIGNED)
-		if ((((unsigned long)data)%4) == 0)
-		{
+		if ((((unsigned long)data)%4) == 0) {
 			HASH_BLOCK_DATA_ORDER_ALIGNED(c, (MD5_LONG*)data, sw);
 			sw *= MD5_CBLOCK;
 			data += sw;
 			len -= sw;
-		}
-		else
-#if !defined(HASH_BLOCK_DATA_ORDER)
-			while (sw--)
-			{
-				ft_memcpy(p = c->data, data, MD5_CBLOCK);
-				HASH_BLOCK_DATA_ORDER_ALIGNED(c, p, 1);
-				data += MD5_CBLOCK;
-				len -= MD5_CBLOCK;
-			}
-#endif
-#endif
-#if defined(HASH_BLOCK_DATA_ORDER)
-		{
+		} else {
 			HASH_BLOCK_DATA_ORDER(c, data, sw);
 			sw *= MD5_CBLOCK;
 			data += sw;
 			len -= sw;
 		}
-#endif
 	}
-	if (len != 0)
-	{
+	if (len != 0) {
 		p = c->data;
 		c->num = len;
 		ew = len >> 2;
 		ec = len & 0x03;
-		while (ew)
-		{
+		while (ew) {
 			HOST_c2l(data, l);
 			*p = l;
 			ew--;
@@ -791,25 +739,17 @@ int		ft_md5_final(u8 *md, t_md5_st *c)
 	p[i++] = l;
 	if (i > (MD5_LBLOCK - 2))
 	{
-		if (i < MD5_LBLOCK) p[i] = 0;
+		if (i < MD5_LBLOCK)
+			p[i] = 0;
 		HASH_BLOCK_HOST_ORDER(c, p, 1);
-		i = 0;
+		i = -1;
 	}
-	for (; i < (MD5_LBLOCK-2); i++)
+	while (++i < (MD5_LBLOCK-2))
 		p[i] = 0;
-#if defined(DATA_ORDER_IS_BIG_ENDIAN)
-	p[MD5_LBLOCK - 2] = c->Nh;
-	p[MD5_LBLOCK - 1] = c->Nl;
-#elif defined(DATA_ORDER_IS_LITTLE_ENDIAN)
 	p[MD5_LBLOCK - 2] = c->Nl;
 	p[MD5_LBLOCK - 1] = c->Nh;
-#endif
 	HASH_BLOCK_HOST_ORDER(c, p, 1);
-#ifndef HASH_MAKE_STRING
-#error "HASH_MAKE_STRING must be defined!"
-#else
 	HASH_MAKE_STRING(c, md);
-#endif
 	c->num = 0;
 	return (1);
 }
@@ -825,17 +765,18 @@ static inline void	pt(unsigned char *md)
 {
 	register int i;
 
-	for (i = 0; i < MD5_DIGEST_LENGTH; i++)
-		printf("%02x", md[i]);
-	printf("\n");
+	i = -1;
+	while (++i < MD5_DIGEST_LENGTH)
+		ft_printf("%02x", md[i]);
+	ft_printf("\n");
 }
 
 void	do_fd(int fd)
 {
-	t_md5_st c;
-	u8 md[MD5_DIGEST_LENGTH];
-	int i;
-	static u8 buf[BUFSIZE];
+	t_md5_st	c;
+	u8			md[MD5_DIGEST_LENGTH];
+	int			i;
+	static u8	buf[BUFSIZE];
 
 	ft_md5_init(&c);
 	while (1)
@@ -853,22 +794,24 @@ void	do_fd(int fd)
 
 int		ft_md5_openssl(int ac, char **av)
 {
-	int i = 0;
-	int err = 0;
-	int fd;
-	struct stat st;
+	int			i;
+	int			err;
+	int			fd;
+	struct stat	st;
 
+	i = 0;
+	err = 0;
 	if (ac == 1)
 		do_fd(STDIN_FILENO);
 	else
 	{
-		for (i = 1; i < ac; i++)
+		while (++i < ac)
 		{
 			fd = open(av[i], O_RDONLY);
-			(void)lstat(av[i], &st);
-			if (fd < 0 || CHF(st.st_mode))
+			if (lstat(av[i], &st) || fd < 0 || CHF(st.st_mode))
 			{
-				if (CHF(st.st_mode)) errno = EISDIR;
+				if (CHF(st.st_mode))
+					errno = EISDIR;
 				perror(av[i]);
 				err++;
 				continue;
