@@ -6,7 +6,7 @@
 #    By: callen <callen@student.42.us.org>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/23 22:04:17 by callen            #+#    #+#              #
-#    Updated: 2019/03/11 16:22:48 by callen           ###   ########.fr        #
+#    Updated: 2019/03/27 23:54:24 by callen           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ ASAN := -fsanitize=address
 all: $(NAME)
 
 libft:
-	@make -s -C libft
+	@make -sC libft
 
 $(NAME): libft $(OBJDIR) $(OBJ)
 	@$(CC) $(INCFLAGS) $(LIBFLAGS) -o $(NAME) $(OBJ)
