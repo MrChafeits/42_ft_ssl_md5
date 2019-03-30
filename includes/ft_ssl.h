@@ -5,13 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-<<<<<<< Updated upstream
-/*   Created: 2019/03/28 16:57:29 by callen            #+#    #+#             */
-/*   Updated: 2019/03/28 16:57:44 by callen           ###   ########.fr       */
-=======
 /*   Created: 2019/03/28 00:03:28 by callen            #+#    #+#             */
-/*   Updated: 2019/03/28 00:03:48 by callen           ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2019/03/29 21:59:31 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +39,8 @@
 
 /*
 ** Allowed functions:[open, close, read, write, malloc, free]
-<<<<<<< Updated upstream
-=======
-**
-**
-**
-**
-**
->>>>>>> Stashed changes
 */
+
 typedef unsigned long	t_ul;
 typedef uint64_t	t_u64;
 typedef uint32_t	t_u32;
