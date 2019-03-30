@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 00:03:28 by callen            #+#    #+#             */
-/*   Updated: 2019/03/29 21:59:31 by callen           ###   ########.fr       */
+/*   Updated: 2019/03/29 22:08:39 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ struct	s_md5_st
 	int			num;
 };
 
+void	ft_tobytes(uint32_t v, uint8_t *b);
+int		ft_toint(const uint8_t *b);
 int		ft_md5_openssl(int ac, char **av);
 void	ft_md5_block_data_order(t_md5_st *c, const void *data_, int num);
 void	ft_md5_block_host_order(t_md5_st *c, const void *data, int num);
