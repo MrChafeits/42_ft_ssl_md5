@@ -586,10 +586,25 @@ void	usage(char *bin, char *cmd, int opt)
 int		main(int ac, char **av)
 {
 	char	*msg;
+	int		b;
+	char	*ln;
 	size_t	len;
 
 	if (ac == 1)
-		usage(av[0], av[1], 0);
+	{
+		ft_printf("ft_ssl> ");
+		while ((b = get_next_line(0, &ln)) > 0)
+		{
+			if (!ft_strncmp("openssl", ln, 7))
+				ft_md5_openssl(1, &ln);
+			else if (!ft_strncmp("fast", ln, 4))
+				ft_fast_md5(ln+5, ft_strlen(ln+5));
+			else if (!ft_strncmp("slow", ln, 4))
+				ft_slow_md5(ln+5, ft_strlen(ln+5));
+			free(ln);
+			ft_printf("ft_ssl> ");
+		}
+	}
 	if (ac >= 2)
 	{
 		if (!ft_strcmp("openssl", av[1]))
