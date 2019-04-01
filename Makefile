@@ -6,7 +6,7 @@
 #    By: callen <callen@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/23 22:04:17 by callen            #+#    #+#              #
-#    Updated: 2019/03/29 21:58:59 by callen           ###   ########.fr        #
+#    Updated: 2019/03/29 22:20:32 by callen           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,15 +25,14 @@ INCDIR := includes/
 OBJDIR := .obj/
 SRCDIR := srcs/
 
-SRC := main.c
-
 INCFLAGS := -I $(INCDIR) -I $(LIBDIR)/$(INCDIR)
 LIBFLAGS := -L $(LIBDIR) -lft
 DEBGLIBS := $(LIBDIR)/d_libft.a
 ASANLIBS := $(LIBDIR)/a_libft.a
 FRAMWRKS :=
 
-SRC :=	main.c apple_openssl.c
+SRC := main.c apple_openssl.c fast_md5.c slow_md5.c openssl_master.c\
+	ft_md5.c ft_md5_utils.c
 OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
 
 NRM := $(shell which pynorme)
