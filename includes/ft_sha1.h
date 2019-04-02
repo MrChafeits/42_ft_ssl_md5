@@ -26,11 +26,11 @@ struct	s_sql
 	t_u32	m[80];
 };
 
-void	sha1_init(t_s1ctx *ctx);
-void	sha1_update(t_s1ctx *ctx, t_u8 *data, t_u64 len);
-void	sha1_final(t_s1ctx *ctx, t_u8 *hash);
-void	sha1_transform_1(t_s1ctx *ctx, t_u8 *data, t_sql *s);
-void	sha1_transform_2(t_s1ctx *ctx, t_sql *s);
-void	sha1_transform_3(t_s1ctx *ctx, t_sql *s);
+void	ft_sha1_init(t_s1ctx *ctx);
+void	ft_sha1_update(t_s1ctx *ctx, t_u8 *data, t_u64 len);
+void	ft_sha1_final(t_s1ctx *ctx, t_u8 *hash);
+void	ft_sha1_transform_1(t_s1ctx *ctx, t_u8 *data, t_sql *s);
+void	ft_sha1_transform_2(t_s1ctx *ctx, t_sql *s);
+void	ft_sha1_transform_3(t_s1ctx *ctx, t_sql *s);
 
 #endif

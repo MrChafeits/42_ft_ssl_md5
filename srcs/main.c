@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
+/*   By: callen <callen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 22:11:16 by callen            #+#    #+#             */
-/*   Updated: 2019/03/29 22:19:54 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/02 15:06:23 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <libft.h>
 #include <ft_md5.h>
 
-static const void	(*g__[8])(int, char**) = {
+static void	(*g__[8])(int, char**) = {
 	[INVAL] = ft_ssl_usage,
 	[MD5] = ft_md5_process,
 	[SHA1] = ft_sha1_process,
@@ -58,7 +58,7 @@ void	shell_prompt(void)
 		t = ft_strsplit(ln, ' ');
 		len = len_strtab(t);
 		free(ln);
-		g__[get_command_(*t)](len, t+1);
+		g__[get_command_(t[1])](len, t+1);
 		ft_free_strtab(&t);
 		ft_printf("ft_ssl> ");
 	}
@@ -70,7 +70,7 @@ int		main(int ac, char **av)
 		shell_prompt();
 	if (ac >= 2)
 	{
-		g__[get_command_(*av)](ac, av);
+		g__[get_command_(av[1])](ac, av);
 	}
 	exit(0);
 }

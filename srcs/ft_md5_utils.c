@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-static int			md5_init(t_md5_ctx *c)
+static int			ft_md5_init(t_md5_ctx *c)
 {
 	c->count[0] = 0;
 	c->count[1] = 0;
@@ -20,7 +20,7 @@ static int			md5_init(t_md5_ctx *c)
 #define DGSTLEN (16)
 #define BUFSIZE (1024 * 16)
 
-static inline void	md5_print(t_u8 *md)
+static inline void	ft_md5_print(t_u8 *md)
 {
 	register int i;
 
@@ -37,16 +37,16 @@ static void			ft_dofd(int fd)
 	int			i;
 	static t_u8	buf[BUFSIZE];
 
-	md5_init(&c);
+	ft_md5_init(&c);
 	while (1)
 	{
 		i = read(fd, buf, BUFSIZE);
 		if (i <= 0)
 			break ;
-		md5_update(&c, (t_u8*)(&buf), i);
+		ft_md5_update(&c, (t_u8*)(&buf), i);
 	}
-	md5_final(&c, md);
-	md5_print(md);
+	ft_md5_final(&c, md);
+	ft_md5_print(md);
 }
 
 static int			ft_md5_fileargs(int ac, char **av)

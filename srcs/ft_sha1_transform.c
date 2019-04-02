@@ -1,7 +1,7 @@
 #include <ft_sha1.h>
 #define ROL(a, b) ((a << b) | (a >> (32 - b)))
 
-void	sha1_transform_1(t_s1ctx *ctx, t_u8 *data, t_sql *s)
+void	ft_sha1_transform_1(t_s1ctx *ctx, t_u8 *data, t_sql *s)
 {
 	int i;
 	int j;
@@ -28,7 +28,7 @@ void	sha1_transform_1(t_s1ctx *ctx, t_u8 *data, t_sql *s)
 	s->e = ctx->state[4];
 }
 
-void	sha1_transform_2(t_s1ctx *ctx, t_sql *s)
+void	ft_sha1_transform_2(t_s1ctx *ctx, t_sql *s)
 {
 	int i;
 
@@ -57,7 +57,7 @@ void	sha1_transform_2(t_s1ctx *ctx, t_sql *s)
 	}
 }
 
-void	sha1_transform_3(t_s1ctx *ctx, t_sql *s)
+void	ft_sha1_transform_3(t_s1ctx *ctx, t_sql *s)
 {
 	int i;
 

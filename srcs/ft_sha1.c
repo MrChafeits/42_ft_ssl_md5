@@ -6,9 +6,9 @@ void	ft_sha1_transform(t_s1ctx *c, t_u8 *d)
 {
 	t_sql	s;
 
-	sha1_transform_1(c, d, &s);
-	sha1_transform_2(c, &s);
-	sha1_transform_3(c, &s);
+	ft_sha1_transform_1(c, d, &s);
+	ft_sha1_transform_2(c, &s);
+	ft_sha1_transform_3(c, &s);
 	c->state[0] += s.a;
 	c->state[1] += s.b;
 	c->state[2] += s.c;
@@ -20,15 +20,15 @@ void	ft_sha1_init(t_s1ctx *c)
 {
 	c->datalen = 0;
 	c->bitlen = 0;
-	c->state[0] = 0x67452301;
-	c->state[1] = 0xEFCDAB89;
-	c->state[2] = 0x98BADCFE;
-	c->state[3] = 0x10325476;
-	c->state[4] = 0xC3D2E1F0;
-	c->k[0] = 0x5A827999;
-	c->k[1] = 0x6ED9EBA1;
-	c->k[2] = 0x8F1BBCDC;
-	c->k[3] = 0xCA62C1D6;
+	c->state[0] = 0x67452301U;
+	c->state[1] = 0xefcdab89U;
+	c->state[2] = 0x98badcfeU;
+	c->state[3] = 0x10325476U;
+	c->state[4] = 0xc3d2e1f0U;
+	c->k[0] = 0x5a827999U;
+	c->k[1] = 0x6ed9eba1U;
+	c->k[2] = 0x8f1bbcdcU;
+	c->k[3] = 0xca62c1d6U;
 }
 
 void	ft_sha1_update(t_s1ctx *c, t_u8 *d, t_u64 l)
@@ -59,15 +59,15 @@ static void	ft_sha1_almost(t_s1ctx *c)
 	{
 		c->data[i++] = 0x80;
 		while (i < 56)
-			c->data[i++] = 0x00;
+			c->data[i++] = 0;
 	}
 	else
 	{
 		c->data[i++] = 0x80;
 		while (i < 64)
-			c->data[i++] = 0x00;
+			c->data[i++] = 0;
 		ft_sha1_transform(c, c->data);
-		ft_memset(c->data, 0x00, 56);
+		ft_memset(c->data, 0, 56);
 	}
 }
 
@@ -92,7 +92,7 @@ void		ft_sha1_final(t_s1ctx *c, t_u8 *md)
 		md[i + 0] = (c->state[0] >> (24 - i * 8)) & 0xFF;
 		md[i + 4] = (c->state[1] >> (24 - i * 8)) & 0xFF;
 		md[i + 8] = (c->state[2] >> (24 - i * 8)) & 0xFF;
-		md[i + 12] = (c->state[2] >> (24 - i * 8)) & 0xFF;
-		md[i + 16] = (c->state[2] >> (24 - i * 8)) & 0xFF;
+		md[i + 12] = (c->state[3] >> (24 - i * 8)) & 0xFF;
+		md[i + 16] = (c->state[4] >> (24 - i * 8)) & 0xFF;
 	}
 }

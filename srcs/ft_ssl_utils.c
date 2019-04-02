@@ -30,7 +30,7 @@ int		get_command_(const char *s)
 	return (ret);
 }
 
-int		len_strtab(const char **t)
+int		len_strtab(char **t)
 {
 	int i;
 

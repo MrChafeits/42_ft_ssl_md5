@@ -2,18 +2,9 @@
 #include <libft.h>
 #include <stdlib.h>
 
-unsigned char g_padding[] = {
-	0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};
+static t_u8 g_padding[64] = {0x80, 0x00};
 
-void	md5_update(t_md5_ctx *context, uint8_t *input, uint32_t inputlen)
+void	ft_md5_update(t_md5_ctx *context, t_u8 *input, t_u32 inputlen)
 {
 	register unsigned int i;
 	register unsigned int index;
@@ -28,11 +19,11 @@ void	md5_update(t_md5_ctx *context, uint8_t *input, uint32_t inputlen)
 	if (inputlen >= partlen)
 	{
 		ft_memcpy(&context->buffer[index], input, partlen);
-		md5_transform(context->state, context->buffer);
+		ft_md5_transform(context->state, context->buffer);
 		i = partlen;
 		while (i + 64 <= inputlen)
 		{
-			md5_transform(context->state, &input[i]);
+			ft_md5_transform(context->state, &input[i]);
 			i += 64;
 		}
 		index = 0;
@@ -42,7 +33,7 @@ void	md5_update(t_md5_ctx *context, uint8_t *input, uint32_t inputlen)
 	ft_memcpy(&context->buffer[index], &input[i], inputlen - i);
 }
 
-void	md5_final(t_md5_ctx *context, uint8_t digest[16])
+void	ft_md5_final(t_md5_ctx *context, t_u8 digest[16])
 {
 	register unsigned int	index;
 	register unsigned int	padlen;
@@ -50,13 +41,13 @@ void	md5_final(t_md5_ctx *context, uint8_t digest[16])
 
 	index = (context->count[0] >> 3) & 0x3F;
 	padlen = (index < 56) ? (56 - index) : (120 - index);
-	md5_encode(bits, context->count, 8);
-	md5_update(context, g_padding, padlen);
-	md5_update(context, bits, 8);
-	md5_encode(digest, context->state, 16);
+	ft_md5_encode(bits, context->count, 8);
+	ft_md5_update(context, g_padding, padlen);
+	ft_md5_update(context, bits, 8);
+	ft_md5_encode(digest, context->state, 16);
 }
 
-void	md5_encode(uint8_t *output, uint32_t *input, uint32_t len)
+void	ft_md5_encode(t_u8 *output, t_u32 *input, t_u32 len)
 {
 	register unsigned int i;
 	register unsigned int j;
@@ -74,7 +65,7 @@ void	md5_encode(uint8_t *output, uint32_t *input, uint32_t len)
 	}
 }
 
-void	md5_decode(uint32_t *output, uint8_t *input, unsigned int len)
+void	ft_md5_decode(t_u32 *output, t_u8 *input, unsigned int len)
 {
 	register unsigned int i;
 	register unsigned int j;
@@ -92,7 +83,7 @@ void	md5_decode(uint32_t *output, uint8_t *input, unsigned int len)
 	}
 }
 
-void	md5_transform(uint32_t state[4], uint8_t block[64])
+void	ft_md5_transform(t_u32 state[4], t_u8 block[64])
 {
 	register unsigned int	a;
 	register unsigned int	b;
@@ -104,7 +95,7 @@ void	md5_transform(uint32_t state[4], uint8_t block[64])
 	b = state[1];
 	c = state[2];
 	d = state[3];
-	md5_decode(x, block, 64);
+	ft_md5_decode(x, block, 64);
 	FUN;
 	state[0] += a;
 	state[1] += b;

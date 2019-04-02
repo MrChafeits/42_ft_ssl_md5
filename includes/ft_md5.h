@@ -89,14 +89,10 @@ struct	s_md5_ctx
 # define I15	I14; II(b, c, d, a, x[9], 21, 0xeb86d391);
 # define FUN	I15;
 
-void	md5_update(t_md5_ctx *a, uint8_t *b, uint32_t c);
-void	md5_final(t_md5_ctx *context, uint8_t digest[16]);
-void	md5_transform(uint32_t state[4], uint8_t block[64]);
-void	md5_encode(uint8_t *o, uint32_t *i, uint32_t len);
-void	md5_decode(uint32_t *o, uint8_t *input, uint32_t len);
-int		compute_string_md5(uint8_t *dest_str, uint32_t dest_len, char *md5_str);
-int		compute_file_md5(char *file_path, char *md5_str, char **buff);
-int		md5_init(t_md5_ctx *context);
-int		die(int i, char *str);
+void	ft_md5_update(t_md5_ctx *a, t_u8 *b, t_u32 c);
+void	ft_md5_final(t_md5_ctx *context, t_u8 digest[16]);
+void	ft_md5_transform(t_u32 state[4], t_u8 block[64]);
+void	ft_md5_encode(t_u8 *o, t_u32 *i, t_u32 len);
+void	ft_md5_decode(t_u32 *o, t_u8 *input, t_u32 len);
 
 #endif

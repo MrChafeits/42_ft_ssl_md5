@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ssl.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
+/*   By: callen <callen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 00:03:28 by callen            #+#    #+#             */
-/*   Updated: 2019/04/01 11:46:39 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/02 13:59:46 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FT_SSL_H
 
 # include <sys/stat.h>
+# include <stdint.h>
 # include <fcntl.h>
 # include <errno.h>
 
@@ -73,6 +74,7 @@ struct	s_function
 };
 
 int		panic(int fd, char *str);
+void	ft_ssl_usage(int ac, char **av);
 void	ft_md5_process(int ac, char **av);
 void	ft_sha1_process(int ac, char **av);
 void	ft_sha224_process(int ac, char **av);

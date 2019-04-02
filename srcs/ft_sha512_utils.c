@@ -1,14 +1,14 @@
 #include <libft.h>
 #include <stdlib.h>
 #include <ft_ssl.h>
-#include <ft_sha1.h>
+#include <ft_sha512.h>
 #include <unistd.h>
 #include <fcntl.h>
 
-#define DGSTLEN (20)
-#define BUFSIZE (1024 * 20)
+#define DGSTLEN (SHA512_DIGEST_SIZE)
+#define BUFSIZE (1024 * DGSTLEN)
 
-static inline void	ft_sha1_print(t_u8 *md)
+static inline void	ft_sha512_print(t_u8 *md)
 {
 	register int i;
 
@@ -20,24 +20,24 @@ static inline void	ft_sha1_print(t_u8 *md)
 
 static void			ft_dofd(int fd)
 {
-	t_s1ctx		c;
+	t_sha512	c;
 	t_u8		md[DGSTLEN];
 	int			i;
 	static t_u8	buf[BUFSIZE];
 
-	ft_sha1_init(&c);
+	ft_sha512_init(&c);
 	while (1)
 	{
 		i = read(fd, buf, BUFSIZE);
 		if (i <= 0)
 			break ;
-		ft_sha1_update(&c, (t_u8*)(&buf), i);
+		ft_sha512_update(&c, (t_u8*)(&buf), i);
 	}
-	ft_sha1_final(&c, md);
-	ft_sha1_print(md);
+	ft_sha512_final(&c, md);
+	ft_sha512_print(md);
 }
 
-static int			ft_sha1_fileargs(int ac, char **av)
+static int			ft_sha512_fileargs(int ac, char **av)
 {
 	int			i;
 	int			err;
@@ -57,19 +57,19 @@ static int			ft_sha1_fileargs(int ac, char **av)
 			err++;
 			continue ;
 		}
-		ft_printf("SHA1(%s)= ", av[i]);
+		ft_printf("SHA512(%s)= ", av[i]);
 		ft_dofd(fd);
 		close(fd);
 	}
 	return (err);
 }
 
-void				ft_sha1_process(int ac, char **av)
+void				ft_sha512_process(int ac, char **av)
 {
 	if (ac == 2)
 		ft_dofd(STDIN_FILENO);
 	else
-		exit(ft_sha1_fileargs(--ac, ++av));
+		exit(ft_sha512_fileargs(--ac, ++av));
 }
 
 #undef DGSTLEN
