@@ -1,16 +1,4 @@
 #include "ft_ssl.h"
-void	ft_tobytes(uint32_t v, uint8_t *b);
-t_u32	ft_toint(const uint8_t *b);
-int		ft_md5_openssl(int ac, char **av);
-void	ft_md5_block_data_order(t_md5_st *c, const void *data_, int num);
-void	ft_md5_block_host_order(t_md5_st *c, const void *data, int num);
-int		ft_md5_init(t_md5_st *c);
-int		ft_md5_update(t_md5_st *c, const void *data_, t_ul len);
-void	ft_md5_transform(t_md5_st *c, const t_u8 *data);
-int		ft_md5_final(t_u8 *md, t_md5_st *c);
-void	ft_slow_md5(char const *msg, size_t len);
-void	ft_fast_md5(char *msg, size_t len);
-
 /*
 ** Apple OpenSSL
 ** https://opensource.apple.com/source/OpenSSL/OpenSSL-46.11/openssl/crypto/md32_common.h.auto.html
@@ -233,14 +221,6 @@ int		ft_md5_init(t_md5_st *c)
 	return (1);
 }
 
-typedef struct s_uvec4	t_uv4;
-struct	s_uvec4
-{
-	unsigned int	a;
-	unsigned int	b;
-	unsigned int	c;
-	unsigned int	d;
-};
 /* static inline void	ft_md5_round0(t_uv4 *f, const MD5_LONG *X)
 {
 	R0(f->a,f->b,f->c,f->d,X[0],7,0xd76aa478);
@@ -317,6 +297,18 @@ static inline void	ft_md5_round3(t_uv4 *f, const MD5_LONG *X)
 	R3(f->c,f->d,f->a,f->b,X[2],15,0x2ad7d2bb);
 	R3(f->b,f->c,f->d,f->a,X[9],21,0xeb86d391);
 } */
+void	ft_tobytes(uint32_t v, uint8_t *b);
+t_u32	ft_toint(const uint8_t *b);
+int		ft_md5_openssl(int ac, char **av);
+void	ft_md5_block_data_order(t_md5_st *c, const void *data_, int num);
+void	ft_md5_block_host_order(t_md5_st *c, const void *data, int num);
+int		ft_md5_init(t_md5_st *c);
+int		ft_md5_update(t_md5_st *c, const void *data_, t_ul len);
+void	ft_md5_transform(t_md5_st *c, const t_u8 *data);
+int		ft_md5_final(t_u8 *md, t_md5_st *c);
+void	ft_slow_md5(char const *msg, size_t len);
+void	ft_fast_md5(char *msg, size_t len);
+
 void	ft_md5_block_host_order(t_md5_st *c, const void *data, int num)
 {
 	const MD5_LONG	*X;

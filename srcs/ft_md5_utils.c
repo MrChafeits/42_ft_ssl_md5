@@ -6,75 +6,83 @@
 #include <unistd.h>
 #include <errno.h>
 
-#define MD5_SIZE 16
-#define BUFF_SIZE 64
-
-int	die(int i, char *str)
+static int			md5_init(t_md5_ctx *c)
 {
-	if (i == -1)
-	{
-		ft_dprintf(2, "%s: %s: %s\n", "ft_ssl", str, strerror(errno));
-		return (-1);
-	}
-	else
-	{
-		ft_dprintf(2, "%s: %s: %s\n", "ft_ssl", str, strerror(errno));
-		close(i);
-		return (-1);
-	}
-}
-
-int	md5_init(t_md5_ctx *context)
-{
-	context->count[0] = 0;
-	context->count[1] = 0;
-	context->state[0] = 0x67452301;
-	context->state[1] = 0xEFCDAB89;
-	context->state[2] = 0x98BADCFE;
-	context->state[3] = 0x10325476;
+	c->count[0] = 0;
+	c->count[1] = 0;
+	c->state[0] = 0x67452301;
+	c->state[1] = 0xEFCDAB89;
+	c->state[2] = 0x98BADCFE;
+	c->state[3] = 0x10325476;
 	return (0);
 }
 
-/* int	compute_string_md5(uint8_t *dest_str, uint32_t dest_len, char *md5_str)
+#define DGSTLEN (16)
+#define BUFSIZE (1024 * 16)
+
+static inline void	md5_print(t_u8 *md)
+{
+	register int i;
+
+	i = -1;
+	while (++i < DGSTLEN)
+		ft_printf("%02x", md[i]);
+	ft_printf("\n");
+}
+
+static void			ft_dofd(int fd)
+{
+	t_md5_ctx	c;
+	t_u8		md[DGSTLEN];
+	int			i;
+	static t_u8	buf[BUFSIZE];
+
+	md5_init(&c);
+	while (1)
+	{
+		i = read(fd, buf, BUFSIZE);
+		if (i <= 0)
+			break ;
+		md5_update(&c, (t_u8*)(&buf), i);
+	}
+	md5_final(&c, md);
+	md5_print(md);
+}
+
+static int			ft_md5_fileargs(int ac, char **av)
 {
 	int			i;
-	uint8_t		md5_value[MD5_SIZE];
-	t_md5_ctx	md5;
+	int			err;
+	int			fd;
+	struct stat	st;
 
-	md5_init(&md5);
-	md5_update(&md5, dest_str, dest_len);
-	md5_final(&md5, md5_value);
-	i = -1;
-	while (++i < MD5_SIZE)
-		md5_str = ft_strcat(md5_str, ft_itoa_base(md5_value[i]));
-	return (0);
-}
- */
-/* int	compute_file_md5(char *file_path, char *md5_str, char **buff)
-{
-	int				fd;
-	int				ret;
-	unsigned char	data[BUFF_SIZE];
-	unsigned char	md5_value[MD5_SIZE];
-	t_md5_ctx		md5;
-
-	fd = open(file_path, O_RDONLY);
-	if (-1 == fd)
-		return (die(fd, file_path));
-	md5_init(&md5);
-	ft_bzero(data, BUFF_SIZE);
-	while ((ret = read(fd, data, BUFF_SIZE)) > 0)
+	i = 0;
+	err = 0;
+	while (++i < ac)
 	{
-		*buff = ft_fstrjoin(*buff, (char *)data, 1);
-		if (-1 == ret)
-			return (die(fd, file_path));
-		md5_update(&md5, data, ret);
-		ft_bzero(data, BUFF_SIZE);
+		fd = open(av[i], O_RDONLY);
+		if (lstat(av[i], &st) || fd < 0 || !S_ISREG(st.st_mode))
+		{
+			if (!S_ISREG(st.st_mode))
+				errno = EISDIR;
+			perror(av[i]);
+			err++;
+			continue ;
+		}
+		ft_printf("MD5(%s)= ", av[i]);
+		ft_dofd(fd);
+		close(fd);
 	}
-	close(fd);
-	md5_final(&md5, md5_value);
-	fd = -1;
-	while (++fd < MD5_SIZE)
-		md5_str = ft_fstrcat(md5_str, to_hex(md5_value[fd]));
-	return (0);
-} */
+	return (err);
+}
+
+void				ft_md5_process(int ac, char **av)
+{
+	if (ac == 2)
+		ft_dofd(STDIN_FILENO);
+	else
+		exit(ft_md5_fileargs(--ac, ++av));
+}
+
+#undef DGSTLEN
+#undef BUFSIZE

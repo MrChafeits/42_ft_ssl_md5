@@ -6,14 +6,13 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 00:03:28 by callen            #+#    #+#             */
-/*   Updated: 2019/03/29 22:19:46 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/01 11:46:39 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_SSL_H
 # define FT_SSL_H
 
-# include "libft.h"
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <errno.h>
@@ -32,13 +31,15 @@ typedef unsigned long	t_ul;
 typedef uint64_t	t_u64;
 typedef uint32_t	t_u32;
 typedef uint16_t	t_u16;
-typedef uint8_t		t_u8;
+typedef uint8_t	t_u8;
 typedef enum e_functype	t_functype;
 typedef enum e_dgsts	t_dgsts;
 typedef struct s_function	t_function;
 typedef struct s_opt	t_opt;
+
 enum	e_dgsts
 {
+	INVAL,
 	MD5,
 	SHA1,
 	SHA224,
@@ -55,8 +56,13 @@ struct	s_opt
 };
 enum	e_functype
 {
-	FT_none, FT_general, FT_md, FT_cipher, FT_pkey,
-	FT_md_alg, FT_cipher_alg 
+	FT_none,
+	FT_general,
+	FT_md,
+	FT_cipher,
+	FT_pkey,
+	FT_md_alg,
+	FT_cipher_alg
 };
 struct	s_function
 {
@@ -66,6 +72,12 @@ struct	s_function
 	const t_opt	*help;
 };
 
-int		compute_string_md5(uint8_t *ds, uint32_t dl, char *md5_str);
-int		compute_file_md5(char *file_path, char *md5_str, char **buf);
+int		panic(int fd, char *str);
+void	ft_md5_process(int ac, char **av);
+void	ft_sha1_process(int ac, char **av);
+void	ft_sha224_process(int ac, char **av);
+void	ft_sha256_process(int ac, char **av);
+void	ft_sha384_process(int ac, char **av);
+void	ft_sha512_process(int ac, char **av);
+
 #endif

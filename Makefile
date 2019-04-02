@@ -31,8 +31,7 @@ DEBGLIBS := $(LIBDIR)/d_libft.a
 ASANLIBS := $(LIBDIR)/a_libft.a
 FRAMWRKS :=
 
-SRC := main.c apple_openssl.c fast_md5.c slow_md5.c openssl_master.c\
-	ft_md5.c ft_md5_utils.c
+SRC := main.c ft_md5.c ft_md5_utils.c
 OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
 
 NRM := $(shell which pynorme)

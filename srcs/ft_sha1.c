@@ -1,86 +1,98 @@
+#include <libft.h>
+#include <ft_ssl.h>
 #include <ft_sha1.h>
 
-void	sha1_transform_1(t_s1ctx *ctx, uint8_t *data, t_sql *s)
+void	ft_sha1_transform(t_s1ctx *c, t_u8 *d)
 {
-	int i;
-	int j;
+	t_sql	s;
 
-	i = 0;
-	j = 0;
-	while (i < 16)
-	{
-		s->m[i] = (data[j] << 24) + (data[j + 1] << 16) + (data[j + 2] << 8) +
-			(data[j + 3]);
-		i++;
-		j += 4;
-	}
-	while (i < 80)
-	{
-		s->m[i] = (s->m[i - 3] ^ s->m[i - 8] ^ s->m[i - 14] ^ s->m[i - 16]);
-		s->m[i] = (s->m[i] << 1) | (s->m[i] >> 31);
-		i++;
-	}
-	s->a = ctx->state[0];
-	s->b = ctx->state[1];
-	s->c = ctx->state[2];
-	s->d = ctx->state[3];
-	s->e = ctx->state[4];
+	sha1_transform_1(c, d, &s);
+	sha1_transform_2(c, &s);
+	sha1_transform_3(c, &s);
+	c->state[0] += s.a;
+	c->state[1] += s.b;
+	c->state[2] += s.c;
+	c->state[3] += s.d;
+	c->state[4] += s.e;
 }
 
-void	sha1_transform_2(t_s1ctx *ctx, t_sql *s)
+void	ft_sha1_init(t_s1ctx *c)
 {
-	int i;
+	c->datalen = 0;
+	c->bitlen = 0;
+	c->state[0] = 0x67452301;
+	c->state[1] = 0xEFCDAB89;
+	c->state[2] = 0x98BADCFE;
+	c->state[3] = 0x10325476;
+	c->state[4] = 0xC3D2E1F0;
+	c->k[0] = 0x5A827999;
+	c->k[1] = 0x6ED9EBA1;
+	c->k[2] = 0x8F1BBCDC;
+	c->k[3] = 0xCA62C1D6;
+}
+
+void	ft_sha1_update(t_s1ctx *c, t_u8 *d, t_u64 l)
+{
+	t_u64	i;
 
 	i = 0;
-	while (i < 20)
+	while (i < l)
 	{
-		s->t = ROTLEFT(s->a, 5) + ((s->b & s->c) ^ (~s->b & s->d)) +
-			s->e + ctx->k[0] + s->m[i];
-		s->e = s->d;
-		s->d = s->c;
-		s->c = ROTLEFT(s->b, 30);
-		s->b = s->a;
-		s->a = s->t;
-		i++;
-	}
-	while (i < 40)
-	{
-		s->t = ROTLEFT(s->a, 5) + (s->b ^ s->c ^ s->d) + s->e +
-			ctx->k[1] + s->m[i];
-		s->e = s->d;
-		s->d = s->c;
-		s->c = ROTLEFT(s->b, 30);
-		s->b = s->a;
-		s->a = s->t;
-		i++;
+		c->data[c->datalen] = d[i];
+		c->datalen++;
+		if (c->datalen == 64)
+		{
+			ft_sha1_transform(c, c->data);
+			c->bitlen += 512;
+			c->datalen = 0;
+		}
+		++i;
 	}
 }
 
-void	sha1_transform_3(t_s1ctx *ctx, t_sql *s)
+static void	ft_sha1_almost(t_s1ctx *c)
 {
-	int i;
+	register int i;
 
-	i = 40;
-	while (i < 60)
+	i = c->datalen;
+	if (c->datalen < 56)
 	{
-		s->t = ROTLEFT(s->a, 5) + ((s->b & s->c) ^ (s->b & s->d) ^
-			(s->c & s->d)) + s->e + ctx->k[2] + s->m[i];
-		s->e = s->d;
-		s->d = s->c;
-		s->c = ROTLEFT(s->b, 30);
-		s->b = s->a;
-		s->a = s->t;
-		i++;
+		c->data[i++] = 0x80;
+		while (i < 56)
+			c->data[i++] = 0x00;
 	}
-	while (i < 80)
+	else
 	{
-		s->t = ROTLEFT(s->a, 5) + (s->b ^ s->c ^ s->d) +
-			s->e + ctx->k[3] + s->m[i];
-		s->e = s->d;
-		s->d = s->c;
-		s->c = ROTLEFT(s->b, 30);
-		s->b = s->a;
-		s->a = s->t;
-		i++;
+		c->data[i++] = 0x80;
+		while (i < 64)
+			c->data[i++] = 0x00;
+		ft_sha1_transform(c, c->data);
+		ft_memset(c->data, 0x00, 56);
+	}
+}
+
+void		ft_sha1_final(t_s1ctx *c, t_u8 *md)
+{
+	register int i;
+
+	ft_sha1_almost(c);
+	c->bitlen += c->datalen * 8;
+	c->data[63] = c->bitlen;
+	c->data[62] = c->bitlen >> 8;
+	c->data[61] = c->bitlen >> 16;
+	c->data[60] = c->bitlen >> 24;
+	c->data[59] = c->bitlen >> 32;
+	c->data[58] = c->bitlen >> 40;
+	c->data[57] = c->bitlen >> 48;
+	c->data[56] = c->bitlen >> 56;
+	ft_sha1_transform(c, c->data);
+	i = -1;
+	while (++i < 4)
+	{
+		md[i + 0] = (c->state[0] >> (24 - i * 8)) & 0xFF;
+		md[i + 4] = (c->state[1] >> (24 - i * 8)) & 0xFF;
+		md[i + 8] = (c->state[2] >> (24 - i * 8)) & 0xFF;
+		md[i + 12] = (c->state[2] >> (24 - i * 8)) & 0xFF;
+		md[i + 16] = (c->state[2] >> (24 - i * 8)) & 0xFF;
 	}
 }

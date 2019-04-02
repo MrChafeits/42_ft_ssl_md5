@@ -10,26 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ssl.h"
+#include <ft_ssl.h>
+#include <ft_md5.h>
 
-/*static const t_u8	PADDING[64] =
-{
-	0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};*/
-
-typedef struct	s_md5
+typedef struct s_md5	t_md5;
+struct	s_md5
 {
 	t_u32	buf[4];
 	t_u32	bits[2];
 	t_u8	in[64];
-}				t_md5;
+};
 
 enum	e_md5const
 {
@@ -118,16 +108,9 @@ enum	e_md5const
 	MD5C3e=0x2ad7d2bbL,
 	MD5C3f=0xeb86d391L
 };
+
 #define ROTL(a,n) ((a << n) | (a >> (32 - n)))
-t_u32	rotl32(const t_u32 a, const t_u32 n)
-{
-	return ((a << n) | (a >> (32 - n)));
-}
 #define ADD3(a,b,c) ((a) + (b) + (c))
-t_u32	hc_add3(const t_u32 a, const t_u32 b, const t_u32 c)
-{
-	return (a + b + c);
-}
 
 void	ft_tobytes(uint32_t v, uint8_t *b)
 {
@@ -152,10 +135,10 @@ uint32_t	ft_toint(const uint8_t *b)
 #define MD5_FF(x,y,z)	(MD5_F((x), (y), (z)))
 #define MD5_GG(x,y,z)	(MD5_G((x), (y), (z)))
 #define MD54(a,b) ((a) += (b))
-#define MD53(a,b,s) ((a) = rotl32(a, s); md54(a, b))
-#define MD52(f,a,b,c,d,x,s) ((a) = hc_add3(a, x, f(b, c, d)); md53(a, b, s))
-#define MD51(f,a,b,c,d,x,K,s) ((a) += K; md52(f, a, b, c, d, x, s))
-#define MD5(f,a,b,c,d,x,K,s) {a+=K;a=hc_add3(a,x,f(b,c,d));a=rotl32(a,s);a+=b;}
+#define MD53(a,b,s) ((a) = ROTL(a, s); MD54(a, b))
+#define MD52(f,a,b,c,d,x,s) ((a) = ADD3(a, x, f(b, c, d)); MD53(a, b, s))
+#define MD51(f,a,b,c,d,x,K,s) ((a) += K; MD52(f, a, b, c, d, x, s))
+#define MD5(f,a,b,c,d,x,K,s) {a+=K;a=ADD3(a,x,f(b,c,d));a=ROTL(a,s);a+=b;}
 
 static inline void	md5_round4(t_u32 w[4][4], t_u32 d[4], t_u32 m[4])
 {
@@ -423,10 +406,9 @@ void	ft_fast_md5(char *msg, size_t len)
 			len -= o;
 			o += len;
 		}
-		for (i = 0; i <= len; i += 4)//asdf ghjk l
+		for (i = 0; i <= len; i += 4)
 			block[i / 4] = ft_toint((t_u8*)msg + i);
 		ft_md5_nolimit(digest, block, i);
-		/* ft_md5_64(block, digest); */
 		ft_printf("MD5(%s)= ", msg);
 		for(i = 0; i < 4; i++)
 			ft_printf("%8.8x", digest[i]);
@@ -454,3 +436,16 @@ void	ft_fast_md5(char *msg, size_t len)
 		}
 	}
 }
+#undef ROTL
+#undef ADD3
+#undef MD5_F
+#undef MD5_G
+#undef MD5_H
+#undef MD5_I
+#undef MD5_FF
+#undef MD5_GG
+#undef MD54
+#undef MD53
+#undef MD52
+#undef MD51
+#undef MD5
