@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   todo_libft.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/02 20:07:49 by callen            #+#    #+#             */
+/*   Updated: 2019/04/02 20:09:11 by callen           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_ssl.h>
 #include <libft.h>
 #include <limits.h>
 #define BITOP(a,b,op) \
-((a)[(size_t)(b)/(8*sizeof *(a))] op (size_t)1<<((size_t)(b)%(8*sizeof *(a))))
+((a)[(size_t)(b)/(8*sizeof(*(a)))] op (size_t)1<<((size_t)(b)%(8*sizeof(*(a)))))
 
 size_t	ft_strspn(const char *s, const char *c)
 {
@@ -35,21 +47,6 @@ char	*ft_strchrnul_(const char *s, int c)
 	c = (unsigned char)c;
 	if (!c)
 		return ((char*)s + ft_strlen(s));
-#ifdef __GNUC__
-	typedef size_t __attribute__((__may_alias__))	word;
-	const word	*w;
-	while ((uintptr_t)s % ALIGN)
-	{
-		if (!*s || *(unsigned char*)s == c)
-			return ((char*)s);
-		s++;
-	}
-	size_t k = ONES * c;
-	w = (void*)s;
-	while (!HASZERO(*w) && !HASZERO(*w ^ k))
-		w++;
-	s = (void*)w;
-#endif
 	while (*s && *(unsigned char*)s != c)
 		s++;
 	return ((char*)s);
@@ -69,6 +66,7 @@ size_t	ft_strcspn(const char *s, const char *c)
 		s++;
 	return (s - a);
 }
+
 char	*ft_strtok(char *restrict s, const char *restrict sep)
 {
 	static char *p;

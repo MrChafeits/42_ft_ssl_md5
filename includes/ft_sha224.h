@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_sha224.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/02 20:10:33 by callen            #+#    #+#             */
+/*   Updated: 2019/04/02 20:11:22 by callen           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_SHA224_H
 # define FT_SHA224_H
 
 # include <stdlib.h>
 # include <ft_ssl.h>
 
-# define ROL(a,b) (((a) << (b)) | ((a) >> (32-(b))))
-# define ROR(a,b) (((a) >> (b)) | ((a) << (32-(b))))
-# define CH(x,y,z) (((x) & (y)) ^ (~(x) & (z)))
-# define MAJ(x,y,z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
-# define EP0(x) (ROR(x,2) ^ ROR(x,13) ^ ROR(x,22))
-# define EP1(x) (ROR(x,6) ^ ROR(x,11) ^ ROR(x,25))
-# define S0(x) (ROR(x,7) ^ ROR(x,18) ^ ((x) >> 3))
-# define S1(x) (ROR(x,17) ^ ROR(x,19) ^ ((x) >> 10))
+# define ROL(a, b) (((a) << (b)) | ((a) >> (32 - (b))))
+# define ROR(a, b) (((a) >> (b)) | ((a) << (32 - (b))))
+# define CH(x, y, z) (((x) & (y)) ^ (~(x) & (z)))
+# define MAJ(x, y, z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
+# define EP0(x) (ROR(x, 2) ^ ROR(x, 13) ^ ROR(x, 22))
+# define EP1(x) (ROR(x, 6) ^ ROR(x, 11) ^ ROR(x, 25))
+# define S0(x) (ROR(x, 7) ^ ROR(x, 18) ^ ((x) >> 3))
+# define S1(x) (ROR(x, 17) ^ ROR(x, 19) ^ ((x) >> 10))
 
 static const t_u32	g_k[64] = {
 	0x428a2f98U, 0x71374491U, 0xb5c0fbcfU, 0xe9b5dba5U,

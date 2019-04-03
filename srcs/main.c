@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 22:11:16 by callen            #+#    #+#             */
-/*   Updated: 2019/04/02 15:06:23 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/02 20:04:23 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ void	ft_ssl_usage(int ac, char **av)
 	{
 		ft_printf("%s: Error: \'%s\' is an invalid command.\n\n", av[0], av[1]);
 		ft_printf("Standard commands:\n\n");
-		ft_printf("Message Digest commands:\n"
-		"md5\nsha1\nsha224\nsha256\nsha384\nsha512\n\n");
+		ft_printf("Message Digest commands:\n%-18s%-18s%-18s%-18s\n%-18s%-18s\n\n",
+		"md5","sha1","sha224","sha256","sha384","sha512");
 		ft_printf("Cipher commands:\n\n");
 	}
 }
@@ -58,7 +58,7 @@ void	shell_prompt(void)
 		t = ft_strsplit(ln, ' ');
 		len = len_strtab(t);
 		free(ln);
-		g__[get_command_(t[1])](len, t+1);
+		g__[get_command_(t[0])](len, t);
 		ft_free_strtab(&t);
 		ft_printf("ft_ssl> ");
 	}

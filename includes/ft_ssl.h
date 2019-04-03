@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 00:03:28 by callen            #+#    #+#             */
-/*   Updated: 2019/04/02 13:59:46 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/02 21:29:35 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,7 @@ typedef uint64_t	t_u64;
 typedef uint32_t	t_u32;
 typedef uint16_t	t_u16;
 typedef uint8_t	t_u8;
-typedef enum e_functype	t_functype;
 typedef enum e_dgsts	t_dgsts;
-typedef struct s_function	t_function;
-typedef struct s_opt	t_opt;
 
 enum	e_dgsts
 {
@@ -46,31 +43,9 @@ enum	e_dgsts
 	SHA224,
 	SHA256,
 	SHA384,
-	SHA512
-};
-struct	s_opt
-{
-	const char	*name;
-	int			retval;
-	int			valtype;
-	const char	*helpstr;
-};
-enum	e_functype
-{
-	FT_none,
-	FT_general,
-	FT_md,
-	FT_cipher,
-	FT_pkey,
-	FT_md_alg,
-	FT_cipher_alg
-};
-struct	s_function
-{
-	t_functype	type;
-	const char	*name;
-	int			(*func)(int argc, char *argv[]);
-	const t_opt	*help;
+	SHA512,
+	TIGER,
+	WHIRL
 };
 
 int		panic(int fd, char *str);

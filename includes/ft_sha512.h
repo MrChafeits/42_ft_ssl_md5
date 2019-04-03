@@ -1,16 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_sha512.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/02 20:14:49 by callen            #+#    #+#             */
+/*   Updated: 2019/04/02 20:14:51 by callen           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_SHA512_H
 # define FT_SHA512_H
 
 # include <stdlib.h>
 # include <ft_ssl.h>
 
-# define CH(X,Y,Z) (Z ^ (X & (Y ^ Z)))
-# define MAJ(X,Y,Z) ((X & Y) | (Z & (X | Y)))
-# define ROR(N,K) (((N) >> (K)) | ((N) << (64 - (K))))
-# define S0(X) (ROR(X,28) ^ ROR(X,34) ^ ROR(X,39))
-# define S1(X) (ROR(X,14) ^ ROR(X,18) ^ ROR(X,41))
-# define R0(X) (ROR(X,1) ^ ROR(X,8) ^ (X >> 7))
-# define R1(X) (ROR(X,19) ^ ROR(X,61) ^ (X >> 6))
+# define CH(X, Y, Z) (Z ^ (X & (Y ^ Z)))
+# define MAJ(X, Y, Z) ((X & Y) | (Z & (X | Y)))
+# define ROR(N, K) (((N) >> (K)) | ((N) << (64 - (K))))
+# define S0(X) (ROR(X, 28) ^ ROR(X, 34) ^ ROR(X, 39))
+# define S1(X) (ROR(X, 14) ^ ROR(X, 18) ^ ROR(X, 41))
+# define R0(X) (ROR(X, 1) ^ ROR(X, 8) ^ (X >> 7))
+# define R1(X) (ROR(X, 19) ^ ROR(X, 61) ^ (X >> 6))
 
 static t_u64 const g_k[80] = {
 	0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL,
