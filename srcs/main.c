@@ -35,7 +35,7 @@ void	ft_ssl_usage(int ac, char **av)
 		ft_printf("%s: Error: \'%s\' is an invalid command.\n\n", av[0], av[1]);
 		ft_printf("Standard commands:\n\n");
 		ft_printf("Message Digest commands:\n%-18s%-18s%-18s%-18s\n%-18s%-18s\n\n",
-		"md5","sha1","sha224","sha256","sha384","sha512");
+		"md5", "sha1", "sha224", "sha256", "sha384", "sha512");
 		ft_printf("Cipher commands:\n\n");
 	}
 }
