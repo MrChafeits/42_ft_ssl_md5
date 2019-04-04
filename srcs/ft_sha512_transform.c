@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <ft_sha512.h>
+#define BEP R1(q->w[i - 2]) + q->w[i - 7] + R0(q->w[i - 15]) + q->w[i - 16];
 
 void		ft_sha512256_init(t_sha512 *s)
 {
@@ -30,22 +31,20 @@ static void	processblock_1(t_sha512 *s, t_sql512 *q, const t_u8 *buf)
 	register int	i;
 
 	i = -1;
-	while (++i < 16)
-	{
-		q->w[i] = (t_u64)buf[8 * i] << 56;
-		q->w[i] |= (t_u64)buf[8 * i + 1] << 48;
-		q->w[i] |= (t_u64)buf[8 * i + 2] << 40;
-		q->w[i] |= (t_u64)buf[8 * i + 3] << 32;
-		q->w[i] |= (t_u64)buf[8 * i + 4] << 24;
-		q->w[i] |= (t_u64)buf[8 * i + 5] << 16;
-		q->w[i] |= (t_u64)buf[8 * i + 6] << 8;
-		q->w[i] |= buf[8 * i + 7];
-	}
-	while (i < 80)
-	{
-		q->w[i] = R1(q->w[i - 2]) + q->w[i - 7] + R0(q->w[i - 15]) + q->w[i - 16];
-		i++;
-	}
+	while (++i < 80)
+		if (i < 16)
+		{
+			q->w[i] = (t_u64)buf[8 * i] << 56;
+			q->w[i] |= (t_u64)buf[8 * i + 1] << 48;
+			q->w[i] |= (t_u64)buf[8 * i + 2] << 40;
+			q->w[i] |= (t_u64)buf[8 * i + 3] << 32;
+			q->w[i] |= (t_u64)buf[8 * i + 4] << 24;
+			q->w[i] |= (t_u64)buf[8 * i + 5] << 16;
+			q->w[i] |= (t_u64)buf[8 * i + 6] << 8;
+			q->w[i] |= buf[8 * i + 7];
+		}
+		else if (i < 80)
+			q->w[i] = BEP;
 	q->a = s->h[0];
 	q->b = s->h[1];
 	q->c = s->h[2];

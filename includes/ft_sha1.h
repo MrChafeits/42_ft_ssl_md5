@@ -17,6 +17,7 @@
 # include <ft_ssl.h>
 
 typedef struct s_s	t_s1ctx;
+typedef struct s_sql1	t_sql1;
 struct	s_s
 {
 	t_u8	data[64];
@@ -25,8 +26,6 @@ struct	s_s
 	t_u32	state[5];
 	t_u32	k[4];
 };
-
-typedef struct s_sql1	t_sql1;
 struct	s_sql1
 {
 	t_u32	a;

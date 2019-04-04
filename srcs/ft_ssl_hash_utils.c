@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ssl_hash_utils.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/03 22:23:22 by callen            #+#    #+#             */
+/*   Updated: 2019/04/03 22:23:23 by callen           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <libft.h>
 #include <stdlib.h>
 #include <internal.h>
@@ -8,19 +20,19 @@
 #define DGSTLEN (512)
 #define BUFSIZE (1024 * DGSTLEN)
 
-t_md5_ctx	ctxmd5;
-t_s1ctx		ctxsha1;
-t_sha256	ctxsha256;
-t_sha512	ctxsha512;
+t_md5_ctx	g_ctxmd5;
+t_s1ctx		g_ctxsha1;
+t_sha256	g_ctxsha256;
+t_sha512	g_ctxsha512;
 void	*g_ctx[] = {
-	[MD5] = (&ctxmd5),
-	[SHA1] = (&ctxsha1),
-	[SHA224] = (&ctxsha256),
-	[SHA256] = (&ctxsha256),
-	[SHA384] = (&ctxsha512),
-	[SHA512] = (&ctxsha512),
-	[SHA512224] = (&ctxsha512),
-	[SHA512256] = (&ctxsha512),
+	[MD5] = (&g_ctxmd5),
+	[SHA1] = (&g_ctxsha1),
+	[SHA224] = (&g_ctxsha256),
+	[SHA256] = (&g_ctxsha256),
+	[SHA384] = (&g_ctxsha512),
+	[SHA512] = (&g_ctxsha512),
+	[SHA512224] = (&g_ctxsha512),
+	[SHA512256] = (&g_ctxsha512),
 };
 static char	*g_pfx[] = {
 	[MD5] = "MD5(%s)= ",
@@ -79,7 +91,7 @@ int		hash_digest(t_hash *h)
 			err++;
 			continue ;
 		}
-		h->bsd ? fcntl(fd, F_GETPATH, pth) : 0;
+		h->bsd ? fcntl(fd, F_GETPATH, pth) : 0; //TODO: delet dis
 		h->path = h->bsd ? (char*)&pth : h->av[i];
 		hash_print(h, fd);
 		close(fd);

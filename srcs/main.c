@@ -44,7 +44,8 @@ void	ft_ssl_help(t_hash *h)
 void	ft_ssl_command_usage(t_hash *h)
 {
 	if (h->ac <= 2)
-		ft_dprintf(2, "Invalid command \'%s\'; type \"help\" for a list.\n", h->av[1]);
+		ft_dprintf(2, "Invalid command \'%s\'; type \"help\" for a list.\n",
+			h->av[1]);
 	else
 	{
 		ft_dprintf(2, "%s: Unrecognized flag %s\n", h->av[1], h->av[optind]);
@@ -60,19 +61,17 @@ void	ft_ssl_command_usage(t_hash *h)
 void	shell_prompt(t_hash *h)
 {
 	char	*ln;
-	char	**t;
 	int		b;
-	int		len;
 
 	ft_printf("ft_ssl> ");
 	while ((b = get_next_line(0, &ln)) > 0)
 	{
 		h->av = ft_strsplit(ln, ' ');
-		h->ac = len = len_strtab(h->av);
+		h->ac = len_strtab(h->av);
 		free(ln);
 		h->id = get_command_(h->av[0]);
 		hash_process(h);
-		ft_free_strtab(&t);
+		ft_free_strtab(&h->av);
 		ft_printf("ft_ssl> ");
 	}
 }
@@ -82,7 +81,7 @@ void	init_hash(t_hash *h)
 	int		ch;
 
 	h->id = get_command_(h->av[1]);
-	while ((ch = ft_getopt(h->ac, h->av, "cpqrs")) != -1)
+	while ((ch = ft_getopt(h->ac, h->av + 1, "cpqrs")) != -1)
 	{
 		if (ch == 'c')
 			h->check = 1;

@@ -87,7 +87,9 @@ enum	e_dgsts
 	WHIRL
 };
 
-static char	*g_s[] = {};
+static char	*g_s[] = {
+	"help"
+};
 
 static char	*g_h[] = {
 	"md5",

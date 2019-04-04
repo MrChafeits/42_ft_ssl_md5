@@ -14,7 +14,7 @@
 #include <ft_ssl.h>
 #include <ft_sha1.h>
 
-void	ft_sha1_transform(t_s1ctx *c, t_u8 *d)
+void		ft_sha1_transform(t_s1ctx *c, t_u8 *d)
 {
 	t_sql1	s;
 
@@ -28,7 +28,7 @@ void	ft_sha1_transform(t_s1ctx *c, t_u8 *d)
 	c->state[4] += s.e;
 }
 
-void	ft_sha1_init(t_s1ctx *c)
+void		ft_sha1_init(t_s1ctx *c)
 {
 	c->datalen = 0;
 	c->bitlen = 0;
@@ -43,7 +43,7 @@ void	ft_sha1_init(t_s1ctx *c)
 	c->k[3] = 0xca62c1d6U;
 }
 
-void	ft_sha1_update(t_s1ctx *c, t_u8 *d, t_u64 l)
+void		ft_sha1_update(t_s1ctx *c, t_u8 *d, t_u64 l)
 {
 	t_u64	i;
 

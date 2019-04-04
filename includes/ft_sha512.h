@@ -67,7 +67,6 @@ static t_u64 const g_k[80] = {
 	0x5fcb6fab3ad6faecULL, 0x6c44198c4a475817ULL
 };
 
-
 typedef struct s_sql512	t_sql512;
 typedef struct s_sha512	t_sha512;
 
