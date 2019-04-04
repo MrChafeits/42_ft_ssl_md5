@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-static int			ft_md5_init(t_md5_ctx *c)
+void				ft_md5_init(t_md5_ctx *c)
 {
 	c->count[0] = 0;
 	c->count[1] = 0;
@@ -26,11 +26,10 @@ static int			ft_md5_init(t_md5_ctx *c)
 	c->state[1] = 0xEFCDAB89;
 	c->state[2] = 0x98BADCFE;
 	c->state[3] = 0x10325476;
-	return (0);
 }
 
-#define DGSTLEN (16)
-#define BUFSIZE (1024 * 16)
+#define DGSTLEN (128 / 8)
+#define BUFSIZE (1024 * DGSTLEN)
 
 static inline void	ft_md5_print(t_u8 *md)
 {
@@ -61,7 +60,7 @@ static void			ft_dofd(int fd)
 	ft_md5_print(md);
 }
 
-static int			ft_md5_fileargs(int ac, char **av)
+static int			ft_md5_fileargs(t_hash *h)
 {
 	int			i;
 	int			err;
@@ -70,30 +69,34 @@ static int			ft_md5_fileargs(int ac, char **av)
 
 	i = 0;
 	err = 0;
-	while (++i < ac)
+	while (++i < h->ac)
 	{
-		fd = open(av[i], O_RDONLY);
-		if (lstat(av[i], &st) || fd < 0 || !S_ISREG(st.st_mode))
+		fd = open(h->av[i], O_RDONLY);
+		if (lstat(h->av[i], &st) || fd < 0 || !S_ISREG(st.st_mode))
 		{
 			if (!S_ISREG(st.st_mode))
 				errno = EISDIR;
-			perror(av[i]);
+			perror(h->av[i]);
 			err++;
 			continue ;
 		}
-		ft_printf("MD5(%s)= ", av[i]);
+		ft_printf("MD5(%s)= ", h->av[i]);
 		ft_dofd(fd);
 		close(fd);
 	}
 	return (err);
 }
 
-void				ft_md5_process(int ac, char **av)
+void				ft_md5_process(t_hash *h)
 {
-	if (ac == 2)
+	if (h->ac == 2)
 		ft_dofd(STDIN_FILENO);
 	else
-		exit(ft_md5_fileargs(--ac, ++av));
+	{
+		h->ac--;
+		h->av++;
+		exit(ft_md5_fileargs(h));
+	}
 }
 
 #undef DGSTLEN

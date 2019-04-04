@@ -6,7 +6,7 @@
 #    By: callen <callen@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/23 22:04:17 by callen            #+#    #+#              #
-#    Updated: 2019/04/02 20:31:56 by callen           ###   ########.fr        #
+#    Updated: 2019/04/03 14:36:02 by callen           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,9 +32,10 @@ ASANLIBS := $(LIBDIR)/a_libft.a
 FRAMWRKS :=
 
 SRC := main.c ft_md5.c ft_md5_utils.c ft_sha1.c ft_sha1_utils.c \
-	ft_sha1_transform.c ft_sha224.c ft_sha224_utils.c ft_sha224_transform.c \
-	ft_sha256.c ft_sha256_utils.c ft_sha256_transform.c ft_sha384_utils.c \
-	ft_sha512.c ft_sha512_utils.c ft_ssl_utils.c
+	ft_sha1_transform.c ft_sha224.c ft_sha224_utils.c ft_sha256.c \
+	ft_sha256_utils.c ft_sha256_transform.c ft_sha384_utils.c \
+	ft_sha512.c ft_sha512_utils.c ft_sha512_transform.c ft_ssl_utils.c \
+	ft_sha512256_utils.c ft_ssl_hash_utils.c
 OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
 
 NRM := $(shell which pynorme)

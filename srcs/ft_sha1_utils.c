@@ -49,7 +49,7 @@ static void			ft_dofd(int fd)
 	ft_sha1_print(md);
 }
 
-static int			ft_sha1_fileargs(int ac, char **av)
+static int			ft_sha1_fileargs(t_hash *h)
 {
 	int			i;
 	int			err;
@@ -58,30 +58,34 @@ static int			ft_sha1_fileargs(int ac, char **av)
 
 	i = 0;
 	err = 0;
-	while (++i < ac)
+	while (++i < h->ac)
 	{
-		fd = open(av[i], O_RDONLY);
-		if (lstat(av[i], &st) || fd < 0 || !S_ISREG(st.st_mode))
+		fd = open(h->av[i], O_RDONLY);
+		if (lstat(h->av[i], &st) || fd < 0 || !S_ISREG(st.st_mode))
 		{
 			if (!S_ISREG(st.st_mode))
 				errno = EISDIR;
-			perror(av[i]);
+			perror(h->av[i]);
 			err++;
 			continue ;
 		}
-		ft_printf("SHA1(%s)= ", av[i]);
+		ft_printf("SHA1(%s)= ", h->av[i]);
 		ft_dofd(fd);
 		close(fd);
 	}
 	return (err);
 }
 
-void				ft_sha1_process(int ac, char **av)
+void				ft_sha1_process(t_hash *h)
 {
-	if (ac == 2)
+	if (h->ac == 2)
 		ft_dofd(STDIN_FILENO);
 	else
-		exit(ft_sha1_fileargs(--ac, ++av));
+	{
+		h->ac--;
+		h->av++;
+		exit(ft_sha1_fileargs(h));
+	}
 }
 
 #undef DGSTLEN

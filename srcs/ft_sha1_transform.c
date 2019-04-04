@@ -13,7 +13,7 @@
 #include <ft_sha1.h>
 #define ROL(a, b) ((a << b) | (a >> (32 - b)))
 
-void	ft_sha1_transform_1(t_s1ctx *ctx, t_u8 *data, t_sql *s)
+void	ft_sha1_transform_1(t_s1ctx *ctx, t_u8 *data, t_sql1 *s)
 {
 	int i;
 	int j;
@@ -40,7 +40,7 @@ void	ft_sha1_transform_1(t_s1ctx *ctx, t_u8 *data, t_sql *s)
 	s->e = ctx->state[4];
 }
 
-void	ft_sha1_transform_2(t_s1ctx *ctx, t_sql *s)
+void	ft_sha1_transform_2(t_s1ctx *ctx, t_sql1 *s)
 {
 	int i;
 
@@ -69,7 +69,7 @@ void	ft_sha1_transform_2(t_s1ctx *ctx, t_sql *s)
 	}
 }
 
-void	ft_sha1_transform_3(t_s1ctx *ctx, t_sql *s)
+void	ft_sha1_transform_3(t_s1ctx *ctx, t_sql1 *s)
 {
 	int i;
 

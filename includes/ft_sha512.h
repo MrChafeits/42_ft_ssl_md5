@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 20:14:49 by callen            #+#    #+#             */
-/*   Updated: 2019/04/02 20:14:51 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/03 14:36:22 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,20 +67,10 @@ static t_u64 const g_k[80] = {
 	0x5fcb6fab3ad6faecULL, 0x6c44198c4a475817ULL
 };
 
-enum { SHA224_DIGEST_SIZE = 224 / 8 };
-enum { SHA256_DIGEST_SIZE = 256 / 8 };
-enum { SHA384_DIGEST_SIZE = 384 / 8 };
-enum { SHA512_DIGEST_SIZE = 512 / 8 };
 
-typedef struct s_sha512_ctx	t_sha512_ctx;
-struct	s_sha512_ctx
-{
-	t_u64	state[8];
-	t_u64	total[2];
-	size_t	buflen;
-	t_u64	buffer[32];
-};
 typedef struct s_sql512	t_sql512;
+typedef struct s_sha512	t_sha512;
+
 struct	s_sql512
 {
 	t_u64	w[80];
@@ -95,7 +85,7 @@ struct	s_sql512
 	t_u64	g;
 	t_u64	h;
 };
-typedef struct s_sha512	t_sha512;
+
 struct	s_sha512
 {
 	t_u64	len;
@@ -103,11 +93,13 @@ struct	s_sha512
 	t_u8	buf[128];
 };
 
-void	ft_sha512_init(t_sha512 *s);
+void	ft_sha512_transform(t_sha512 *s, const t_u8 *buf);
 void	ft_sha384_init(t_sha512 *s);
+void	ft_sha512_init(t_sha512 *s);
+void	ft_sha512224_init(t_sha512 *s);
+void	ft_sha512256_init(t_sha512 *s);
 
 void	ft_sha512_final(t_sha512 *s, t_u8 *md);
-void	ft_sha384_final(t_sha512 *s, t_u8 *md);
-void	ft_sha512_update(t_sha512 *s, const void *m, unsigned long len);
+void	ft_sha512_update(t_sha512 *s, const void *m, t_ul len);
 
 #endif

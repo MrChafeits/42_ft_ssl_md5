@@ -16,7 +16,7 @@
 
 void	ft_sha1_transform(t_s1ctx *c, t_u8 *d)
 {
-	t_sql	s;
+	t_sql1	s;
 
 	ft_sha1_transform_1(c, d, &s);
 	ft_sha1_transform_2(c, &s);

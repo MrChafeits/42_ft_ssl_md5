@@ -23,22 +23,16 @@ int		panic_(int fd, char *str)
 
 int		get_command_(const char *s)
 {
-	int		ret;
+	register int	ret;
 
-	if (ft_strequ("md5", s))
-		ret = MD5;
-	else if (ft_strequ("sha1", s))
-		ret = SHA1;
-	else if (ft_strequ("sha224", s))
-		ret = SHA224;
-	else if (ft_strequ("sha256", s))
-		ret = SHA256;
-	else if (ft_strequ("sha384", s))
-		ret = SHA384;
-	else if (ft_strequ("sha512", s))
-		ret = SHA512;
-	else
+	ret = -1;
+	while (g_h[++ret])
+		if (ft_strequ(g_h[ret], s))
+			break ;
+	if (!g_h[ret])
 		ret = INVAL;
+	else
+		ret++;
 	return (ret);
 }
 
