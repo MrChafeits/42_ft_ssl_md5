@@ -42,8 +42,6 @@ struct	s_sql256
 
 void	ft_sha224_init(t_sha256 *c);
 void	ft_sha224_update(t_sha256 *c, t_u8 *msg, t_u32 len);
-void	ft_sha224_final(t_sha256 *c, t_u8 *md);
-void	ft_sha224_init(t_sha256 *c);
 void	ft_sha224_finish(t_sha256 *c, t_u8 *md);
 void	ft_sha224_final(t_sha256 *c, t_u8 *md);
 

@@ -16,6 +16,7 @@
 # include <ft_md5.h>
 # include <ft_sha1.h>
 # include <ft_sha256.h>
+# include <ft_sha3.h>
 # include <ft_tiger.h>
 # include <ft_whirlpool.h>
 # include <ft_sha512.h>
@@ -29,6 +30,9 @@ static void	(*g_init[])() = {
 	[SHA512] = ft_sha512_init,
 	[SHA512224] = ft_sha512224_init,
 	[SHA512256] = ft_sha512256_init,
+	[SHA3] = ft_sha3_init,
+	[TIGER] = ft_tiger_init,
+	[WHIRL] = ft_whrl_init,
 };
 
 static void	(*g_final[])() = {
@@ -40,6 +44,9 @@ static void	(*g_final[])() = {
 	[SHA512] = ft_sha512_final,
 	[SHA512224] = ft_sha512_final,
 	[SHA512256] = ft_sha512_final,
+	[SHA3] = ft_sha3_final,
+	[TIGER] = ft_tiger_final,
+	[WHIRL] = ft_whrl_final,
 };
 
 static void	(*g_update[])() = {
@@ -51,6 +58,9 @@ static void	(*g_update[])() = {
 	[SHA512] = ft_sha512_update,
 	[SHA512224] = ft_sha512_update,
 	[SHA512256] = ft_sha512_update,
+	[SHA3] = ft_sha3_update,
+	[TIGER] = ft_tiger_update,
+	[WHIRL] = ft_whrl_update,
 };
 
 static int	g_dgst_size[] = {
@@ -62,9 +72,8 @@ static int	g_dgst_size[] = {
 	[SHA512] = SHA512_DIGEST_SIZE,
 	[SHA512224] = SHA224_DIGEST_SIZE,
 	[SHA512256] = SHA256_DIGEST_SIZE,
-	[TIGER128] = TIGER128_DIGEST_SIZE,
-	[TIGER160] = TIGER160_DIGEST_SIZE,
-	[TIGER192] = TIGER192_DIGEST_SIZE,
+	[SHA3] = SHA3_DIGEST_SIZE,
+	[TIGER] = TIGER_DIGEST_SIZE,
 	[WHIRL] = WHIRL_DIGEST_SIZE,
 };
 int		get_command_(const char *s);

@@ -6,7 +6,7 @@
 #    By: callen <callen@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/23 22:04:17 by callen            #+#    #+#              #
-#    Updated: 2019/04/03 14:36:02 by callen           ###   ########.fr        #
+#    Updated: 2019/04/04 13:19:19 by callen           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,12 +21,12 @@ AFLAGS := $(DFLAGS) -fsanitize=address
 OFLAGS := $(CFLAGS) -O2
 
 LIBDIR := libft
-INCDIR := includes/
+INCDIR := includes
 OBJDIR := .obj/
 SRCDIR := srcs/
 
-INCFLAGS := -I $(INCDIR) -I $(LIBDIR)/$(INCDIR)
-LIBFLAGS := -L $(LIBDIR) -lft
+INCFLAGS := -I$(INCDIR) -I$(LIBDIR)/$(INCDIR)
+LIBFLAGS := -L$(LIBDIR) -lft
 DEBGLIBS := $(LIBDIR)/d_libft.a
 ASANLIBS := $(LIBDIR)/a_libft.a
 FRAMWRKS :=
@@ -35,7 +35,8 @@ SRC := main.c ft_md5.c ft_sha1.c \
 	ft_sha1_transform.c ft_sha224.c ft_sha256.c \
 	ft_sha256_transform.c \
 	ft_sha512.c ft_sha512_transform.c ft_ssl_utils.c \
-	ft_ssl_hash_utils.c ft_md5_utils.c ft_sha384_utils.c
+	ft_ssl_hash_utils.c ft_md5_utils.c ft_sha384_utils.c ft_tiger.c \
+	ft_whirlpool.c ft_sha3.c
 OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
 
 NRM := $(shell which pynorme)

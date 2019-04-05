@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 00:03:28 by callen            #+#    #+#             */
-/*   Updated: 2019/04/02 21:29:35 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/04 13:19:49 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,13 @@ struct	s_hash
 enum
 {
 	MD5_DIGEST_SIZE = (128 / 8),
-	TIGER128_DIGEST_SIZE = (128 / 8),
-	TIGER160_DIGEST_SIZE = (160 / 8),
-	TIGER192_DIGEST_SIZE = (192 / 8),
+	TIGER_DIGEST_SIZE = (192 / 8),
 	SHA1_DIGEST_SIZE = (160 / 8),
 	SHA224_DIGEST_SIZE = (224 / 8),
 	SHA256_DIGEST_SIZE = (256 / 8),
 	SHA384_DIGEST_SIZE = (384 / 8),
 	SHA512_DIGEST_SIZE = (512 / 8),
+	SHA3_DIGEST_SIZE = (256 / 8),
 	WHIRL_DIGEST_SIZE = (512 / 8)
 };
 enum	e_dgsts
@@ -81,9 +80,8 @@ enum	e_dgsts
 	SHA512,
 	SHA512224,
 	SHA512256,
-	TIGER128,
-	TIGER160,
-	TIGER192,
+	SHA3,
+	TIGER,
 	WHIRL
 };
 
@@ -100,9 +98,8 @@ static char	*g_h[] = {
 	"sha512",
 	"sha512224",
 	"sha512256",
-	"tiger128",
-	"tiger160",
-	"tiger192",
+	"sha3",
+	"tiger",
 	"whirlpool",
 };
 
@@ -114,13 +111,13 @@ static char	*g_c[] = {
 
 int		panic(int fd, char *str);
 void	ft_ssl_help(t_hash *h);
-void	ft_md5_process(t_hash *h);
-void	ft_sha1_process(t_hash *h);
-void	ft_sha224_process(t_hash *h);
-void	ft_sha256_process(t_hash *h);
-void	ft_sha384_process(t_hash *h);
-void	ft_sha512_process(t_hash *h);
-void	ft_sha512224_process(t_hash *h);
-void	ft_sha512256_process(t_hash *h);
+// void	ft_md5_process(t_hash *h);
+// void	ft_sha1_process(t_hash *h);
+// void	ft_sha224_process(t_hash *h);
+// void	ft_sha256_process(t_hash *h);
+// void	ft_sha384_process(t_hash *h);
+// void	ft_sha512_process(t_hash *h);
+// void	ft_sha512224_process(t_hash *h);
+// void	ft_sha512256_process(t_hash *h);
 
 #endif
