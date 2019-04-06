@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 20:16:14 by callen            #+#    #+#             */
-/*   Updated: 2019/04/02 20:16:16 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/05 22:19:27 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <ft_sha512.h>
 
 static void	(*g_init[])() = {
+	[INVAL] = ft_ssl_command_usage,
 	[MD5] = ft_md5_init,
 	[SHA1] = ft_sha1_init,
 	[SHA224] = ft_sha224_init,
@@ -36,6 +37,7 @@ static void	(*g_init[])() = {
 };
 
 static void	(*g_final[])() = {
+	[INVAL] = ft_ssl_command_usage,
 	[MD5] = ft_md5_final,
 	[SHA1] = ft_sha1_final,
 	[SHA224] = ft_sha224_final,
@@ -50,6 +52,7 @@ static void	(*g_final[])() = {
 };
 
 static void	(*g_update[])() = {
+	[INVAL] = ft_ssl_command_usage,
 	[MD5] = ft_md5_update,
 	[SHA1] = ft_sha1_update,
 	[SHA224] = ft_sha224_update,
@@ -64,6 +67,7 @@ static void	(*g_update[])() = {
 };
 
 static int	g_dgst_size[] = {
+	[INVAL] = INVAL_DIGEST_SIZE,
 	[MD5] = MD5_DIGEST_SIZE,
 	[SHA1] = SHA1_DIGEST_SIZE,
 	[SHA224] = SHA224_DIGEST_SIZE,
@@ -76,7 +80,7 @@ static int	g_dgst_size[] = {
 	[TIGER] = TIGER_DIGEST_SIZE,
 	[WHIRL] = WHIRL_DIGEST_SIZE,
 };
-int		get_command_(const char *s);
+t_i32v	get_command_(t_hash *h, const char *s);
 int		len_strtab(char **t);
 void	ft_free_strtab(char ***tab);
 int		panic_(int fd, char *str);

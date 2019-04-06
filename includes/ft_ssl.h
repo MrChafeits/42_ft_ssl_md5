@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 00:03:28 by callen            #+#    #+#             */
-/*   Updated: 2019/04/04 13:19:49 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/05 23:05:27 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FT_SSL_H
 
 # include <sys/stat.h>
+# include <string.h>
 # include <stdint.h>
 # include <fcntl.h>
 # include <errno.h>
@@ -34,9 +35,14 @@ typedef uint64_t	t_u64;
 typedef uint32_t	t_u32;
 typedef uint16_t	t_u16;
 typedef uint8_t	t_u8;
+typedef struct s_i32v	t_i32v;
 typedef struct s_hash	t_hash;
 typedef enum e_dgsts	t_dgsts;
-
+struct	s_i32v
+{
+	int	x;
+	int	y;
+};
 struct	s_hash
 {
 	void	(*f)(t_hash*);
@@ -49,16 +55,19 @@ struct	s_hash
 	char	**av;
 	int		dgst_len;
 	int		ac;
-	int		id;
+	t_i32v	id;
 	int		bsd;
 	int		echo;
 	int		quiet;
 	int		string;
 	int		check;
+	int		shell;
+	int		help;
 };
 
 enum
 {
+	INVAL_DIGEST_SIZE = (0),
 	MD5_DIGEST_SIZE = (128 / 8),
 	TIGER_DIGEST_SIZE = (192 / 8),
 	SHA1_DIGEST_SIZE = (160 / 8),
@@ -69,6 +78,15 @@ enum
 	SHA3_DIGEST_SIZE = (256 / 8),
 	WHIRL_DIGEST_SIZE = (512 / 8)
 };
+
+static char	*g_s[] = {
+	"ciphers",
+	"dgst",
+	"help",
+	"version",
+	NULL
+};
+
 enum	e_dgsts
 {
 	INVAL,
@@ -85,10 +103,6 @@ enum	e_dgsts
 	WHIRL
 };
 
-static char	*g_s[] = {
-	"help"
-};
-
 static char	*g_h[] = {
 	"md5",
 	"sha1",
@@ -96,21 +110,36 @@ static char	*g_h[] = {
 	"sha256",
 	"sha384",
 	"sha512",
-	"sha512224",
-	"sha512256",
-	"sha3",
+	"sha512-224",
+	"sha512-256",
+	"sha3-256",
 	"tiger",
 	"whirlpool",
+	NULL
 };
 
 static char	*g_c[] = {
 	"des",
 	"des-cbc",
+	"des-cfb",
 	"des-ecb",
+	"des-ede",
+	"des-ede-cbc",
+	"des-ede-cfb",
+	"des-ede-ofb",
+	"des-ede3",
+	"des-ede3-cbc",
+	"des-ede3-cfb",
+	"des-ed3-ofb",
+	"des-ofb",
+	"des3",
+	"desx",
+	NULL
 };
 
 int		panic(int fd, char *str);
 void	ft_ssl_help(t_hash *h);
+void	ft_ssl_command_usage(t_hash *h);
 // void	ft_md5_process(t_hash *h);
 // void	ft_sha1_process(t_hash *h);
 // void	ft_sha224_process(t_hash *h);

@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 20:07:28 by callen            #+#    #+#             */
-/*   Updated: 2019/04/02 20:07:28 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/05 22:44:54 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,29 @@ int		panic_(int fd, char *str)
 	return (-1);
 }
 
-int		get_command_(const char *s)
+t_i32v	get_command_(t_hash *h, const char *s)
 {
-	register int	ret;
+	static char	**hecc[] = {(char**)&g_s, (char**)&g_h, (char**)&g_c, 0};
+	t_i32v		i;
 
-	ret = -1;
-	while (g_h[++ret])
-		if (ft_strequ(g_h[ret], s))
+	if (ft_strequ("help", s))
+		ft_ssl_help(h);
+	i.y = -1;
+	while (hecc[++i.y])
+	{
+		i.x = -1;
+		while (hecc[i.y][++i.x])
+			if (ft_strequ(hecc[i.y][i.x], s))
+				break ;
+		if (!hecc[i.y][i.x])
+			continue ;
+		else
+		{
+			i.x++;
 			break ;
-	if (!g_h[ret])
-		ret = INVAL;
-	else
-		ret++;
-	return (ret);
+		}
+	}
+	return (i);
 }
 
 int		len_strtab(char **t)

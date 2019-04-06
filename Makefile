@@ -6,7 +6,7 @@
 #    By: callen <callen@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/23 22:04:17 by callen            #+#    #+#              #
-#    Updated: 2019/04/04 13:19:19 by callen           ###   ########.fr        #
+#    Updated: 2019/04/05 23:08:16 by callen           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ ifeq ($(NRM),)
 		echo ~/.usr_bin/norminette.py;\
 	fi)"
 endif
-NORME := $(addsuffix *.h,$(INCDIR)) $(addsuffix *.c,$(SRCDIR))
+NORME := $(addsuffix *.h,$(INCDIR)/) $(addsuffix *.c,$(SRCDIR))
 
 .PHONY: all debug clean dclean fclean re tags libft j k asan norme codesize
 
@@ -83,7 +83,7 @@ fclean: clean
 re: fclean all
 
 tags:
-	ctags $(addsuffix *.h,$(INCDIR)) $(addsuffix *.c,$(SRCDIR))
+	ctags $(addsuffix *.h,$(INCDIR)/) $(addsuffix *.c,$(SRCDIR))
 
 $(addprefix $(OBJDIR), %.o): $(addprefix $(SRCDIR), %.c)
 	$(CC) $(INCFLAGS) $(CFLAGS) -o $@ -c $<
