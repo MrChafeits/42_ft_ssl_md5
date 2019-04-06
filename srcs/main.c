@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 22:11:16 by callen            #+#    #+#             */
-/*   Updated: 2019/04/05 23:13:35 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/06 01:49:21 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	init_hash(t_hash *h)
 			ft_ssl_command_usage(h);
 	}
 	if (optind == 1 && h->ac < 3 && h->id.x)
-		h->echo = 1;
+		h->shell = 1;
 	h->init = g_init[h->id.x];
 	h->update = g_update[h->id.x];
 	h->final = g_final[h->id.x];

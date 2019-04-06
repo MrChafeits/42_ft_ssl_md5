@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 22:23:22 by callen            #+#    #+#             */
-/*   Updated: 2019/04/05 23:12:39 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/06 01:49:52 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,11 @@ void	hash_print(t_hash *h, int fd)
 	h->init(g_ctx[h->id.x]);
 	while (1)
 	{
-		i = read(fd, buf, BUFSIZE);
-		if (i <= 0)
+		if ((i = read(fd, buf, BUFSIZE)) <= 0)
 			break ;
 		h->update(g_ctx[h->id.x], (t_u8*)(&buf), i);
 	}
-	if (fd == STDIN_FILENO)
+	if (h->echo && fd == STDIN_FILENO)
 		ft_printf("%s", buf);
 	h->final(g_ctx[h->id.x], (t_u8*)(&md));
 	if (!h->quiet && fd != STDIN_FILENO && !h->bsd)
@@ -140,7 +139,7 @@ void	hash_digest_check(t_hash *h)
 
 void	hash_process(t_hash *h)
 {
-	if (h->echo)
+	if (h->shell || h->echo)
 		hash_print(h, STDIN_FILENO);
 	exit(hash_digest_files(h));
 }
