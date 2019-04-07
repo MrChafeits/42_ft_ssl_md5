@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 20:16:14 by callen            #+#    #+#             */
-/*   Updated: 2019/04/05 22:19:27 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/06 21:11:10 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,18 @@
 # include <ft_tiger.h>
 # include <ft_whirlpool.h>
 # include <ft_sha512.h>
+
+typedef union u_ctx	t_ctx;
+union	u_ctx
+{
+	t_md5_ctx	md5;
+	t_s1ctx		sha1;
+	t_sha256	sha2;
+	t_sha512	sha5;
+	t_sha3_ctx	sha3;
+	t_tiger_ctx	tig;
+	t_whrl_ctx	whrl;
+};
 
 static void	(*g_init[])() = {
 	[INVAL] = ft_ssl_command_usage,
@@ -80,11 +92,13 @@ static int	g_dgst_size[] = {
 	[TIGER] = TIGER_DIGEST_SIZE,
 	[WHIRL] = WHIRL_DIGEST_SIZE,
 };
+
 t_i32v	get_command_(t_hash *h, const char *s);
 int		len_strtab(char **t);
 void	ft_free_strtab(char ***tab);
 int		panic_(int fd, char *str);
 void	hash_process(t_hash *h);
 int		cmp_hash_str(t_hash *h, const char *s, t_u8 *md);
+int		str_in_strtab(const char *s, const char **t);
 
 #endif

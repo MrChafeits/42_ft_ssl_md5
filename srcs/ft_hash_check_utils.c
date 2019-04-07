@@ -2,6 +2,17 @@
 #include <stdlib.h>
 #include <internal.h>
 
+int	str_in_strtab(const char *s, const char **t)
+{
+	register int i;
+
+	i = -1;
+	while (t[++i])
+		if (ft_strequ(s, t[i]))
+			break ;
+	return (t[i] != NULL);
+}
+
 #ifdef STOB
 # undef STOB
 #endif

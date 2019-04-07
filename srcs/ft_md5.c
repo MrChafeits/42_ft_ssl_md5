@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 20:04:31 by callen            #+#    #+#             */
-/*   Updated: 2019/04/02 20:04:32 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/06 21:50:48 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	ft_md5_final(t_md5_ctx *context, t_u8 digest[16])
 {
 	register t_u32	index;
 	register t_u32	padlen;
-	unsigned char			bits[8];
+	unsigned char	bits[8];
 
 	index = (context->count[0] >> 3) & 0x3F;
 	padlen = (index < 56) ? (56 - index) : (120 - index);
@@ -79,13 +79,14 @@ void	ft_md5_encode(t_u8 *output, t_u32 *input, t_u32 len)
 
 void	ft_md5_decode(t_u32 *output, t_u8 *input, t_u32 len)
 {
-	register t_u32 i;
-	register t_u32 j;
+	register t_u32	i;
+	register t_u32	j;
 
 	i = 0;
 	j = 0;
-	while (j + 17 < len)
+	while (j < len)
 	{
+		/* ft_printf("i(%d) j(%d)\n",i,j); */
 		output[i] = (input[j]) |
 			(input[j + 1] << 8) |
 			(input[j + 2] << 16) |

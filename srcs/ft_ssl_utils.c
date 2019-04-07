@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_ssl.h>
+#include <internal.h>
 #include <libft.h>
 
 int		panic_(int fd, char *str)
@@ -28,6 +28,8 @@ t_i32v	get_command_(t_hash *h, const char *s)
 
 	if (ft_strequ("help", s))
 		ft_ssl_help(h);
+	if (!str_in_strtab(s, (const char**)&g_h))
+		ft_ssl_command_usage(h);
 	i.y = -1;
 	while (hecc[++i.y])
 	{
