@@ -45,24 +45,31 @@ struct	s_i32v
 };
 struct	s_hash
 {
-	void	(*f)(t_hash*);
-	void	(*init)();
-	void	(*update)();
-	void	(*final)();
-	void	(*print)(t_hash*);
-	void	*ctx;
-	char	*path;
-	char	**av;
-	int		dgst_len;
-	int		ac;
-	t_i32v	id;
-	int		bsd;
-	int		echo;
-	int		quiet;
-	int		string;
-	int		check;
-	int		shell;
-	int		help;
+	void		(*f)(t_hash*);
+	void		(*init)();
+	void		(*update)();
+	void		(*final)();
+	void		(*print)(t_hash*);
+	void		*ctx;
+	char		*path;
+	char		*cpth;
+	char		**av;
+	char		*strarg;
+	char		**t;
+	struct stat	st;
+	int			cfd;
+	int			err;
+	int			dgst_len;
+	int			ac;
+	int			c;
+	t_i32v		id;
+	int			bsd;
+	int			echo;
+	int			quiet;
+	int			string;
+	int			check;
+	int			shell;
+	int			help;
 };
 
 enum
@@ -137,16 +144,9 @@ static char	*g_c[] = {
 	NULL
 };
 
-int		panic(int fd, char *str);
+int		panic_(int fd, char *str);
 void	ft_ssl_help(t_hash *h);
 void	ft_ssl_command_usage(t_hash *h);
-// void	ft_md5_process(t_hash *h);
-// void	ft_sha1_process(t_hash *h);
-// void	ft_sha224_process(t_hash *h);
-// void	ft_sha256_process(t_hash *h);
-// void	ft_sha384_process(t_hash *h);
-// void	ft_sha512_process(t_hash *h);
-// void	ft_sha512224_process(t_hash *h);
-// void	ft_sha512256_process(t_hash *h);
+void	ft_ssl_command_help(t_hash *h);
 
 #endif

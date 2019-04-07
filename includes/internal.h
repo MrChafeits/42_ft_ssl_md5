@@ -85,5 +85,6 @@ int		len_strtab(char **t);
 void	ft_free_strtab(char ***tab);
 int		panic_(int fd, char *str);
 void	hash_process(t_hash *h);
+int		cmp_hash_str(t_hash *h, const char *s, t_u8 *md);
 
 #endif

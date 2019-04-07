@@ -203,6 +203,7 @@ static void	keccakf1600(t_u64 a[5][5])
 		pi(a);
 		chi(a);
 		iota(a, i);
+		i++;
 	}
 }
 
@@ -258,6 +259,7 @@ void	sha3_squeeze(t_u64 a[5][5], t_u8 *out, size_t len, size_t r)
 				{
 					*out++ = (t_u8)ai;
 					ai >>= 8;
+					i++;
 				}
 				return ;
 			}
@@ -287,24 +289,26 @@ void	sha3_sponge(const t_u8 *inp, size_t len, t_u8 *out, size_t d, size_t r)
 	sha3_squeeze(a, out, d, r);
 }
 
-static const t_u8	pingors[24] = {
-	10, 7, 11, 17, 18, 3,
-	5, 16, 8, 21, 24, 4,
-	15, 23, 19, 13, 12, 2,
-	20, 14, 22, 9, 6, 1
-};
-static const t_u8 rhoblo[24] = {
-	1, 3, 6, 10, 15, 21,
-	28, 36, 45, 55, 2, 14,
-	27, 41, 56, 8, 25, 43,
-	62, 18, 39, 61, 20, 44
-};
+/*
+**static const t_u8	pingors[24] = {
+**	10, 7, 11, 17, 18, 3,
+**	5, 16, 8, 21, 24, 4,
+**	15, 23, 19, 13, 12, 2,
+**	20, 14, 22, 9, 6, 1
+**};
+**static const t_u8 rhoblo[24] = {
+**	1, 3, 6, 10, 15, 21,
+**	28, 36, 45, 55, 2, 14,
+**	27, 41, 56, 8, 25, 43,
+**	62, 18, 39, 61, 20, 44
+**};
+*/
 #define ROL(x, s) (((x) << s) | ((x) >> (64 - s)))
 #define REPEAT6(e) e e e e e e
 #define REPEAT24(e) REPEAT6(e e e e)
 #define REPEAT5(e) e e e e e
 #define FOR5(v, s, e) v = 0; REPEAT5(e; v+= s;)
-static inline void	keccakf(void *state)
+/* static inline void	keccakf(t_sha3_ctx *c)
 {
 	t_u64	*a;
 	t_u64	b[5];
@@ -312,10 +316,10 @@ static inline void	keccakf(void *state)
 	t_u8	x;
 	t_u8	y;
 
-	a = (t_u64*)state;
+	a = (t_u64*)c->a;
 	ft_memset(b, 0, sizeof(b));
 	t = 0;
-	for (int i = 0; i < 24; i++) {
+	for (c->i = 0; c->i < 24; c->i++) {
 		FOR5(x, 1, b[x] = 0;
 			FOR5(y, 5, b[x] ^= a[x + y];))
 		FOR5(x, 1,
@@ -332,25 +336,99 @@ static inline void	keccakf(void *state)
 				b[x] = a[y + x];)
 			FOR5(x, 1,
 				a[y + x] = b[x] ^ ((~b[(x + 1) % 5]) & b[(x + 2) % 5]);))
-		a[0] ^= iotas[i];
+		a[0] ^= iotas[c->i];
 	}
-}
-void	ft_sha3_init(t_sha3_ctx *c)
+} */
+
+static int	init(t_sha3_ctx *ctx, size_t bsz, size_t mdsz, t_u8 pad)
 {
-	c->i = 0;
-	c->w = 0;
-	c->r = 0;
+	if (bsz <= sizeof(ctx->buf))
+	{
+		ft_memset(ctx->a, 0, sizeof(ctx->a));
+		ctx->num = 0;
+		ctx->block_size = bsz;
+		ctx->md_size = mdsz;
+		ctx->pad = pad;
+		return (1);
+	}
+	return (0);
 }
 
-void	ft_sha3_update(t_sha3_ctx *c, t_u8 *msg, t_u64 len)
+static int	sha3_init(t_sha3_ctx *ctx)
 {
-	(void)c;
-	(void)msg;
-	(void)len;
+	return (init(ctx, (1600 - 256) / 8, (256 / 8), '\x06'));
+}
+
+static int	sha3_update(t_sha3_ctx *ctx, const void *msg, size_t len)
+{
+	size_t		bsz;
+	const t_u8	*inp = msg;
+	size_t		num;
+	size_t		rem;
+
+	bsz = ctx->block_size;
+	if (len == 0)
+		return (1);
+	if ((num = ctx->num) != 0)
+	{
+		rem = bsz - num;
+		if (len < rem)
+		{
+			ft_memcpy(ctx->buf + num, inp, len);
+			ctx->num += len;
+			return (1);
+		}
+		ft_memcpy(ctx->buf + num, inp, rem);
+		inp += rem;
+		len -= rem;
+		(void)sha3_absorb(ctx->a, ctx->buf, bsz, bsz);
+		ctx->num = 0;
+	}
+	if (len >= bsz)
+		rem = sha3_absorb(ctx->a, inp, len, bsz);
+	else
+		rem = len;
+	if (rem)
+	{
+		ft_memcpy(ctx->buf, inp + len - rem, rem);
+		ctx->num = rem;
+	}
+	return (1);
+}
+
+static int	sha3_final(t_sha3_ctx *ctx, t_u8 *md)
+{
+	size_t	bsz;
+	size_t	num;
+
+	bsz = ctx->block_size;
+	num = ctx->num;
+	ft_memset(ctx->buf + num, 0, bsz - num);
+	ctx->buf[num] = ctx->pad;
+	ctx->buf[bsz - 1] |= 0x80;
+	(void)sha3_absorb(ctx->a, ctx->buf, bsz, bsz);
+	sha3_squeeze(ctx->a, md, ctx->md_size, bsz);
+	return (1);
+}
+
+void	ft_sha3_init(t_sha3_ctx *ctx)
+{
+	if (!(sha3_init(ctx)))
+		exit(panic_(-1, "Error in digest init."));
+}
+
+void	ft_sha3_update(t_sha3_ctx *ctx, t_u8 *msg, t_u64 len)
+{
+	(void)sha3_update(ctx, msg, len);
 }
 
 void	ft_sha3_final(t_sha3_ctx *c, t_u8 *md)
 {
-	(void)c;
-	(void)md;
+	(void)sha3_final(c, md);
 }
+
+#undef ROL
+#undef REPEAT6
+#undef REPEAT24
+#undef REPEAT5
+#undef FOR5

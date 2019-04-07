@@ -24,7 +24,7 @@ void	ft_ssl_help(t_hash *h)
 			h->av[0]);
 	else
 	{
-		ft_dprintf(2, "\nStandard commands:\n");
+		ft_dprintf(2, "Standard commands:\n");
 		i = -1;
 		while (g_s[++i])
 			ft_dprintf(2, FMTSTR, g_s[i]);
@@ -51,7 +51,7 @@ void	ft_ssl_command_usage(t_hash *h)
 	else
 	{
 		ft_dprintf(2, "%s: Unrecognized flag %s\n", h->av[1], h->av[optind]);
-		ft_dprintf(2, "%s: Use -help for summary.\n", h->av[1]);
+		ft_dprintf(2, "%s: Use -h for summary.\n", h->av[1]);
 	}
 	exit(EXIT_FAILURE);
 }
@@ -78,29 +78,30 @@ void	shell_prompt(t_hash *h)
 		ft_printf("ft_ssl> ");
 	}
 }
-
+#define STRMODE {h->string = 1; h->strarg = optarg;}
 void	init_hash(t_hash *h)
 {
-	int		ch;
+	int		c;
 
 	h->id = get_command_(h, h->av[1]);
-	while (h->ac >= 3 && (ch = ft_getopt(h->ac, h->av + 1, "cpqrs")) != -1)
+	while (h->ac > 2 && (c = ft_getopt(h->ac - 1, h->av + 1, "chpqrs:")) != -1)
 	{
-		if (ch == 'c')
+		if (c == 'c')
 			h->check = 1;
-		else if (ch == 'p')
+		else if (c == 'h')
+			ft_ssl_command_help(h);
+		else if (c == 'p')
 			h->echo = 1;
-		else if (ch == 'q')
+		else if (c == 'q')
 			h->quiet = 1;
-		else if (ch == 'r')
+		else if (c == 'r')
 			h->bsd = 1;
-		else if (ch == 's')
-			h->string = 1;
+		else if (c == 's')
+			STRMODE
 		else
 			ft_ssl_command_usage(h);
 	}
-	if (optind == 1 && h->ac < 3 && h->id.x)
-		h->shell = 1;
+	h->shell = (optind == 1 && h->ac < 3 && h->id.x && !h->string) ? 1 : 0;
 	h->init = g_init[h->id.x];
 	h->update = g_update[h->id.x];
 	h->final = g_final[h->id.x];

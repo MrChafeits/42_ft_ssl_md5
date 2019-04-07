@@ -24,6 +24,13 @@ typedef struct s_sha3_ctx	t_sha3_ctx;
 struct	s_sha3_ctx
 {
 	t_u64	a[5][5];
+	size_t	block_size;
+	size_t	md_size;
+	size_t	num;
+	t_u8	buf[1600 / 8 - 32];
+	t_u8	pad;//bleb
+	t_u8	*inp;
+	t_u8	*out;
 	size_t	len;
 	size_t	i;
 	size_t	w;

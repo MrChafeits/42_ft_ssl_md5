@@ -68,3 +68,58 @@ void	ft_free_strtab(char ***tab)
 	}
 	free((*tab));
 }
+
+void	ft_ssl_command_help(t_hash *h)
+{
+	if (h->id.y == 0)
+	{
+		ft_dprintf(2, "Usage: %s [options]\n", h->av[1]);
+		ft_dprintf(2, " %-20s%s\n", "-h", "Display this summary");
+	}
+	else if (h->id.y == 1)
+	{
+		ft_dprintf(2, "Usage: %s [options] [file...]\n", h->av[1]);
+		ft_dprintf(2, "  file... files to digest (default is stdin)\n");
+		ft_dprintf(2, " %-11s%s\n", "-h", "Display this summary");
+		ft_dprintf(2, " %-11s%s\n", "-c", "Verify checksum from file");
+		ft_dprintf(2, " %-11s%s\n", "-p", "Echo stdin to stdout and append hash to stdout");
+		ft_dprintf(2, " %-11s%s\n", "-q", "Disable printing of digest algorithm and file path");
+		ft_dprintf(2, " %-11s%s\n", "-r", "Use BSD output format");
+		ft_dprintf(2, " %-11s%s\n", "-s string", "Digest string");
+	}
+	else if (h->id.y == 2)
+	{
+		ft_dprintf(2, "Usage: %s [options]\n", h->av[1]);
+		ft_dprintf(2, " %-20s%s\n", "-h", "Display this summary");
+	}
+	exit(EXIT_SUCCESS);
+}
+
+/*
+**Usage: gost [options] [file...]
+**  file... files to digest (default is stdin)
+** -help               Display this summary
+** -c                  Print the digest with separating colons
+** -r                  Print the digest in coreutils format
+** -out outfile        Output to filename rather than stdout
+** -passin val         Input file pass phrase source
+** -sign val           Sign digest using private key
+** -verify val         Verify a signature using public key
+** -prverify val       Verify a signature using private key
+** -signature infile   File with signature to verify
+** -keyform format     Key file format (PEM or ENGINE)
+** -hex                Print as hex dump
+** -binary             Print in binary form
+** -d                  Print debug info
+** -debug              Print debug info
+** -fips-fingerprint   Compute HMAC with the key used in OpenSSL-FIPS fprint
+** -hmac val           Create hashed MAC with key
+** -mac val            Create MAC (not necessarily HMAC)
+** -sigopt val         Signature parameter in n:v form
+** -macopt val         MAC algorithm parameters in n:v form or key
+** -*                  Any supported digest
+** -rand val           Load the file(s) into the random number generator
+** -writerand outfile  Write random data to the specified file
+** -engine val         Use engine e, possibly a hardware device
+** -engine_impl        Also use engine given by -engine for digest operations
+*/

@@ -36,7 +36,7 @@ SRC := main.c ft_md5.c ft_sha1.c \
 	ft_sha256_transform.c \
 	ft_sha512.c ft_sha512_transform.c ft_ssl_utils.c \
 	ft_ssl_hash_utils.c ft_md5_utils.c ft_sha384_utils.c ft_tiger.c \
-	ft_whirlpool.c ft_sha3.c
+	ft_whirlpool.c ft_sha3.c ft_hash_check_utils.c
 OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
 
 NRM := $(shell which pynorme)
@@ -56,6 +56,12 @@ all: $(NAME)
 libft:
 	make -C libft
 
+libdbg:
+	make -C libft debug
+
+libasan:
+	make -C libft asan
+
 $(NAME): libft $(OBJDIR) $(OBJ)
 	$(CC) $(INCFLAGS) $(LIBFLAGS) -o $(NAME) $(OBJ)
 
@@ -63,21 +69,22 @@ j: debug
 
 k: fclean dclean
 
-asan: libft
-	$(CC) $(AFLAGS) $(INCFLAGS) $(LIBFLAGS) -o $(ANAM) $(addprefix $(SRCDIR), $(SRC))
+asan: libasan
+	$(CC) $(AFLAGS) $(INCFLAGS) $(ASANLIBS) -o $(ANAM) $(addprefix $(SRCDIR), $(SRC))
 
-debug: libft
-	$(CC) $(DFLAGS) $(INCFLAGS) $(LIBFLAGS) -o $(DNAM) $(addprefix $(SRCDIR), $(SRC))
+debug: libdbg
+	$(CC) $(DFLAGS) $(INCFLAGS) $(DEBGLIBS) -o $(DNAM) $(addprefix $(SRCDIR), $(SRC))
 
 dclean:
 	rm -rf $(DNAM) $(DNAM).dSYM $(ANAM) $(ANAM).dSYM
+	make -C libft dclean
 
 clean:
-	make -C libft/ clean
+	make -C libft clean
 	rm -Rf $(OBJDIR)
 
 fclean: clean
-	make -C libft/ fclean
+	make -C libft fclean
 	rm -f $(NAME)
 
 re: fclean all

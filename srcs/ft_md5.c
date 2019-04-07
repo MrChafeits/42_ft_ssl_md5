@@ -18,9 +18,9 @@ static t_u8 g_padding[64] = {0x80, 0x00};
 
 void	ft_md5_update(t_md5_ctx *context, t_u8 *input, t_u32 inputlen)
 {
-	register unsigned int i;
-	register unsigned int index;
-	register unsigned int partlen;
+	register t_u32 i;
+	register t_u32 index;
+	register t_u32 partlen;
 
 	index = (context->count[0] >> 3) & 0x3F;
 	partlen = 64 - index;
@@ -47,8 +47,8 @@ void	ft_md5_update(t_md5_ctx *context, t_u8 *input, t_u32 inputlen)
 
 void	ft_md5_final(t_md5_ctx *context, t_u8 digest[16])
 {
-	register unsigned int	index;
-	register unsigned int	padlen;
+	register t_u32	index;
+	register t_u32	padlen;
 	unsigned char			bits[8];
 
 	index = (context->count[0] >> 3) & 0x3F;
@@ -61,8 +61,8 @@ void	ft_md5_final(t_md5_ctx *context, t_u8 digest[16])
 
 void	ft_md5_encode(t_u8 *output, t_u32 *input, t_u32 len)
 {
-	register unsigned int i;
-	register unsigned int j;
+	register t_u32 i;
+	register t_u32 j;
 
 	i = 0;
 	j = 0;
@@ -77,14 +77,14 @@ void	ft_md5_encode(t_u8 *output, t_u32 *input, t_u32 len)
 	}
 }
 
-void	ft_md5_decode(t_u32 *output, t_u8 *input, unsigned int len)
+void	ft_md5_decode(t_u32 *output, t_u8 *input, t_u32 len)
 {
-	register unsigned int i;
-	register unsigned int j;
+	register t_u32 i;
+	register t_u32 j;
 
 	i = 0;
 	j = 0;
-	while (j < len)
+	while (j + 17 < len)
 	{
 		output[i] = (input[j]) |
 			(input[j + 1] << 8) |
@@ -97,11 +97,11 @@ void	ft_md5_decode(t_u32 *output, t_u8 *input, unsigned int len)
 
 void	ft_md5_transform(t_u32 state[4], t_u8 block[64])
 {
-	register unsigned int	a;
-	register unsigned int	b;
-	register unsigned int	c;
-	register unsigned int	d;
-	unsigned int			x[64];
+	register t_u32	a;
+	register t_u32	b;
+	register t_u32	c;
+	register t_u32	d;
+	t_u32			x[64];
 
 	a = state[0];
 	b = state[1];
