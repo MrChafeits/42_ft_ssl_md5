@@ -20,6 +20,7 @@
 ** TODO: sha3_init, sha3_update, sha3_final
 ** Also do I actually want to implement this
 */
+
 typedef struct s_sha3_ctx	t_sha3_ctx;
 struct	s_sha3_ctx
 {
@@ -37,6 +38,7 @@ struct	s_sha3_ctx
 	size_t	r;
 };
 
+void	unrolled_keccakf1600(uint64_t a[5][5]);
 void	ft_sha3_init(t_sha3_ctx *c);
 void	ft_sha3_update(t_sha3_ctx *c, t_u8 *msg, t_u64 len);
 void	ft_sha3_final(t_sha3_ctx *c, t_u8 *md);

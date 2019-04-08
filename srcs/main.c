@@ -6,13 +6,17 @@
 /*   By: callen <callen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/29 22:11:16 by callen            #+#    #+#             */
-/*   Updated: 2019/04/06 01:49:21 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/07 21:17:57 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ssl.h>
 #include <internal.h>
 #include "libft.h"
+
+#ifdef FMTSTR
+# undef FMTSTR
+#endif
 #define FMTSTR ((!((i + 1) % 4) && i) ? "%-18s\n" : "%-18s")
 
 void	ft_ssl_help(t_hash *h)
@@ -33,7 +37,7 @@ void	ft_ssl_help(t_hash *h)
 		i = -1;
 		while (g_h[++i])
 			ft_dprintf(2, FMTSTR, g_h[i]);
-		(i + 1) % 4 ? ft_printf("\n") : ft_printf("\n\n");
+		(i + 1) % 4 ? ft_printf("\n\n") : ft_printf("\n\n");
 		ft_dprintf(2, "Cipher commands:\n");
 		i = -1;
 		while (g_c[++i])
@@ -46,8 +50,10 @@ void	ft_ssl_help(t_hash *h)
 void	ft_ssl_command_usage(t_hash *h)
 {
 	if (h->ac <= 2)
+	{
 		ft_dprintf(2, "Invalid command \'%s\'; type \"help\" for a list.\n",
-			h->av[1]);
+		h->av[1]);
+	}
 	else
 	{
 		ft_dprintf(2, "%s: Unrecognized flag %s\n", h->av[1], h->av[optind]);
@@ -78,29 +84,14 @@ void	shell_prompt(t_hash *h)
 		ft_printf("ft_ssl> ");
 	}
 }
-#define STRMODE {h->string = 1; h->strarg = optarg;}
+
 void	init_hash(t_hash *h)
 {
 	int		c;
 
 	h->id = get_command_(h, h->av[1]);
 	while (h->ac > 2 && (c = ft_getopt(h->ac - 1, h->av + 1, "chpqrs:")) != -1)
-	{
-		if (c == 'c')
-			h->check = 1;
-		else if (c == 'h')
-			ft_ssl_command_help(h);
-		else if (c == 'p')
-			h->echo = 1;
-		else if (c == 'q')
-			h->quiet = 1;
-		else if (c == 'r')
-			h->bsd = 1;
-		else if (c == 's')
-			STRMODE
-		else
-			ft_ssl_command_usage(h);
-	}
+		doopt(h, c);
 	h->shell = (optind == 1 && h->ac < 3 && h->id.x && !h->string) ? 1 : 0;
 	h->init = g_init[h->id.x];
 	h->update = g_update[h->id.x];
@@ -125,3 +116,4 @@ int		main(int ac, char **av)
 }
 
 #undef FMTSTR
+#undef STRMODE

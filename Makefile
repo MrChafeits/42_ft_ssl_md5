@@ -35,8 +35,8 @@ SRC := main.c ft_md5.c ft_sha1.c \
 	ft_sha1_transform.c ft_sha224.c ft_sha256.c \
 	ft_sha256_transform.c \
 	ft_sha512.c ft_sha512_transform.c ft_ssl_utils.c \
-	ft_ssl_hash_utils.c ft_md5_utils.c ft_sha384_utils.c ft_tiger.c \
-	ft_whirlpool.c ft_sha3.c ft_hash_check_utils.c
+	ft_ssl_hash_utils.c ft_md5_utils.c ft_sha384_utils.c \
+	ft_hash_check_utils.c
 OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
 
 NRM := $(shell which pynorme)

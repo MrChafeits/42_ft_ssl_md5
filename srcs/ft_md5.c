@@ -86,7 +86,6 @@ void	ft_md5_decode(t_u32 *output, t_u8 *input, t_u32 len)
 	j = 0;
 	while (j < len)
 	{
-		/* ft_printf("i(%d) j(%d)\n",i,j); */
 		output[i] = (input[j]) |
 			(input[j + 1] << 8) |
 			(input[j + 2] << 16) |

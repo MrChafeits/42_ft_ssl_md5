@@ -16,9 +16,6 @@
 # include <ft_md5.h>
 # include <ft_sha1.h>
 # include <ft_sha256.h>
-# include <ft_sha3.h>
-# include <ft_tiger.h>
-# include <ft_whirlpool.h>
 # include <ft_sha512.h>
 
 typedef union u_ctx	t_ctx;
@@ -28,9 +25,6 @@ union	u_ctx
 	t_s1ctx		sha1;
 	t_sha256	sha2;
 	t_sha512	sha5;
-	t_sha3_ctx	sha3;
-	t_tiger_ctx	tig;
-	t_whrl_ctx	whrl;
 };
 
 static void	(*g_init[])() = {
@@ -43,9 +37,6 @@ static void	(*g_init[])() = {
 	[SHA512] = ft_sha512_init,
 	[SHA512224] = ft_sha512224_init,
 	[SHA512256] = ft_sha512256_init,
-	[SHA3] = ft_sha3_init,
-	[TIGER] = ft_tiger_init,
-	[WHIRL] = ft_whrl_init,
 };
 
 static void	(*g_final[])() = {
@@ -58,9 +49,6 @@ static void	(*g_final[])() = {
 	[SHA512] = ft_sha512_final,
 	[SHA512224] = ft_sha512_final,
 	[SHA512256] = ft_sha512_final,
-	[SHA3] = ft_sha3_final,
-	[TIGER] = ft_tiger_final,
-	[WHIRL] = ft_whrl_final,
 };
 
 static void	(*g_update[])() = {
@@ -73,9 +61,6 @@ static void	(*g_update[])() = {
 	[SHA512] = ft_sha512_update,
 	[SHA512224] = ft_sha512_update,
 	[SHA512256] = ft_sha512_update,
-	[SHA3] = ft_sha3_update,
-	[TIGER] = ft_tiger_update,
-	[WHIRL] = ft_whrl_update,
 };
 
 static int	g_dgst_size[] = {
@@ -88,9 +73,6 @@ static int	g_dgst_size[] = {
 	[SHA512] = SHA512_DIGEST_SIZE,
 	[SHA512224] = SHA224_DIGEST_SIZE,
 	[SHA512256] = SHA256_DIGEST_SIZE,
-	[SHA3] = SHA3_DIGEST_SIZE,
-	[TIGER] = TIGER_DIGEST_SIZE,
-	[WHIRL] = WHIRL_DIGEST_SIZE,
 };
 
 t_i32v	get_command_(t_hash *h, const char *s);
@@ -100,5 +82,6 @@ int		panic_(int fd, char *str);
 void	hash_process(t_hash *h);
 int		cmp_hash_str(t_hash *h, const char *s, t_u8 *md);
 int		str_in_strtab(const char *s, const char **t);
+void	doopt(t_hash *h, int c);
 
 #endif

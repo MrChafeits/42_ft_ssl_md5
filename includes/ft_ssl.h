@@ -76,14 +76,11 @@ enum
 {
 	INVAL_DIGEST_SIZE = (0),
 	MD5_DIGEST_SIZE = (128 / 8),
-	TIGER_DIGEST_SIZE = (192 / 8),
 	SHA1_DIGEST_SIZE = (160 / 8),
 	SHA224_DIGEST_SIZE = (224 / 8),
 	SHA256_DIGEST_SIZE = (256 / 8),
 	SHA384_DIGEST_SIZE = (384 / 8),
 	SHA512_DIGEST_SIZE = (512 / 8),
-	SHA3_DIGEST_SIZE = (256 / 8),
-	WHIRL_DIGEST_SIZE = (512 / 8)
 };
 
 static char	*g_s[] = {
@@ -104,12 +101,20 @@ enum	e_dgsts
 	SHA384,
 	SHA512,
 	SHA512224,
-	SHA512256,
-	SHA3,
-	TIGER,
-	WHIRL
+	SHA512256
 };
-
+/*
+**	[MD5] = "md5",
+**	[SHA1] = "sha1",
+**	[SHA224] = "sha224",
+**	[SHA256] = "sha256",
+**	[SHA384] = "sha384",
+**	[SHA512] = "sha512",
+**	[SHA512224] = "sha512-224",
+**	[SHA512256] = "sha512-256",
+**	[TIGER] = "tiger",
+**	[WHIRL] = "whirlpool",
+*/
 static char	*g_h[] = {
 	"md5",
 	"sha1",
@@ -119,9 +124,6 @@ static char	*g_h[] = {
 	"sha512",
 	"sha512-224",
 	"sha512-256",
-	"sha3-256",
-	"tiger",
-	"whirlpool",
 	NULL
 };
 

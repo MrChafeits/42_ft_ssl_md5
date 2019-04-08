@@ -25,6 +25,7 @@
 #endif
 #define DGSTLEN (512 / 8)
 #define BUFSIZE (1024 * DGSTLEN)
+
 static t_ctx	g_ctxx;
 void	*g_ctx[] = {
 	[INVAL] = (&g_ctxx.md5),
@@ -36,9 +37,6 @@ void	*g_ctx[] = {
 	[SHA512] = (&g_ctxx.sha5),
 	[SHA512224] = (&g_ctxx.sha5),
 	[SHA512256] = (&g_ctxx.sha5),
-	[SHA3] = (&g_ctxx.sha3),
-	[TIGER] = (&g_ctxx.tig),
-	[WHIRL] = (&g_ctxx.whrl),
 	NULL
 };
 static char	*g_pfx[] = {
@@ -51,9 +49,6 @@ static char	*g_pfx[] = {
 	[SHA512] = "SHA512(%s)= ",
 	[SHA512224] = "SHA512-224(%s)= ",
 	[SHA512256] = "SHA512-256(%s)= ",
-	[SHA3] = "SHA3-256(%s)= ",
-	[TIGER] = "tiger(%s)= ",
-	[WHIRL] = "whirlpool(%s)= ",
 	NULL
 };
 static char	*g_strfx[] = {
@@ -66,9 +61,6 @@ static char	*g_strfx[] = {
 	[SHA512] = "SHA512(\"%s\")= ",
 	[SHA512224] = "SHA512-224(\"%s\")= ",
 	[SHA512256] = "SHA512-256(\"%s\")= ",
-	[SHA3] = "SHA3-256(\"%s\")= ",
-	[TIGER] = "tiger(\"%s\")= ",
-	[WHIRL] = "whirlpool(\"%s\")= ",
 	NULL
 };
 
@@ -93,13 +85,17 @@ static char	*g_strfx[] = {
 #ifdef ISOK
 # undef ISOK
 #endif
-#define STDINFD (STDIN_FILENO)
-#define CLOSEBR close(h->cfd); break;
-#define READBF if((i[1] = read(h->cfd, buf, BUFSIZE)) <= 0){CLOSEBR}
+#ifdef STDIN_FILENO
+# define STDINFD (STDIN_FILENO)
+#else
+# define STDINFD 0
+#endif
+#define CLOSEBR {close(h->cfd); break;}
+#define READBF if((i[1] = read(h->cfd, buf, BUFSIZE)) <= 0) CLOSEBR
 #define TAILFREE free(h->cpth); ft_free_strtab(&h->t);
 #define CFDERROR {perror(h->cpth); h->err++; free(h->cpth); continue;}
 #define HASNULLT ((h->cfd = ft_strlen(h->cpth)) && h->cpth[h->cfd])
-#define ISOK (!cmp_hash_str(h, h->t[0], (t_u8*)(&md)))
+#define ISOK (!cmp_hash_str(h, h->t[0], (t_u8*)(md)))
 
 void	hash_digest_check(t_hash *h, int fd)
 {
@@ -117,16 +113,16 @@ void	hash_digest_check(t_hash *h, int fd)
 		HASNULLT ? h->cpth[h->cfd] = 0 : 0;
 		h->cfd = open(h->cpth, O_RDONLY);
 		if (lstat(h->cpth, &h->st) || h->cfd < 0 || !S_ISREG(h->st.st_mode))
-		CFDERROR
+			CFDERROR;
 		while (1)
 		{
-			READBF
+			READBF;
 			h->update(g_ctx[h->id.x], (t_u8*)(&buf), i[1]);
 		}
 		h->final(g_ctx[h->id.x], (t_u8*)(&md));
 		ft_printf(g_pfx[h->id.x], h->cpth);
 		(ISOK) ? ft_printf("OK\n") : ft_printf("FAILED\n");
-		TAILFREE
+		TAILFREE;
 	}
 }
 
@@ -143,15 +139,15 @@ void	hash_print(t_hash *h, int fd)
 			break ;
 		h->update(g_ctx[h->id.x], (t_u8*)(&buf), i);
 	}
-	if (h->echo && fd == STDIN_FILENO)
+	if (h->echo && fd == STDINFD)
 		ft_printf("%s", buf);
 	h->final(g_ctx[h->id.x], (t_u8*)(&md));
-	if (!h->quiet && fd != STDIN_FILENO && !h->bsd)
+	if (!h->quiet && fd != STDINFD && !h->bsd)
 		ft_printf(g_pfx[h->id.x], h->path);
 	i = -1;
 	while (++i < h->dgst_len)
 		ft_printf("%02x", md[i]);
-	(!h->quiet && fd != STDIN_FILENO && h->bsd) ? ft_printf(" *%s\n", h->path) :
+	(!h->quiet && fd != STDINFD && h->bsd) ? ft_printf(" *%s\n", h->path) :
 		ft_putchar('\n');
 }
 
@@ -201,7 +197,7 @@ void	hash_string(t_hash *h)
 void	hash_process(t_hash *h)
 {
 	if (h->shell || h->echo)
-		hash_print(h, STDIN_FILENO);
+		hash_print(h, STDINFD);
 	if (h->string)
 		hash_string(h);
 	exit(hash_digest_files(h));

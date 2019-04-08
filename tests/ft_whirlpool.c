@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_whirlpool.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/07 21:16:25 by callen            #+#    #+#             */
+/*   Updated: 2019/04/07 21:16:27 by callen           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <ft_whirlpool.h>
 #include <libft.h>
 
@@ -470,7 +482,7 @@ void	ft_whrl_final(t_whrl_ctx *c, t_u8 *md)
 	ft_whrl_block(c, c->data, 1);
 	if (md)
 	{
-		ft_memcpy(md, c->h.c, WHIRL_DIGEST_SIZE);
+		ft_memcpy(md, c->h.c, (512 / 8));
 		ft_bzero(c, sizeof(*c));
 		errno = 0;
 	}

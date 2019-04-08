@@ -71,6 +71,11 @@ void	ft_free_strtab(char ***tab)
 	free((*tab));
 }
 
+#define ECHOFMT "-p", "Echo stdin to stdout and append checksum to stdout"
+#define QSTR2 "  Overrides the -r option."
+#define QUIETSTR ("Quiet mode - only the checksum is printed out.")
+#define QUIETFMT "-q", QUIETSTR, QSTR2
+
 void	ft_ssl_command_help(t_hash *h)
 {
 	if (h->id.y == 0)
@@ -84,8 +89,8 @@ void	ft_ssl_command_help(t_hash *h)
 		ft_dprintf(2, "  file... files to digest (default is stdin)\n");
 		ft_dprintf(2, " %-11s%s\n", "-h", "Display this summary");
 		ft_dprintf(2, " %-11s%s\n", "-c", "Verify checksum from file");
-		ft_dprintf(2, " %-11s%s\n", "-p", "Echo stdin to stdout and append hash to stdout");
-		ft_dprintf(2, " %-11s%s\n", "-q", "Disable printing of digest algorithm and file path");
+		ft_dprintf(2, " %-11s%s\n", ECHOFMT);
+		ft_dprintf(2, " %-11s%s%s\n", QUIETFMT);
 		ft_dprintf(2, " %-11s%s\n", "-r", "Use BSD output format");
 		ft_dprintf(2, " %-11s%s\n", "-s string", "Digest string");
 	}
