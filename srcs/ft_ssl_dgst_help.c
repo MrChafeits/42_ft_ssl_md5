@@ -34,8 +34,8 @@ void	std_dgst_help(t_hash *h)
 {
 	ft_dprintf(2, "Usage: %s [options] [file...]\n", h->av[1]);
 	ft_dprintf(2, "  file... files to digest (default is stdin)\n");
-	ft_dprintf(2, " %-11s%s\n", "-*", "Any supported digest");
 	ft_dprintf(2, " %-11s%s\n", "-h", "Display this summary");
+	ft_dprintf(2, " %-11s%s\n", "-*", "Any supported digest");
 	ft_dprintf(2, " %-11s%s\n", "-c", "Verify checksum from file");
 	ft_dprintf(2, " %-11s%s\n", ECHOFMT);
 	ft_dprintf(2, " %-11s%s%s\n", QUIETFMT);
