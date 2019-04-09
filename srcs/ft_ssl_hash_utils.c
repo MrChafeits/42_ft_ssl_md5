@@ -109,7 +109,7 @@ void	hash_digest_check(t_hash *h, int fd)
 		h->init(g_ctx[h->id.x]);
 		h->t = ft_strsplit(h->cpth, ' ');
 		free(h->cpth);
-		h->cpth = ft_strdup(h->t[1] + 1);
+		h->cpth = ft_strdup(h->t[1] + (*h->t[1] == '*' || *h->t[1] == '?'));
 		HASNULLT ? h->cpth[h->cfd] = 0 : 0;
 		h->cfd = open(h->cpth, O_RDONLY);
 		if (lstat(h->cpth, &h->st) || h->cfd < 0 || !S_ISREG(h->st.st_mode))
