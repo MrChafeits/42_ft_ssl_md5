@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <internal.h>
 
-int		str_in_strtab(const char *s, const char **t)
+int		str_in_tab(const char *s, const char **t)
 {
 	register int i;
 
@@ -22,7 +22,20 @@ int		str_in_strtab(const char *s, const char **t)
 	while (t[++i])
 		if (ft_strequ(s, t[i]))
 			break ;
-	return (t[i] != NULL);
+	return (t[i] != NULL ? i : -1);
+}
+
+int		str_ocr_strtab(const char *s, const char **t)
+{
+	register int i;
+	register int total;
+
+	i = -1;
+	total = 0;
+	while (t[++i])
+		if (ft_strequ(s, t[i]))
+			total++;
+	return (total);
 }
 
 int		cmp_hash_str(t_hash *h, const char *s, t_u8 *md)

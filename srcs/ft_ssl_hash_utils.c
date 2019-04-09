@@ -40,27 +40,27 @@ void	*g_ctx[] = {
 	NULL
 };
 static char	*g_pfx[] = {
-	[INVAL] = "wot in ternation",
-	[MD5] = "MD5(%s)= ",
-	[SHA1] = "SHA1(%s)= ",
-	[SHA224] = "SHA224(%s)= ",
-	[SHA256] = "SHA256(%s)= ",
-	[SHA384] = "SHA384(%s)= ",
-	[SHA512] = "SHA512(%s)= ",
-	[SHA512224] = "SHA512-224(%s)= ",
-	[SHA512256] = "SHA512-256(%s)= ",
+	[INVAL] = "wot in ternation (%s) = ",
+	[MD5] = "MD5 (%s) = ",
+	[SHA1] = "SHA1 (%s) = ",
+	[SHA224] = "SHA224 (%s) = ",
+	[SHA256] = "SHA256 (%s) = ",
+	[SHA384] = "SHA384 (%s) = ",
+	[SHA512] = "SHA512 (%s) = ",
+	[SHA512224] = "SHA512-224 (%s) = ",
+	[SHA512256] = "SHA512-256 (%s) = ",
 	NULL
 };
 static char	*g_strfx[] = {
-	[INVAL] = "wot in ternation",
-	[MD5] = "MD5(\"%s\")= ",
-	[SHA1] = "SHA1(\"%s\")= ",
-	[SHA224] = "SHA224(\"%s\")= ",
-	[SHA256] = "SHA256(\"%s\")= ",
-	[SHA384] = "SHA384(\"%s\")= ",
-	[SHA512] = "SHA512(\"%s\")= ",
-	[SHA512224] = "SHA512-224(\"%s\")= ",
-	[SHA512256] = "SHA512-256(\"%s\")= ",
+	[INVAL] = "wot in ternation (\"%s\") = ",
+	[MD5] = "MD5 (\"%s\") = ",
+	[SHA1] = "SHA1 (\"%s\") = ",
+	[SHA224] = "SHA224 (\"%s\") = ",
+	[SHA256] = "SHA256 (\"%s\") = ",
+	[SHA384] = "SHA384 (\"%s\") = ",
+	[SHA512] = "SHA512 (\"%s\") = ",
+	[SHA512224] = "SHA512-224 (\"%s\") = ",
+	[SHA512256] = "SHA512-256 (\"%s\") = ",
 	NULL
 };
 
@@ -73,8 +73,8 @@ static char	*g_strfx[] = {
 #ifdef READBF
 # undef READBF
 #endif
-#ifdef TAILFREE
-# undef TAILFREE
+#ifdef END
+# undef END
 #endif
 #ifdef CFDERROR
 # undef CFDERROR
@@ -92,7 +92,7 @@ static char	*g_strfx[] = {
 #endif
 #define CLOSEBR {close(h->cfd); break;}
 #define READBF if((i[1] = read(h->cfd, buf, BUFSIZE)) <= 0) CLOSEBR
-#define TAILFREE free(h->cpth); ft_free_strtab(&h->t);
+#define END free(h->cpth);ft_free_strtab(&h->t);ft_bzero(&g_ctxx,sizeof(t_ctx))
 #define CFDERROR {perror(h->cpth); h->err++; free(h->cpth); continue;}
 #define HASNULLT ((h->cfd = ft_strlen(h->cpth)) && h->cpth[h->cfd])
 #define ISOK (!cmp_hash_str(h, h->t[0], (t_u8*)(md)))
@@ -122,7 +122,7 @@ void	hash_digest_check(t_hash *h, int fd)
 		h->final(g_ctx[h->id.x], (t_u8*)(&md));
 		ft_printf(g_pfx[h->id.x], h->cpth);
 		(ISOK) ? ft_printf("OK\n") : ft_printf("FAILED\n");
-		TAILFREE;
+		END;
 	}
 }
 
@@ -142,28 +142,34 @@ void	hash_print(t_hash *h, int fd)
 	if (h->echo && fd == STDINFD)
 		ft_printf("%s", buf);
 	h->final(g_ctx[h->id.x], (t_u8*)(&md));
-	if (!h->quiet && fd != STDINFD && !h->bsd)
+	if (!h->bsd && !h->quiet && fd != STDINFD)
 		ft_printf(g_pfx[h->id.x], h->path);
 	i = -1;
 	while (++i < h->dgst_len)
 		ft_printf("%02x", md[i]);
-	(!h->quiet && fd != STDINFD && h->bsd) ? ft_printf(" *%s\n", h->path) :
+	(h->bsd && !h->quiet && fd != STDINFD) ? ft_printf(" *%s\n", h->path) :
 		ft_putchar('\n');
+	ft_bzero(&g_ctxx, sizeof(t_ctx));
 }
+
+#ifdef CHK
+# undef CHK
+#endif
+#define CHK(m) (!S_ISREG(m) && !S_ISCHR(m))
 
 int		hash_digest_files(t_hash *h)
 {
 	register int	i;
 	register int	fd;
-	struct stat		st;
 
 	i = optind;
 	h->err = 0;
 	while (++i < h->ac)
 	{
 		fd = open(h->av[i], O_RDONLY);
-		if (lstat(h->av[i], &st) || fd < 0 || !S_ISREG(st.st_mode))
+		if (lstat(h->av[i], &h->st) || fd < 0 || CHK(h->st.st_mode))
 		{
+			errno = S_ISDIR(h->st.st_mode) ? EISDIR : errno;
 			perror(h->av[i]);
 			h->err++;
 			continue ;
@@ -185,32 +191,36 @@ void	hash_string(t_hash *h)
 	(void)ft_strncpy((char*)(&buf), h->strarg, BUFSIZE);
 	h->update(g_ctx[h->id.x], (t_u8*)(&buf), ft_strlen((char*)(&buf)));
 	h->final(g_ctx[h->id.x], (t_u8*)(&md));
-	if (!h->quiet && !h->echo && !h->bsd)
+	if (!h->bsd && !h->quiet)
 		ft_printf(g_strfx[h->id.x], h->strarg);
 	i = -1;
 	while (++i < h->dgst_len)
 		ft_printf("%02x", md[i]);
-	(!h->quiet && !h->echo && h->bsd) ? ft_printf(" \"%s\"\n", h->strarg) :
+	(h->bsd && !h->quiet) ? ft_printf(" \"%s\"\n", h->strarg) :
 		ft_putchar('\n');
+	ft_bzero(&g_ctxx, sizeof(t_ctx));
 }
 
 void	hash_process(t_hash *h)
 {
-	if (h->shell || h->echo)
+	register int status;
+
+	status = 0;
+	if (h->ac <= optind || h->shell || h->echo)
 		hash_print(h, STDINFD);
 	if (h->string)
 		hash_string(h);
-	exit(hash_digest_files(h));
+	if (h->ac - 1 > optind)
+		status = hash_digest_files(h);
+	exit(status);
 }
 
+#undef CHK
 #undef DGSTLEN
 #undef BUFSIZE
-#undef CTOI
-#undef STOB
-#undef ISXDIG
 #undef STDINFD
 #undef CLOSEBR
-#undef TAILFREE
+#undef END
 #undef CFDERROR
 #undef HASNULLT
 #undef ISOK

@@ -116,7 +116,7 @@ static int	init(t_sha3_ctx *ctx, size_t bsz, size_t mdsz, t_u8 pad)
 void	ft_sha3_init(t_sha3_ctx *ctx)
 {
 	if (!(init(ctx, (1600 - 256) / 8, (256 / 8), '\x06')))
-		exit(panic_(-1, "Error in digest init."));
+		exit(-panic_(-1, "Error in digest init."));
 }
 
 void	ft_sha3_update(t_sha3_ctx *ctx, t_u8 *msg, t_u64 len)

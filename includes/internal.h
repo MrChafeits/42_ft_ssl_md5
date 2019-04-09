@@ -80,8 +80,10 @@ int		len_strtab(char **t);
 void	ft_free_strtab(char ***tab);
 int		panic_(int fd, char *str);
 void	hash_process(t_hash *h);
+void	std_process(t_hash *h);
 int		cmp_hash_str(t_hash *h, const char *s, t_u8 *md);
-int		str_in_strtab(const char *s, const char **t);
+int		str_in_tab(const char *s, const char **t);
 void	doopt(t_hash *h, int c);
+void	std_dgst_help(t_hash *h);
 
 #endif

@@ -27,8 +27,13 @@
 **    -r reverse output
 **    -s hash args as strings
 **    -c verify checksum input
-**    if none then openssl cli-interface
+**    if none then openssl-esque cli-interface
 */
+
+# ifdef FT_SSL_VERSION
+#  undef FT_SSL_VERSION
+# endif
+# define FT_SSL_VERSION "0.0042uwu"
 
 typedef unsigned long	t_ul;
 typedef uint64_t	t_u64;
@@ -38,11 +43,13 @@ typedef uint8_t	t_u8;
 typedef struct s_i32v	t_i32v;
 typedef struct s_hash	t_hash;
 typedef enum e_dgsts	t_dgsts;
+
 struct	s_i32v
 {
 	int	x;
 	int	y;
 };
+
 struct	s_hash
 {
 	void		(*f)(t_hash*);
@@ -63,6 +70,8 @@ struct	s_hash
 	int			ac;
 	int			c;
 	t_i32v		id;
+	int			heck;
+	int			digest;
 	int			bsd;
 	int			echo;
 	int			quiet;
@@ -83,8 +92,14 @@ enum
 	SHA512_DIGEST_SIZE = (512 / 8),
 };
 
+enum	e_stdcmd
+{
+	DGST,
+	HELP,
+	VER
+};
+
 static char	*g_s[] = {
-	"ciphers",
 	"dgst",
 	"help",
 	"version",
@@ -103,18 +118,7 @@ enum	e_dgsts
 	SHA512224,
 	SHA512256
 };
-/*
-**	[MD5] = "md5",
-**	[SHA1] = "sha1",
-**	[SHA224] = "sha224",
-**	[SHA256] = "sha256",
-**	[SHA384] = "sha384",
-**	[SHA512] = "sha512",
-**	[SHA512224] = "sha512-224",
-**	[SHA512256] = "sha512-256",
-**	[TIGER] = "tiger",
-**	[WHIRL] = "whirlpool",
-*/
+
 static char	*g_h[] = {
 	"md5",
 	"sha1",
@@ -146,8 +150,6 @@ static char	*g_c[] = {
 	NULL
 };
 
-int		panic_(int fd, char *str);
-void	ft_ssl_help(t_hash *h);
 void	ft_ssl_command_usage(t_hash *h);
 void	ft_ssl_command_help(t_hash *h);
 

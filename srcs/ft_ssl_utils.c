@@ -15,10 +15,15 @@
 
 int		panic_(int fd, char *str)
 {
-	ft_dprintf(2, "%s: %s: %s\n", "ft_ssl", str, strerror(errno));
-	if (fd != -1)
+	if (fd == -2 && !errno)
+		ft_dprintf(2, "ft_ssl: %s: Not yet implemented\n", str);
+	else if (fd == -3)
+		ft_dprintf(2, "ft_ssl: Error: %s\n", str);
+	else
+		ft_dprintf(2, "%s: %s: %s\n", "ft_ssl", str, strerror(errno));
+	if (fd > 2)
 		close(fd);
-	return (-1);
+	return (1);
 }
 
 t_i32v	get_command_(t_hash *h, const char *s)
@@ -26,10 +31,8 @@ t_i32v	get_command_(t_hash *h, const char *s)
 	static char	**hecc[] = {(char**)&g_s, (char**)&g_h, (char**)&g_c, 0};
 	t_i32v		i;
 
-	if (ft_strequ("help", s))
-		ft_ssl_help(h);
-	if (!str_in_strtab(s, (const char**)&g_h))
-		ft_ssl_command_usage(h);
+	if (!h)
+		panic_(-3, "in ft_ssl_utils.c line 34: h == NULL is true");
 	i.y = -1;
 	while (hecc[++i.y])
 	{
@@ -41,10 +44,12 @@ t_i32v	get_command_(t_hash *h, const char *s)
 			continue ;
 		else
 		{
-			i.x++;
+			i.x = i.y == 1 ? i.x + 1 : i.x;
 			break ;
 		}
 	}
+	if (!hecc[i.y] || (!hecc[i.y][i.x] && i.y != 1))
+		ft_ssl_command_usage(h);
 	return (i);
 }
 
@@ -78,11 +83,13 @@ void	ft_free_strtab(char ***tab)
 
 void	ft_ssl_command_help(t_hash *h)
 {
-	if (h->id.y == 0)
+	if (h->id.y == 0 && h->id.x)
 	{
 		ft_dprintf(2, "Usage: %s [options]\n", h->av[1]);
 		ft_dprintf(2, " %-20s%s\n", "-h", "Display this summary");
 	}
+	else if (h->id.y == 0 && h->id.x == 0)
+		std_dgst_help(h);
 	else if (h->id.y == 1)
 	{
 		ft_dprintf(2, "Usage: %s [options] [file...]\n", h->av[1]);
@@ -99,7 +106,7 @@ void	ft_ssl_command_help(t_hash *h)
 		ft_dprintf(2, "Usage: %s [options]\n", h->av[1]);
 		ft_dprintf(2, " %-20s%s\n", "-h", "Display this summary");
 	}
-	exit(EXIT_SUCCESS);
+	!h->shell ? exit(0) : 0;
 }
 
 /*
