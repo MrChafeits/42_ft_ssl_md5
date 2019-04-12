@@ -33,7 +33,7 @@
 # ifdef FT_SSL_VERSION
 #  undef FT_SSL_VERSION
 # endif
-# define FT_SSL_VERSION "0.0042uwu"
+# define FT_SSL_VERSION "0.0042"
 
 typedef unsigned long	t_ul;
 typedef uint64_t	t_u64;
@@ -132,21 +132,6 @@ static char	*g_h[] = {
 };
 
 static char	*g_c[] = {
-	"des",
-	"des-cbc",
-	"des-cfb",
-	"des-ecb",
-	"des-ede",
-	"des-ede-cbc",
-	"des-ede-cfb",
-	"des-ede-ofb",
-	"des-ede3",
-	"des-ede3-cbc",
-	"des-ede3-cfb",
-	"des-ed3-ofb",
-	"des-ofb",
-	"des3",
-	"desx",
 	NULL
 };
 

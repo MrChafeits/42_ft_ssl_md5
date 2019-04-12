@@ -86,7 +86,7 @@ void	std_help(t_hash *h)
 
 void	std_version(t_hash *h)
 {
-	ft_printf("FT_Ssl %s\n", FT_SSL_VERSION);
+	ft_printf("ft_ssl %s\n", FT_SSL_VERSION);
 	!h->shell ? exit(0) : 0;
 }
 
