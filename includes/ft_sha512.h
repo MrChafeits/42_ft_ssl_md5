@@ -14,7 +14,7 @@
 # define FT_SHA512_H
 
 # include <stdlib.h>
-# include <ft_ssl.h>
+# include "ft_ssl.h"
 
 # define CH(X, Y, Z) (Z ^ (X & (Y ^ Z)))
 # define MAJ(X, Y, Z) ((X & Y) | (Z & (X | Y)))

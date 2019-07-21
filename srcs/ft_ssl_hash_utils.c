@@ -6,13 +6,13 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 22:23:22 by callen            #+#    #+#             */
-/*   Updated: 2019/04/06 21:19:38 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/12 18:06:40 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include "libft.h"
 #include <stdlib.h>
-#include <internal.h>
+#include "internal.h"
 #include <unistd.h>
 #include <limits.h>
 #include <fcntl.h>
@@ -33,10 +33,10 @@ void	*g_ctx[] = {
 	[SHA1] = (&g_ctxx.sha1),
 	[SHA224] = (&g_ctxx.sha2),
 	[SHA256] = (&g_ctxx.sha2),
-	[SHA384] = (&g_ctxx.sha5),
-	[SHA512] = (&g_ctxx.sha5),
-	[SHA512224] = (&g_ctxx.sha5),
-	[SHA512256] = (&g_ctxx.sha5),
+	[SHA384] = (&g_ctxx.sha512),
+	[SHA512] = (&g_ctxx.sha512),
+	[SHA512224] = (&g_ctxx.sha512),
+	[SHA512256] = (&g_ctxx.sha512),
 	NULL
 };
 static char	*g_pfx[] = {
@@ -188,7 +188,7 @@ void	hash_string(t_hash *h)
 	static t_u8		buf[BUFSIZE];
 
 	h->init(g_ctx[h->id.x]);
-	(void)ft_strncpy((char*)(&buf), h->strarg, BUFSIZE);
+	ft_strncpy((char*)(&buf), h->strarg, BUFSIZE);
 	h->update(g_ctx[h->id.x], (t_u8*)(&buf), ft_strlen((char*)(&buf)));
 	h->final(g_ctx[h->id.x], (t_u8*)(&md));
 	if (!h->bsd && !h->quiet)
@@ -206,13 +206,13 @@ void	hash_process(t_hash *h)
 	register int status;
 
 	status = 0;
-	if (h->ac <= optind || h->shell || h->echo)
+	if (h->ac <= optind || h->echo || !h->shell)
 		hash_print(h, STDINFD);
 	if (h->string)
 		hash_string(h);
 	if (h->ac - 1 > optind)
 		status = hash_digest_files(h);
-	exit(status);
+	!h->shell ? exit(status) : 0;
 }
 
 #undef CHK

@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/05 23:21:40 by callen            #+#    #+#             */
-/*   Updated: 2019/04/05 23:27:05 by callen           ###   ########.fr       */
+/*   Updated: 2019/07/21 00:10:26 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,17 @@
 # define FT_SHA3_H
 
 # include <stdlib.h>
-# include <ft_ssl.h>
+# include <stdio.h>
+# include <string.h>
+/* # include <ft_ssl.h> */
 
 /*
 ** TODO: sha3_init, sha3_update, sha3_final
 ** Also do I actually want to implement this
 */
+
+typedef unsigned char t_u8;
+typedef unsigned long long t_u64;
 
 typedef struct s_sha3_ctx	t_sha3_ctx;
 struct	s_sha3_ctx

@@ -6,13 +6,14 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/05 23:29:40 by callen            #+#    #+#             */
-/*   Updated: 2019/04/05 23:45:04 by callen           ###   ########.fr       */
+/*   Updated: 2019/07/21 00:39:25 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_sha3.h>
-#include <libft.h>
+#include "ft_sha3.h"
 #include <assert.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 /*
 ** TODO: all
@@ -94,7 +95,7 @@ void	sha3_sponge(const t_u8 *inp, size_t len, t_u8 *out, size_t d, size_t r)
 {
 	uint64_t a[5][5];
 
-	ft_memset(a, 0, sizeof(a));
+	memset(a, 0, sizeof(a));
 	sha3_absorb(a, inp, len, r);
 	sha3_squeeze(a, out, d, r);
 }
@@ -103,7 +104,7 @@ static int	init(t_sha3_ctx *ctx, size_t bsz, size_t mdsz, t_u8 pad)
 {
 	if (bsz <= sizeof(ctx->buf))
 	{
-		ft_memset(ctx->a, 0, sizeof(ctx->a));
+		memset(ctx->a, 0, sizeof(ctx->a));
 		ctx->num = 0;
 		ctx->block_size = bsz;
 		ctx->md_size = mdsz;
@@ -116,7 +117,10 @@ static int	init(t_sha3_ctx *ctx, size_t bsz, size_t mdsz, t_u8 pad)
 void	ft_sha3_init(t_sha3_ctx *ctx)
 {
 	if (!(init(ctx, (1600 - 256) / 8, (256 / 8), '\x06')))
-		exit(-panic_(-1, "Error in digest init."));
+	{
+		fputs("Error in digest init.", stderr);
+		exit(1);
+	}
 }
 
 void	ft_sha3_update(t_sha3_ctx *ctx, t_u8 *msg, t_u64 len)
@@ -128,20 +132,20 @@ void	ft_sha3_update(t_sha3_ctx *ctx, t_u8 *msg, t_u64 len)
 
 	bsz = ctx->block_size;
 	if (len == 0)
-		return (1);
+		return ;//(1);
 	if ((num = ctx->num) != 0)
 	{
 		rem = bsz - num;
 		if (len < rem)
 		{
-			ft_memcpy(ctx->buf + num, inp, len);
+			memcpy(ctx->buf + num, inp, len);
 			ctx->num += len;
-			return (1);
+			return ;//(1);
 		}
-		ft_memcpy(ctx->buf + num, inp, rem);
+		memcpy(ctx->buf + num, inp, rem);
 		inp += rem;
 		len -= rem;
-		(void)sha3_absorb(ctx->a, ctx->buf, bsz, bsz);
+		sha3_absorb(ctx->a, ctx->buf, bsz, bsz);
 		ctx->num = 0;
 	}
 	if (len >= bsz)
@@ -150,7 +154,7 @@ void	ft_sha3_update(t_sha3_ctx *ctx, t_u8 *msg, t_u64 len)
 		rem = len;
 	if (rem)
 	{
-		ft_memcpy(ctx->buf, inp + len - rem, rem);
+		memcpy(ctx->buf, inp + len - rem, rem);
 		ctx->num = rem;
 	}
 }
@@ -162,9 +166,38 @@ void	ft_sha3_final(t_sha3_ctx *ctx, t_u8 *md)
 
 	bsz = ctx->block_size;
 	num = ctx->num;
-	ft_memset(ctx->buf + num, 0, bsz - num);
+	memset(ctx->buf + num, 0, bsz - num);
 	ctx->buf[num] = ctx->pad;
 	ctx->buf[bsz - 1] |= 0x80;
-	(void)sha3_absorb(ctx->a, ctx->buf, bsz, bsz);
+	sha3_absorb(ctx->a, ctx->buf, bsz, bsz);
 	sha3_squeeze(ctx->a, md, ctx->md_size, bsz);
+}
+#define BUFSIZE (1024 * (256 / 8))
+int		main(int argc, char *argv[])
+{
+	size_t				i,j=0;(void)j;
+	int					fd;
+	static t_u8			buf[BUFSIZE];
+	static t_sha3_ctx	ctx;
+
+	if (argc >= 2) {
+		fd = open(argv[1], O_RDONLY);
+		if (fd < 0)
+			return (1);
+	} else {
+		fd = STDIN_FILENO;
+	}
+	ft_sha3_init(&ctx);
+	while (1)
+	{
+		if ((i = read(fd, buf, BUFSIZE)) <= 0) {
+			if (++j>2400)
+				break ;
+		}
+		ft_sha3_update(&ctx, buf, i);
+	}
+	ft_sha3_final(&ctx, buf);
+	for (i = 0; i < ctx.md_size; i++)
+		printf("%02x", ctx.buf[i]);
+	printf(" \"%s\"\n", fd == 0 ? "(stdin)" : argv[1]);
 }

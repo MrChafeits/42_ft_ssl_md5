@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <internal.h>
-#include <libft.h>
+#include "internal.h"
+#include "libft.h"
 
 #ifdef ECHOFMT
 # undef ECHOFMT
@@ -32,7 +32,7 @@
 
 void	std_dgst_help(t_hash *h)
 {
-	ft_dprintf(2, "Usage: %s [options] [file...]\n", h->av[1]);
+	ft_dprintf(2, "Usage: %s [options] [file...]\n", h->av[1] + h->hc2dgst);
 	ft_dprintf(2, "  file... files to digest (default is stdin)\n");
 	ft_dprintf(2, " %-11s%s\n", "-h", "Display this summary");
 	ft_dprintf(2, " %-11s%s\n", "-*", "Any supported digest");
@@ -41,7 +41,8 @@ void	std_dgst_help(t_hash *h)
 	ft_dprintf(2, " %-11s%s%s\n", QUIETFMT);
 	ft_dprintf(2, " %-11s%s\n", "-r", "Use coreutils output format");
 	ft_dprintf(2, " %-11s%s\n", "-s string", "Digest string");
-	!h->shell ? exit(0) : 0;
+	if (!h->shell)
+		exit(0);
 }
 
 #undef ECHOFMT

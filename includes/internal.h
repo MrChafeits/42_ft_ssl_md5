@@ -12,11 +12,11 @@
 
 #ifndef INTERNAL_H
 # define INTERNAL_H
-# include <ft_ssl.h>
-# include <ft_md5.h>
-# include <ft_sha1.h>
-# include <ft_sha256.h>
-# include <ft_sha512.h>
+# include "ft_ssl.h"
+# include "ft_md5.h"
+# include "ft_sha1.h"
+# include "ft_sha256.h"
+# include "ft_sha512.h"
 
 typedef union u_ctx	t_ctx;
 union	u_ctx
@@ -24,7 +24,7 @@ union	u_ctx
 	t_md5_ctx	md5;
 	t_s1ctx		sha1;
 	t_sha256	sha2;
-	t_sha512	sha5;
+	t_sha512	sha512;
 };
 
 static void	(*g_init[])() = {
@@ -85,5 +85,9 @@ int		cmp_hash_str(t_hash *h, const char *s, t_u8 *md);
 int		str_in_tab(const char *s, const char **t);
 void	doopt(t_hash *h, int c);
 void	std_dgst_help(t_hash *h);
+
+void	std_help(t_hash *h);
+void	std_version(t_hash *h);
+void	std_nyimpl(t_hash *h);
 
 #endif

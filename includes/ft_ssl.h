@@ -70,7 +70,7 @@ struct	s_hash
 	int			ac;
 	int			c;
 	t_i32v		id;
-	int			heck;
+	int			hc2dgst;
 	int			digest;
 	int			bsd;
 	int			echo;

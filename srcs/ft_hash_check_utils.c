@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
+#include "libft.h"
 #include <stdlib.h>
-#include <internal.h>
+#include "internal.h"
 
 int		str_in_tab(const char *s, const char **t)
 {

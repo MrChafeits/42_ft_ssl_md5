@@ -14,7 +14,7 @@
 # define FT_SHA1_H
 
 # include <stdlib.h>
-# include <ft_ssl.h>
+# include "ft_ssl.h"
 
 typedef struct s_s	t_s1ctx;
 typedef struct s_sql1	t_sql1;

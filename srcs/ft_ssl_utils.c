@@ -6,12 +6,12 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 20:07:28 by callen            #+#    #+#             */
-/*   Updated: 2019/04/05 22:44:54 by callen           ###   ########.fr       */
+/*   Updated: 2019/04/12 18:18:51 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <internal.h>
-#include <libft.h>
+#include "internal.h"
+#include "libft.h"
 
 int		panic_(int fd, char *str)
 {
@@ -20,35 +20,35 @@ int		panic_(int fd, char *str)
 	else if (fd == -3)
 		ft_dprintf(2, "ft_ssl: Error: %s\n", str);
 	else
-		ft_dprintf(2, "%s: %s: %s\n", "ft_ssl", str, strerror(errno));
+		ft_dprintf(2, "ft_ssl: %s: %s\n", str, strerror(errno));
 	if (fd > 2)
 		close(fd);
 	return (1);
 }
 
+/*
+** If s is not std_cmd, check hash_cmd
+** md5 is same command as dgst
+*/
+
 t_i32v	get_command_(t_hash *h, const char *s)
 {
-	static char	**hecc[] = {(char**)&g_s, (char**)&g_h, (char**)&g_c, 0};
+	static char	**cmds[] = {(char**)&g_s, (char**)&g_h, (char**)&g_c};
 	t_i32v		i;
 
-	if (!h)
-		panic_(-3, "in ft_ssl_utils.c line 34: h == NULL is true");
 	i.y = -1;
-	while (hecc[++i.y])
+	while (++i.y < 3)
 	{
 		i.x = -1;
-		while (hecc[i.y][++i.x])
-			if (ft_strequ(hecc[i.y][i.x], s))
+		while (cmds[i.y][++i.x])
+			if (ft_strequ(cmds[i.y][i.x], s))
 				break ;
-		if (!hecc[i.y][i.x])
+		if (!cmds[i.y][i.x])
 			continue ;
 		else
-		{
-			i.x = i.y == 1 ? i.x + 1 : i.x;
-			break ;
-		}
+			return ((t_i32v){i.x + (i.y == 1), i.y});
 	}
-	if (!hecc[i.y] || (!hecc[i.y][i.x] && i.y != 1))
+	if (!cmds[i.y] || !cmds[i.y][i.x])
 		ft_ssl_command_usage(h);
 	return (i);
 }
@@ -67,13 +67,16 @@ void	ft_free_strtab(char ***tab)
 {
 	register int i;
 
-	i = 0;
-	while ((*tab)[i])
+	if (tab && *tab && **tab)
 	{
-		free((*tab)[i]);
-		i++;
+		i = 0;
+		while ((*tab)[i])
+		{
+			ft_memdel((void**)&(*tab)[i]);
+			i++;
+		}
+		ft_memdel((void**)&(*tab));
 	}
-	free((*tab));
 }
 
 #define ECHOFMT "-p", "Echo stdin to stdout and append checksum to stdout"
@@ -83,30 +86,15 @@ void	ft_free_strtab(char ***tab)
 
 void	ft_ssl_command_help(t_hash *h)
 {
-	if (h->id.y == 0 && h->id.x)
+	if (h->id.y == 2 || (!h->id.y && h->id.x))
 	{
 		ft_dprintf(2, "Usage: %s [options]\n", h->av[1]);
-		ft_dprintf(2, " %-20s%s\n", "-h", "Display this summary");
-	}
-	else if (h->id.y == 0 && h->id.x == 0)
-		std_dgst_help(h);
-	else if (h->id.y == 1)
-	{
-		ft_dprintf(2, "Usage: %s [options] [file...]\n", h->av[1]);
-		ft_dprintf(2, "  file... files to digest (default is stdin)\n");
 		ft_dprintf(2, " %-11s%s\n", "-h", "Display this summary");
-		ft_dprintf(2, " %-11s%s\n", "-c", "Verify checksum from file");
-		ft_dprintf(2, " %-11s%s\n", ECHOFMT);
-		ft_dprintf(2, " %-11s%s%s\n", QUIETFMT);
-		ft_dprintf(2, " %-11s%s\n", "-r", "Use BSD output format");
-		ft_dprintf(2, " %-11s%s\n", "-s string", "Digest string");
 	}
-	else if (h->id.y == 2)
-	{
-		ft_dprintf(2, "Usage: %s [options]\n", h->av[1]);
-		ft_dprintf(2, " %-20s%s\n", "-h", "Display this summary");
-	}
-	!h->shell ? exit(0) : 0;
+	else if (h->id.y == 1 || (!h->id.y && !h->id.x))
+		std_dgst_help(h);
+	if (h->shell == 0)
+		exit(0);
 }
 
 /*

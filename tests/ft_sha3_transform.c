@@ -6,12 +6,11 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 20:15:04 by callen            #+#    #+#             */
-/*   Updated: 2019/04/07 20:16:37 by callen           ###   ########.fr       */
+/*   Updated: 2019/07/21 00:10:41 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_sha3.h>
-#include <libft.h>
+#include "ft_sha3.h"
 #include <assert.h>
 
 /*

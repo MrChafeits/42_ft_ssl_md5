@@ -6,7 +6,7 @@
 #    By: callen <callen@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/23 22:04:17 by callen            #+#    #+#              #
-#    Updated: 2019/04/11 19:36:42 by callen           ###   ########.fr        #
+#    Updated: 2019/04/16 08:19:41 by callen           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ FRAMWRKS :=
 
 SRC := main.c ft_md5.c ft_sha1.c \
 	ft_sha1_transform.c ft_sha224.c ft_sha256.c \
-	ft_sha256_transform.c \
+	ft_sha256_transform.c ft_ssl_std_cmds.c \
 	ft_sha512.c ft_sha512_transform.c ft_ssl_utils.c \
 	ft_ssl_hash_utils.c ft_md5_utils.c ft_sha384_utils.c \
 	ft_hash_check_utils.c ft_ssl_cmd_utils.c ft_ssl_dgst_help.c
@@ -49,31 +49,24 @@ ifeq ($(NRM),)
 endif
 NORME := $(addsuffix *.h,$(INCDIR)/) $(addsuffix *.c,$(SRCDIR))
 
-.PHONY: all debug clean dclean fclean re tags lib libdbg libasan j k asan norme codesize
+.PHONY: all debug clean dclean fclean re tags j k asan norme codesize
 
 all: $(NAME)
 
-lib:
-	@make -sC libft all
-
-libdbg:
-	@make -sC libft debug
-
-libasan:
-	@make -sC libft asan
-
 $(NAME): $(OBJDIR) $(OBJ)
-	@make -sC libft all
+	@make -C libft all
 	@$(CC) $(INCFLAGS) $(LIBFLAGS) -o $(NAME) $(OBJ)
 
 j: debug
 
-k: fclean dclean
+k: dclean
 
-asan: libasan
+asan:
+	@make -C libft asan
 	@$(CC) $(AFLAGS) $(INCFLAGS) $(ASANLIBS) -o $(ANAM) $(addprefix $(SRCDIR), $(SRC))
 
-debug: libdbg
+debug:
+	@make -C libft debug
 	@$(CC) $(DFLAGS) $(INCFLAGS) $(DEBGLIBS) -o $(DNAM) $(addprefix $(SRCDIR), $(SRC))
 
 dclean:
@@ -81,17 +74,17 @@ dclean:
 	@make -C libft dclean
 
 clean:
-	@make -sC libft clean
+	@make -C libft clean
 	@rm -Rf $(OBJDIR)
 
 fclean: clean
-	@make -sC libft fclean
+	@make -C libft fclean
 	@rm -f $(NAME)
 
 re: fclean all
 
 tags:
-	Wctags $(addsuffix *.h,$(INCDIR)/) $(addsuffix *.c,$(SRCDIR))
+	@ctags $(addsuffix *.h,$(INCDIR)/) $(addsuffix *.c,$(SRCDIR))
 
 $(addprefix $(OBJDIR), %.o): $(addprefix $(SRCDIR), %.c)
 	@$(CC) $(INCFLAGS) $(CFLAGS) -o $@ -c $<
