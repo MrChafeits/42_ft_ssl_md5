@@ -98,8 +98,8 @@ static void	key_schedule(t_tiger *t)
 static void	ft_tiger_process_block(t_u64 state[3], t_u64 *block)
 {
 	t_tiger			t;
-	register char	i;
-	register t_u64	tmp;
+	char			i;
+	t_u64			tmp;
 
 	t.x0 = block[0];
 	t.x1 = block[1];
@@ -193,22 +193,3 @@ void		ft_tiger_final(t_tiger_ctx *ctx, unsigned char result[24])
 	/* save result hash */
 	ft_memcpy(result, &ctx->hash, 24);
 }
-
-#undef T1
-#undef T2
-#undef T3
-#undef T4
-#undef RA1
-#undef RA2
-#undef RA3
-#undef RA4
-#undef RB4
-#undef RB3
-#undef RB2
-#undef RB1
-#undef RNDC
-#undef RNDA
-#undef RNDB
-#undef RNDM
-#undef ROUND
-#undef IS_ALIGNED_64

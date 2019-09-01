@@ -18,9 +18,9 @@ static t_u8 g_padding[64] = {0x80, 0x00};
 
 void	ft_md5_update(t_md5_ctx *context, t_u8 *input, t_u32 inputlen)
 {
-	register t_u32 i;
-	register t_u32 index;
-	register t_u32 partlen;
+	t_u32 i;
+	t_u32 index;
+	t_u32 partlen;
 
 	index = (context->count[0] >> 3) & 0x3F;
 	partlen = 64 - index;
@@ -47,8 +47,8 @@ void	ft_md5_update(t_md5_ctx *context, t_u8 *input, t_u32 inputlen)
 
 void	ft_md5_final(t_md5_ctx *context, t_u8 digest[16])
 {
-	register t_u32	index;
-	register t_u32	padlen;
+	t_u32			index;
+	t_u32			padlen;
 	unsigned char	bits[8];
 
 	index = (context->count[0] >> 3) & 0x3F;
@@ -61,8 +61,8 @@ void	ft_md5_final(t_md5_ctx *context, t_u8 digest[16])
 
 void	ft_md5_encode(t_u8 *output, t_u32 *input, t_u32 len)
 {
-	register t_u32 i;
-	register t_u32 j;
+	t_u32 i;
+	t_u32 j;
 
 	i = 0;
 	j = 0;
@@ -79,8 +79,8 @@ void	ft_md5_encode(t_u8 *output, t_u32 *input, t_u32 len)
 
 void	ft_md5_decode(t_u32 *output, t_u8 *input, t_u32 len)
 {
-	register t_u32	i;
-	register t_u32	j;
+	t_u32	i;
+	t_u32	j;
 
 	i = 0;
 	j = 0;
@@ -98,228 +98,7 @@ void	ft_md5_decode(t_u32 *output, t_u8 *input, t_u32 len)
 /*
 ** Macros for all four rounds of MD5, adapted from the md5-x86_64.pl asm script
 */
-#ifdef F
-# undef F
-#endif
-#ifdef G
-# undef G
-#endif
-#ifdef H
-# undef H
-#endif
-#ifdef I
-# undef I
-#endif
-#ifdef ROL32
-# undef ROL32
-#endif
-#ifdef FF
-# undef FF
-#endif
-#ifdef GG
-# undef GG
-#endif
-#ifdef HH
-# undef HH
-#endif
-#ifdef II
-# undef II
-#endif
-#ifdef F00
-# undef F00
-#endif
-#ifdef F01
-# undef F01
-#endif
-#ifdef F02
-# undef F02
-#endif
-#ifdef F03
-# undef F03
-#endif
-#ifdef F04
-# undef F04
-#endif
-#ifdef F05
-# undef F05
-#endif
-#ifdef F06
-# undef F06
-#endif
-#ifdef F07
-# undef F07
-#endif
-#ifdef F08
-# undef F08
-#endif
-#ifdef F09
-# undef F09
-#endif
-#ifdef F10
-# undef F10
-#endif
-#ifdef F11
-# undef F11
-#endif
-#ifdef F12
-# undef F12
-#endif
-#ifdef F13
-# undef F13
-#endif
-#ifdef F14
-# undef F14
-#endif
-#ifdef F15
-# undef F15
-#endif
-#ifdef G00
-# undef G00
-#endif
-#ifdef G01
-# undef G01
-#endif
-#ifdef G02
-# undef G02
-#endif
-#ifdef G03
-# undef G03
-#endif
-#ifdef G04
-# undef G04
-#endif
-#ifdef G05
-# undef G05
-#endif
-#ifdef G06
-# undef G06
-#endif
-#ifdef G07
-# undef G07
-#endif
-#ifdef G08
-# undef G08
-#endif
-#ifdef G09
-# undef G09
-#endif
-#ifdef G10
-# undef G10
-#endif
-#ifdef G11
-# undef G11
-#endif
-#ifdef G12
-# undef G12
-#endif
-#ifdef G13
-# undef G13
-#endif
-#ifdef G14
-# undef G14
-#endif
-#ifdef G15
-# undef G15
-#endif
-#ifdef H00
-# undef H00
-#endif
-#ifdef H01
-# undef H01
-#endif
-#ifdef H02
-# undef H02
-#endif
-#ifdef H03
-# undef H03
-#endif
-#ifdef H04
-# undef H04
-#endif
-#ifdef H05
-# undef H05
-#endif
-#ifdef H06
-# undef H06
-#endif
-#ifdef H07
-# undef H07
-#endif
-#ifdef H08
-# undef H08
-#endif
-#ifdef H09
-# undef H09
-#endif
-#ifdef H10
-# undef H10
-#endif
-#ifdef H11
-# undef H11
-#endif
-#ifdef H12
-# undef H12
-#endif
-#ifdef H13
-# undef H13
-#endif
-#ifdef H14
-# undef H14
-#endif
-#ifdef H15
-# undef H15
-#endif
-#ifdef I00
-# undef I00
-#endif
-#ifdef I01
-# undef I01
-#endif
-#ifdef I02
-# undef I02
-#endif
-#ifdef I03
-# undef I03
-#endif
-#ifdef I04
-# undef I04
-#endif
-#ifdef I05
-# undef I05
-#endif
-#ifdef I06
-# undef I06
-#endif
-#ifdef I07
-# undef I07
-#endif
-#ifdef I08
-# undef I08
-#endif
-#ifdef I09
-# undef I09
-#endif
-#ifdef I10
-# undef I10
-#endif
-#ifdef I11
-# undef I11
-#endif
-#ifdef I12
-# undef I12
-#endif
-#ifdef I13
-# undef I13
-#endif
-#ifdef I14
-# undef I14
-#endif
-#ifdef I15
-# undef I15
-#endif
-#ifdef MD5
-# undef MD5
-#endif
+
 #define F(x,y,z) (((x) & (y)) | (~(x) & (z)))
 #define G(x,y,z) (((x) & (z)) | ((y) & ~(z)))
 #define H(x,y,z) ((x) ^ (y) ^ (z))
@@ -393,98 +172,24 @@ void	ft_md5_decode(t_u32 *output, t_u8 *input, t_u32 len)
 #define I13 I12; II(d, a, b, c, x[11], 10, 0xbd3af235);
 #define I14 I13; II(c, d, a, b, x[ 2], 15, 0x2ad7d2bb);
 #define I15 I14; II(b, c, d, a, x[ 9], 21, 0xeb86d391);
-#define MD5 I15;
+#define MD5_ROUNDS I15;
 
 void	ft_md5_transform(t_u32 state[4], t_u8 block[64])
 {
-	register t_u32	a;
-	register t_u32	b;
-	register t_u32	c;
-	register t_u32	d;
-	t_u32			x[64];
+	t_u32	a;
+	t_u32	b;
+	t_u32	c;
+	t_u32	d;
+	t_u32	x[64];
 
 	a = state[0];
 	b = state[1];
 	c = state[2];
 	d = state[3];
 	ft_md5_decode(x, block, 64);
-	MD5;
+	MD5_ROUNDS;
 	state[0] += a;
 	state[1] += b;
 	state[2] += c;
 	state[3] += d;
 }
-#undef F
-#undef G
-#undef H
-#undef I
-#undef ROL32
-#undef FF
-#undef GG
-#undef HH
-#undef II
-#undef F00
-#undef F01
-#undef F02
-#undef F03
-#undef F04
-#undef F05
-#undef F06
-#undef F07
-#undef F08
-#undef F09
-#undef F10
-#undef F11
-#undef F12
-#undef F13
-#undef F14
-#undef F15
-#undef G00
-#undef G01
-#undef G02
-#undef G03
-#undef G04
-#undef G05
-#undef G06
-#undef G07
-#undef G08
-#undef G09
-#undef G10
-#undef G11
-#undef G12
-#undef G13
-#undef G14
-#undef G15
-#undef H00
-#undef H01
-#undef H02
-#undef H03
-#undef H04
-#undef H05
-#undef H06
-#undef H07
-#undef H08
-#undef H09
-#undef H10
-#undef H11
-#undef H12
-#undef H13
-#undef H14
-#undef H15
-#undef I00
-#undef I01
-#undef I02
-#undef I03
-#undef I04
-#undef I05
-#undef I06
-#undef I07
-#undef I08
-#undef I09
-#undef I10
-#undef I11
-#undef I12
-#undef I13
-#undef I14
-#undef I15
-#undef MD5

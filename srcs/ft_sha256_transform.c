@@ -65,8 +65,8 @@ void	ft_sha256_transform(t_sha256 *c, t_u8 *d)
 
 void	ft_sha256_transform_1(t_sql256 *s, t_u8 *d)
 {
-	register int i;
-	register int j;
+	int i;
+	int j;
 
 	i = -1;
 	j = 0;
@@ -86,7 +86,7 @@ void	ft_sha256_transform_1(t_sql256 *s, t_u8 *d)
 
 void	ft_sha256_transform_2(t_sql256 *s)
 {
-	register int i;
+	int i;
 
 	i = -1;
 	while (++i < 64)

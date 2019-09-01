@@ -38,8 +38,8 @@ void	ft_sha224_transform(t_sha256 *c, t_u8 *d)
 
 void	ft_sha224_transform_1(t_sql *s, t_u8 *d)
 {
-	register int i;
-	register int j;
+	int i;
+	int j;
 
 	i = -1;
 	j = 0;
@@ -59,7 +59,7 @@ void	ft_sha224_transform_1(t_sql *s, t_u8 *d)
 
 void	ft_sha224_transform_2(t_sql *s)
 {
-	register int i;
+	int i;
 
 	i = -1;
 	while (++i < 64)

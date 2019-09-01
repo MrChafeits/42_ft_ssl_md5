@@ -101,7 +101,7 @@ void	shell_prompt(t_hash *h)
 	{
 		h->shell = 1;
 		h->help = 0;
-		ft_printf("ft_ssl> ");
+		ft_putstr("ft_ssl> ");
 		/* if ((get_next_line(0, &ln)) > 0) */
 		if ((linelen = getline(&ln, &lcap, stdin)) > 0)
 		{
@@ -137,5 +137,3 @@ int		main(int ac, char **av)
 	}
 	return (0);
 }
-
-#undef STRMODE

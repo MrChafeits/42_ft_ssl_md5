@@ -65,7 +65,7 @@ int		len_strtab(char **t)
 
 void	ft_free_strtab(char ***tab)
 {
-	register int i;
+	int i;
 
 	if (tab && *tab && **tab)
 	{

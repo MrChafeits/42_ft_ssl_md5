@@ -16,7 +16,7 @@
 
 int		str_in_tab(const char *s, const char **t)
 {
-	register int i;
+	int i;
 
 	i = -1;
 	while (t[++i])
@@ -27,8 +27,8 @@ int		str_in_tab(const char *s, const char **t)
 
 int		str_ocr_strtab(const char *s, const char **t)
 {
-	register int i;
-	register int total;
+	int i;
+	int total;
 
 	i = -1;
 	total = 0;
@@ -40,10 +40,10 @@ int		str_ocr_strtab(const char *s, const char **t)
 
 int		cmp_hash_str(t_hash *h, const char *s, t_u8 *md)
 {
-	register int	i;
-	register t_u8	b;
-	register t_u8	c;
-	const char		*p = s;
+	int			i;
+	t_u8		b;
+	t_u8		c;
+	const char	*p = s;
 
 	if ((int)ft_strlen(s) != h->dgst_len * 2)
 		return (1);

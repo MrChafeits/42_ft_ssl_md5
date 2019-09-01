@@ -64,7 +64,7 @@ void		ft_sha1_update(t_s1ctx *c, t_u8 *d, t_u64 l)
 
 static void	ft_sha1_almost(t_s1ctx *c)
 {
-	register int i;
+	int i;
 
 	i = c->datalen;
 	if (c->datalen < 56)
@@ -85,7 +85,7 @@ static void	ft_sha1_almost(t_s1ctx *c)
 
 void		ft_sha1_final(t_s1ctx *c, t_u8 *md)
 {
-	register int i;
+	int i;
 
 	ft_sha1_almost(c);
 	c->bitlen += c->datalen * 8;

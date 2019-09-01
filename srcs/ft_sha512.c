@@ -66,7 +66,7 @@ void		ft_sha512_init(t_sha512 *s)
 
 void		ft_sha512_final(t_sha512 *s, t_u8 *md)
 {
-	register int i;
+	int i;
 
 	pad(s);
 	i = -1;

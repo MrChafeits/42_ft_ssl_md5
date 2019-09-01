@@ -17,12 +17,6 @@
 #include <limits.h>
 #include <fcntl.h>
 
-#ifdef DGSTLEN
-# undef DGSTLEN
-#endif
-#ifdef BUFSIZE
-# undef BUFSIZE
-#endif
 #define DGSTLEN (512 / 8)
 #define BUFSIZE (1024 * DGSTLEN)
 
@@ -39,6 +33,7 @@ void	*g_ctx[] = {
 	[SHA512256] = (&g_ctxx.sha512),
 	NULL
 };
+
 static char	*g_pfx[] = {
 	[INVAL] = "wot in ternation (%s) = ",
 	[MD5] = "MD5 (%s) = ",
@@ -51,6 +46,7 @@ static char	*g_pfx[] = {
 	[SHA512256] = "SHA512-256 (%s) = ",
 	NULL
 };
+
 static char	*g_strfx[] = {
 	[INVAL] = "wot in ternation (\"%s\") = ",
 	[MD5] = "MD5 (\"%s\") = ",
@@ -63,39 +59,6 @@ static char	*g_strfx[] = {
 	[SHA512256] = "SHA512-256 (\"%s\") = ",
 	NULL
 };
-
-#ifdef STDINFD
-# undef STDINFD
-#endif
-#ifdef CLOSEBR
-# undef CLOSEBR
-#endif
-#ifdef READBF
-# undef READBF
-#endif
-#ifdef END
-# undef END
-#endif
-#ifdef CFDERROR
-# undef CFDERROR
-#endif
-#ifdef HASNULLT
-# undef HASNULLT
-#endif
-#ifdef ISOK
-# undef ISOK
-#endif
-#ifdef STDIN_FILENO
-# define STDINFD (STDIN_FILENO)
-#else
-# define STDINFD 0
-#endif
-#define CLOSEBR {close(h->cfd); break;}
-#define READBF if((i[1] = read(h->cfd, buf, BUFSIZE)) <= 0) CLOSEBR
-#define END free(h->cpth);ft_free_strtab(&h->t);ft_bzero(&g_ctxx,sizeof(t_ctx))
-#define CFDERROR {perror(h->cpth); h->err++; free(h->cpth); continue;}
-#define HASNULLT ((h->cfd = ft_strlen(h->cpth)) && h->cpth[h->cfd])
-#define ISOK (!cmp_hash_str(h, h->t[0], (t_u8*)(md)))
 
 void	hash_digest_check(t_hash *h, int fd)
 {
@@ -110,25 +73,40 @@ void	hash_digest_check(t_hash *h, int fd)
 		h->t = ft_strsplit(h->cpth, ' ');
 		free(h->cpth);
 		h->cpth = ft_strdup(h->t[1] + (*h->t[1] == '*' || *h->t[1] == '?'));
-		HASNULLT ? h->cpth[h->cfd] = 0 : 0;
+		if ((h->cfd = ft_strlen(h->cpth)) && h->cpth[h->cfd])
+			h->cpth[h->cfd] = 0;
 		h->cfd = open(h->cpth, O_RDONLY);
 		if (lstat(h->cpth, &h->st) || h->cfd < 0 || !S_ISREG(h->st.st_mode))
-			CFDERROR;
+		{
+			perror(h->cpth);
+			h->err++;
+			free(h->cpth);
+			continue;
+		}
 		while (1)
 		{
-			READBF;
+			if((i[1] = read(h->cfd, buf, BUFSIZE)) <= 0)
+			{
+				close(h->cfd);
+				break;
+			}
 			h->update(g_ctx[h->id.x], (t_u8*)(&buf), i[1]);
 		}
 		h->final(g_ctx[h->id.x], (t_u8*)(&md));
 		ft_printf(g_pfx[h->id.x], h->cpth);
-		(ISOK) ? ft_printf("OK\n") : ft_printf("FAILED\n");
-		END;
+		if (!cmp_hash_str(h, h->t[0], (t_u8*)(md)))
+			ft_printf("OK\n");
+		else
+			ft_printf("FAILED\n");
+		free(h->cpth);
+		ft_free_strtab(&h->t);
+		ft_bzero(&g_ctxx,sizeof(t_ctx));
 	}
 }
 
 void	hash_print(t_hash *h, int fd)
 {
-	register int	i;
+	int				i;
 	t_u8			md[DGSTLEN];
 	static t_u8		buf[BUFSIZE];
 
@@ -139,28 +117,27 @@ void	hash_print(t_hash *h, int fd)
 			break ;
 		h->update(g_ctx[h->id.x], (t_u8*)(&buf), i);
 	}
-	if (h->echo && fd == STDINFD)
+	if (h->echo && fd == STDIN_FILENO)
 		ft_printf("%s", buf);
 	h->final(g_ctx[h->id.x], (t_u8*)(&md));
-	if (!h->bsd && !h->quiet && fd != STDINFD)
+	if (!h->bsd && !h->quiet && fd != STDIN_FILENO)
 		ft_printf(g_pfx[h->id.x], h->path);
 	i = -1;
 	while (++i < h->dgst_len)
 		ft_printf("%02x", md[i]);
-	(h->bsd && !h->quiet && fd != STDINFD) ? ft_printf(" *%s\n", h->path) :
+	if (h->bsd && !h->quiet && fd != STDIN_FILENO)
+		ft_printf(" *%s\n", h->path);
+	else
 		ft_putchar('\n');
 	ft_bzero(&g_ctxx, sizeof(t_ctx));
 }
 
-#ifdef CHK
-# undef CHK
-#endif
 #define CHK(m) (!S_ISREG(m) && !S_ISCHR(m))
 
 int		hash_digest_files(t_hash *h)
 {
-	register int	i;
-	register int	fd;
+	int	i;
+	int	fd;
 
 	i = optind;
 	h->err = 0;
@@ -183,7 +160,7 @@ int		hash_digest_files(t_hash *h)
 
 void	hash_string(t_hash *h)
 {
-	register int	i;
+	int				i;
 	t_u8			md[DGSTLEN];
 	static t_u8		buf[BUFSIZE];
 
@@ -203,24 +180,14 @@ void	hash_string(t_hash *h)
 
 void	hash_process(t_hash *h)
 {
-	register int status;
+	int status;
 
 	status = 0;
 	if (h->ac <= optind || h->echo || !h->shell)
-		hash_print(h, STDINFD);
+		hash_print(h, STDIN_FILENO);
 	if (h->string)
 		hash_string(h);
 	if (h->ac - 1 > optind)
 		status = hash_digest_files(h);
 	!h->shell ? exit(status) : 0;
 }
-
-#undef CHK
-#undef DGSTLEN
-#undef BUFSIZE
-#undef STDINFD
-#undef CLOSEBR
-#undef END
-#undef CFDERROR
-#undef HASNULLT
-#undef ISOK

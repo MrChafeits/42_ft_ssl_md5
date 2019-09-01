@@ -13,14 +13,11 @@
 #include "internal.h"
 #include "libft.h"
 
-#ifdef FMTSTR
-# undef FMTSTR
-#endif
 #define FMTSTR ((!((i + 1) % 4) && i) ? "%-18s\n" : "%-18s")
 
 void	std_help(t_hash *h)
 {
-	register int i;
+	int i;
 
 	if (h->ac <= 2 && !h->help)
 	{
@@ -55,5 +52,3 @@ void	std_nyimpl(t_hash *h)
 	panic_(-2, h->av[1]);
 	!h->shell ? exit(1) : h->shell;
 }
-
-#undef FMTSTR

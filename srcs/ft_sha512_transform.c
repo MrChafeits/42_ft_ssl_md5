@@ -28,7 +28,7 @@ void		ft_sha512256_init(t_sha512 *s)
 
 static void	processblock_1(t_sha512 *s, t_sql512 *q, const t_u8 *buf)
 {
-	register int	i;
+	int	i;
 
 	i = -1;
 	while (++i < 80)
@@ -57,7 +57,7 @@ static void	processblock_1(t_sha512 *s, t_sql512 *q, const t_u8 *buf)
 
 static void	processblock_2(t_sha512 *s, t_sql512 *q)
 {
-	register int	i;
+	int	i;
 
 	i = -1;
 	while (++i < 80)
