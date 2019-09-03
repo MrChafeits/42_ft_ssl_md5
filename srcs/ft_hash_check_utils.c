@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_hash_check_utils.c                              :+:      :+:    :+:   */
+/*   ft_ssl_env_check_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -38,7 +38,7 @@ int		str_ocr_strtab(const char *s, const char **t)
 	return (total);
 }
 
-int		cmp_hash_str(t_hash *h, const char *s, t_u8 *md)
+int		cmp_hash_str(t_ssl_env *h, const char *s, t_u8 *md)
 {
 	int			i;
 	t_u8		b;
@@ -59,7 +59,7 @@ int		cmp_hash_str(t_hash *h, const char *s, t_u8 *md)
 	return (0);
 }
 
-void	doopt(t_hash *h, int c)
+void	doopt(t_ssl_env *h, int c)
 {
 	if (c == 'c')
 		h->check = 1;

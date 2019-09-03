@@ -41,7 +41,7 @@ typedef uint32_t	t_u32;
 typedef uint16_t	t_u16;
 typedef uint8_t	t_u8;
 typedef struct s_i32v	t_i32v;
-typedef struct s_hash	t_hash;
+typedef struct s_hash	t_ssl_env;
 typedef enum e_dgsts	t_dgsts;
 
 struct	s_i32v
@@ -52,11 +52,11 @@ struct	s_i32v
 
 struct	s_hash
 {
-	void		(*f)(t_hash*);
+	void		(*f)(t_ssl_env*);
 	void		(*init)();
 	void		(*update)();
 	void		(*final)();
-	void		(*print)(t_hash*);
+	void		(*print)(t_ssl_env*);
 	void		*ctx;
 	char		*path;
 	char		*cpth;
@@ -99,7 +99,7 @@ enum	e_stdcmd
 	VER
 };
 
-static char	*g_s[] = {
+static char	*g_std_cmd[] = {
 	"dgst",
 	"help",
 	"version",
@@ -119,7 +119,7 @@ enum	e_dgsts
 	SHA512256
 };
 
-static char	*g_h[] = {
+static char	*g_dgst_cmd[] = {
 	"md5",
 	"sha1",
 	"sha224",
@@ -131,11 +131,11 @@ static char	*g_h[] = {
 	NULL
 };
 
-static char	*g_c[] = {
+static char	*g_enc_cmd[] = {
 	NULL
 };
 
-void	ft_ssl_command_usage(t_hash *h);
-void	ft_ssl_command_help(t_hash *h);
+void	ft_ssl_command_usage(t_ssl_env *h);
+void	ft_ssl_command_help(t_ssl_env *h);
 
 #endif

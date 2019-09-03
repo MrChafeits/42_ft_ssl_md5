@@ -30,7 +30,7 @@
 #define QUIETSTR ("Quiet mode - only the checksum is printed out.")
 #define QUIETFMT "-q", QUIETSTR, QSTR2
 
-void	std_dgst_help(t_hash *h)
+void	std_dgst_help(t_ssl_env *h)
 {
 	ft_dprintf(2, "Usage: %s [options] [file...]\n", h->av[1] + h->hc2dgst);
 	ft_dprintf(2, "  file... files to digest (default is stdin)\n");

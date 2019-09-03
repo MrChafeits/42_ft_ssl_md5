@@ -29,11 +29,12 @@ int		panic_(int fd, char *str)
 /*
 ** If s is not std_cmd, check hash_cmd
 ** md5 is same command as dgst
+** TODO: split get_command_ into separate functions for each command type
 */
 
-t_i32v	get_command_(t_hash *h, const char *s)
+t_i32v	get_command_(t_ssl_env *h, const char *s)
 {
-	static char	**cmds[] = {(char**)&g_s, (char**)&g_h, (char**)&g_c};
+	static char	**cmds[] = {(char**)&g_std_cmd, (char**)&g_dgst_cmd, (char**)&g_enc_cmd};
 	t_i32v		i;
 
 	i.y = -1;
@@ -84,7 +85,7 @@ void	ft_free_strtab(char ***tab)
 #define QUIETSTR ("Quiet mode - only the checksum is printed out.")
 #define QUIETFMT "-q", QUIETSTR, QSTR2
 
-void	ft_ssl_command_help(t_hash *h)
+void	ft_ssl_command_help(t_ssl_env *h)
 {
 	if (h->id.y == 2 || (!h->id.y && h->id.x))
 	{

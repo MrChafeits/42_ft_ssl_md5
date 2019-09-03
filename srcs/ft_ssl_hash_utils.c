@@ -60,7 +60,7 @@ static char	*g_strfx[] = {
 	NULL
 };
 
-void	hash_digest_check(t_hash *h, int fd)
+void	hash_digest_check(t_ssl_env *h, int fd)
 {
 	int				i[2];
 	t_u8			md[DGSTLEN];
@@ -104,7 +104,7 @@ void	hash_digest_check(t_hash *h, int fd)
 	}
 }
 
-void	hash_print(t_hash *h, int fd)
+void	hash_print(t_ssl_env *h, int fd)
 {
 	int				i;
 	t_u8			md[DGSTLEN];
@@ -134,7 +134,7 @@ void	hash_print(t_hash *h, int fd)
 
 #define CHK(m) (!S_ISREG(m) && !S_ISCHR(m))
 
-int		hash_digest_files(t_hash *h)
+int		hash_digest_files(t_ssl_env *h)
 {
 	int	i;
 	int	fd;
@@ -158,7 +158,7 @@ int		hash_digest_files(t_hash *h)
 	return (h->err);
 }
 
-void	hash_string(t_hash *h)
+void	hash_string(t_ssl_env *h)
 {
 	int				i;
 	t_u8			md[DGSTLEN];
@@ -178,7 +178,7 @@ void	hash_string(t_hash *h)
 	ft_bzero(&g_ctxx, sizeof(t_ctx));
 }
 
-void	hash_process(t_hash *h)
+void	hash_process(t_ssl_env *h)
 {
 	int status;
 

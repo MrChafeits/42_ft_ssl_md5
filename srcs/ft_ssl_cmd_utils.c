@@ -17,7 +17,7 @@
 ** Attempt to Mimic OpenSSL dgst command.
 */
 
-static int	dgst_options(t_hash *h)
+static int	dgst_options(t_ssl_env *h)
 {
 	int c;
 
@@ -43,7 +43,7 @@ static int	dgst_options(t_hash *h)
 #endif
 #define INCARG h->ac--; h->av++; h->av[1]++;
 
-void	std_dgst(t_hash *h)
+void	std_dgst(t_ssl_env *h)
 {
 	const char	**avbak = (const char**)h->av;
 	const int	acbak = (const int)h->ac;
@@ -79,14 +79,14 @@ void	std_dgst(t_hash *h)
 	h->av = (char**)avbak;
 }
 
-static void	(*g_std[])(t_hash*) = {
+static void	(*g_std[])(t_ssl_env*) = {
 	[DGST] = std_dgst,
 	[HELP] = std_help,
 	[VER] = std_version,
 	std_nyimpl
 };
 
-void	std_process(t_hash *h)
+void	std_process(t_ssl_env *h)
 {
 	if (h->id.y == 0)
 		g_std[h->id.x](h);
