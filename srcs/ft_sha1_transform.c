@@ -97,5 +97,3 @@ void	ft_sha1_transform_3(t_s1ctx *ctx, t_sql1 *s)
 		i++;
 	}
 }
-
-#undef ROL

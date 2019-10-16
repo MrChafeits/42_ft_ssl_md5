@@ -44,7 +44,7 @@ int		ft_ssl_getopt(t_ssl_env *env)
 	{
 		if (ft_strequ(env->av[ii], "-c"))
 			env->check = 1;
-		else if (ft_strequ(env->av[ii], "-h"))
+		else if (ft_strequ(env->av[ii], "-help"))
 			ft_ssl_command_help(env);
 		else if (ft_strequ(env->av[ii], "-p"))
 			env->echo = 1;
@@ -102,7 +102,7 @@ void	hashcmd_to_dgst(t_ssl_env *h)
 
 	if (!(nv = ft_memalloc(sizeof(*nv) * (h->ac + 1))))
 	{
-		panic_(-3, "in main.c:58: malloc failure");
+		panic_(-3, "in " __FILE__ ": malloc failure");
 		return ;
 	}
 	nv[h->ac] = 0;
@@ -179,11 +179,6 @@ size_t	ft_strcspn(const char *s, const char *c)
 	return (s - a);
 }
 
-#undef BITOP_AND
-#undef BITOP_OREQ
-#undef BITOP_A
-#undef BITOP_B
-
 char	*ft_strndup(const char *s1, size_t n)
 {
 	char	*s2;
@@ -251,7 +246,8 @@ void	shell_prompt(t_ssl_env *h)
 		h->help = 0;
 		ft_putstr("ft_ssl> ");
 		/* if ((get_next_line(0, &ln)) > 0) */
-		if ((linelen = getline(&ln, &lcap, stdin)) > 0)
+		linelen = getline(&ln, &lcap, stdin);
+		if (linelen > 0)
 		{
 			if (linelen > 0 && ln[linelen - 1] == '\n')
 				ln[linelen - 1] = 0;

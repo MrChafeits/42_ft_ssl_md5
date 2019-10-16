@@ -19,11 +19,13 @@
 
 static int	dgst_options(t_ssl_env *h)
 {
-	int c;
+	// int c;
 
-	while (h->ac > 2 && (c = ft_getopt(h->ac - !h->shell,
-			h->av + !h->shell, "chpqrs:")) != -1)
-		doopt(h, c);
+	// while (h->ac > 2 && (c = ft_getopt(h->ac - !h->shell,
+	// 		h->av + !h->shell, "chpqrs:")) != -1)
+	// 	doopt(h, c);
+	// optreset = 1;
+	ft_ssl_getopt(h);
 	if (h->help)
 	{
 		std_dgst_help(h);
@@ -38,9 +40,6 @@ static int	dgst_options(t_ssl_env *h)
 	return (0);
 }
 
-#ifdef INCARG
-# undef INCARG
-#endif
 #define INCARG h->ac--; h->av++; h->av[1]++;
 
 void	std_dgst(t_ssl_env *h)
@@ -52,14 +51,14 @@ void	std_dgst(t_ssl_env *h)
 	h->id.x = !h->id.x && (h->hc2dgst || h->ac == 1) ? SHA256 : h->id.x;
 	h->id.y = 1;
 	h->digest = 1;
-	if (h->ac >= 3 && *h->av[2] == '-' && !ft_strequ("-h", h->av[2]))
+	if (h->ac >= 3 && *h->av[2] == '-' && !ft_strequ("-help", h->av[2]))
 	{
 		h->ac -= !h->shell;
 		h->av += !h->shell;
 		h->av[1] += !h->shell;
 		h->id = get_command_(h, h->av[1]);
 	}
-	else if (h->ac >= 3 && ft_strequ("-h", h->av[2]))
+	else if (h->ac >= 3 && ft_strequ("-help", h->av[2]))
 		std_dgst_help(h);
 	if (!dgst_options(h) || h->help)
 	{
@@ -68,6 +67,7 @@ void	std_dgst(t_ssl_env *h)
 	}
 	// while (h->ac > 2 && (c = ft_getopt(h->ac - 1, h->av + 1, "chpqrs:")) != -1)
 	// 	doopt(h, c);
+	// optreset = 1;
 	// h->help ? std_dgst_help(h) : 0;
 	// h->shell = optind == 1 && h->ac < 3 && !h->string ? 1 : 0;
 	// h->init = g_init[h->id.x];
@@ -93,5 +93,3 @@ void	std_process(t_ssl_env *h)
 	else
 		std_nyimpl(h);
 }
-
-#undef INCARG

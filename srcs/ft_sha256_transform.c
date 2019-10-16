@@ -103,12 +103,3 @@ void	ft_sha256_transform_2(t_sql256 *s)
 		s->a = s->t1 + s->t2;
 	}
 }
-
-#undef ROL
-#undef ROR
-#undef CH
-#undef MAJ
-#undef EP0
-#undef EP1
-#undef S0
-#undef S1

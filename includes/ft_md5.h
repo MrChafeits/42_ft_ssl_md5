@@ -12,8 +12,8 @@
 
 #ifndef FT_MD5_H
 # define FT_MD5_H
-# include "ft_ssl.h"
 
+# include "ft_ssl.h"
 # include <stdlib.h>
 
 typedef struct s_md5_ctx	t_md5_ctx;

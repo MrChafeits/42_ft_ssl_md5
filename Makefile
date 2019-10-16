@@ -14,8 +14,8 @@ NAME := ft_ssl
 DNAM := d_$(NAME)
 ANAM := a_$(NAME)
 
-CC ?= clang
-CFLAGS := -Wall -Wextra -Werror
+# CC ?= clang
+CCFLAGS := -Wall -Wextra -Werror
 DFLAGS := -Wall -Wextra -g
 AFLAGS := $(DFLAGS) -fsanitize=address
 
@@ -24,8 +24,8 @@ INCDIR := includes
 OBJDIR := .obj/
 SRCDIR := srcs/
 
-INCFLAGS := -I$(INCDIR) -I$(LIBDIR)/$(INCDIR)
-LIBFLAGS := -L$(LIBDIR) -lft
+INCLUDES := -I$(INCDIR) -I$(LIBDIR)/$(INCDIR)
+LDFLAGS := -L$(LIBDIR) -lft
 DEBGLIBS := $(LIBDIR)/d_libft.a
 ASANLIBS := $(LIBDIR)/a_libft.a
 FRAMWRKS :=
@@ -37,7 +37,10 @@ SRC := main.c ft_md5.c ft_sha1.c \
 	ft_ssl_hash_utils.c ft_md5_utils.c ft_sha384_utils.c \
 	ft_hash_check_utils.c ft_ssl_cmd_utils.c ft_ssl_dgst_help.c
 
-OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
+# OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
+SRCS = $(addprefix $(SRCDIR), $(SRC))
+OBJS := $(SRCS:.c=.o)
+
 
 NRM := $(shell which pynorme)
 ifeq ($(NRM),)
@@ -51,49 +54,56 @@ NORME := $(addsuffix *.h,$(INCDIR)/) $(addsuffix *.c,$(SRCDIR))
 
 .PHONY: all debug clean dclean fclean re tags j k asan norme codesize
 
-all: $(NAME)
+all: $(LIBDIR)/libft.a $(NAME)
 
-$(NAME): $(OBJDIR) $(OBJ)
-	@make -C libft all
-	@$(CC) $(INCFLAGS) $(LIBFLAGS) -o $(NAME) $(OBJ)
+$(LIBDIR)/libft.a:
+	make -C $(LIBDIR) all
+
+$(NAME): CFLAGS = $(CCFLAGS) $(INCLUDES)
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS)
 
 j: debug
 
 k: dclean
 
+asan: CFLAGS = -Wall -Wextra -g -fsanitize=address $(INCLUDES) $(ASANLIBS)
 asan:
-	@make -C libft asan
-	@$(CC) $(AFLAGS) $(INCFLAGS) $(ASANLIBS) -o $(ANAM) $(addprefix $(SRCDIR), $(SRC))
+	make -C libft asan
+	$(CC) $(CFLAGS) -o $(ANAM) $(addprefix $(SRCDIR), $(SRC))
 
+debug: CFLAGS = -Wall -Wextra -g $(INCLUDES) $(DEBGLIBS)
 debug:
-	@make -C libft debug
-	@$(CC) $(DFLAGS) $(INCFLAGS) $(DEBGLIBS) -o $(DNAM) $(addprefix $(SRCDIR), $(SRC))
+	make -C libft debug
+	$(CC) $(CFLAGS) -o $(DNAM) $(addprefix $(SRCDIR), $(SRC))
 
 dclean:
-	@rm -rf $(DNAM) $(DNAM).dSYM $(ANAM) $(ANAM).dSYM
-	@make -C libft dclean
+	rm -rf $(DNAM) $(DNAM).dSYM $(ANAM) $(ANAM).dSYM
+	make -C libft dclean
 
 clean:
-	@make -C libft clean
-	@rm -Rf $(OBJDIR)
+	make -C libft clean
+	$(RM) $(OBJS)
+
+# rm -Rf $(OBJDIR)
 
 fclean: clean
-	@make -C libft fclean
-	@rm -f $(NAME)
+	make -C libft fclean
+# rm -f $(NAME)
 
 re: fclean all
 
 tags:
-	@ctags $(addsuffix *.h,$(INCDIR)/) $(addsuffix *.c,$(SRCDIR))
+	ctags $(addsuffix *.h,$(INCDIR)/) $(addsuffix *.c,$(SRCDIR))
 
-$(addprefix $(OBJDIR), %.o): $(addprefix $(SRCDIR), %.c)
-	@$(CC) $(INCFLAGS) $(CFLAGS) -o $@ -c $<
+# $(addprefix $(OBJDIR), %.o): $(addprefix $(SRCDIR), %.c)
+# 	@$(CC) $(INCFLAGS) $(CFLAGS) -o $@ -c $<
 
-$(OBJDIR):
-	@mkdir -p $(OBJDIR)
+# $(OBJDIR):
+# 	@mkdir -p $(OBJDIR)
 
 norme:
-	@$(NRM) $(NORME)
+	$(NRM) $(NORME)
 
 codesize:
-	@cat $(NORME) | grep -Ev '(^\/\*|^\*\*|^\*\/$$|^$$|\*\/)' | wc -l
+	cat $(NORME) | grep -Ev '(^\/\*|^\*\*|^\*\/$$|^$$|\*\/)' | wc -l

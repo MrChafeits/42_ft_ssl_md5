@@ -27,6 +27,18 @@ union	u_ctx
 	t_sha512	sha512;
 };
 
+enum e_cliflags {
+	ERROR = -1,
+	NONE = 0,
+	CLIHELP,
+	CLIDGST,
+	CLICHECK,
+	CLIPRINT,
+	CLIQUIET,
+	CLIREV,
+	CLISTRING
+};
+
 static void	(*g_init[])() = {
 	[INVAL] = ft_ssl_command_usage,
 	[MD5] = ft_md5_init,
@@ -83,7 +95,8 @@ void	hash_process(t_ssl_env *h);
 void	std_process(t_ssl_env *h);
 int		cmp_hash_str(t_ssl_env *h, const char *s, t_u8 *md);
 int		str_in_tab(const char *s, const char **t);
-void	doopt(t_ssl_env *h, int c);
+int		ft_ssl_getopt(t_ssl_env *env);
+void	doopt(t_ssl_env *h, int c); //TODO: remove this function
 void	std_dgst_help(t_ssl_env *h);
 
 void	std_help(t_ssl_env *h);
