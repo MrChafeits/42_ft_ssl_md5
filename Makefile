@@ -89,7 +89,7 @@ clean:
 
 fclean: clean
 	make -C libft fclean
-# rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
 
