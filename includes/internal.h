@@ -19,8 +19,7 @@
 # include "ft_sha512.h"
 
 typedef union u_ctx	t_ctx;
-union	u_ctx
-{
+union	u_ctx {
 	t_md5_ctx	md5;
 	t_s1ctx		sha1;
 	t_sha256	sha2;

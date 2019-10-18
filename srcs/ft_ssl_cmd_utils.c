@@ -19,12 +19,6 @@
 
 static int	dgst_options(t_ssl_env *h)
 {
-	// int c;
-
-	// while (h->ac > 2 && (c = ft_getopt(h->ac - !h->shell,
-	// 		h->av + !h->shell, "chpqrs:")) != -1)
-	// 	doopt(h, c);
-	// optreset = 1;
 	ft_ssl_getopt(h);
 	if (h->help)
 	{
@@ -51,6 +45,8 @@ void	std_dgst(t_ssl_env *h)
 	h->id.x = !h->id.x && (h->hc2dgst || h->ac == 1) ? SHA256 : h->id.x;
 	h->id.y = 1;
 	h->digest = 1;
+	// md5 -s asdf
+	// dgst -md5 -s asdf
 	if (h->ac >= 3 && *h->av[2] == '-' && !ft_strequ("-help", h->av[2]))
 	{
 		h->ac -= !h->shell;
@@ -80,16 +76,19 @@ void	std_dgst(t_ssl_env *h)
 }
 
 static void	(*g_std[])(t_ssl_env*) = {
+	std_nyimpl,
 	[DGST] = std_dgst,
 	[HELP] = std_help,
 	[VER] = std_version,
-	std_nyimpl
 };
 
 void	std_process(t_ssl_env *h)
 {
+	/* If id.y is a std_cmd */
 	if (h->id.y == 0)
 		g_std[h->id.x](h);
+	if (h->std_cmd == DGST)
+		g_std[DGST](h);
 	else
 		std_nyimpl(h);
 }

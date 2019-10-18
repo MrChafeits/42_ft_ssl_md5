@@ -44,14 +44,12 @@ typedef struct s_i32v	t_i32v;
 typedef struct s_hash	t_ssl_env;
 typedef enum e_dgsts	t_dgsts;
 
-struct	s_i32v
-{
+struct	s_i32v {
 	int	x;
 	int	y;
 };
 
-struct	s_hash
-{
+struct	s_hash {
 	void		(*f)(t_ssl_env*);
 	void		(*init)();
 	void		(*update)();
@@ -63,6 +61,8 @@ struct	s_hash
 	char		**av;
 	char		*strarg;
 	char		**t;
+	int			std_cmd;
+	int			md_cmd;
 	struct stat	st;
 	int			cfd;
 	int			err;
@@ -81,8 +81,7 @@ struct	s_hash
 	int			help;
 };
 
-enum
-{
+enum {
 	INVAL_DIGEST_SIZE = (0),
 	MD5_DIGEST_SIZE = (128 / 8),
 	SHA1_DIGEST_SIZE = (160 / 8),
@@ -92,22 +91,22 @@ enum
 	SHA512_DIGEST_SIZE = (512 / 8),
 };
 
-enum	e_stdcmd
-{
+enum	e_stdcmd {
+	INVAL = 0,
 	DGST,
 	HELP,
-	VER
+	VER,
+	MAX_STDCMD
 };
 
 static char	*g_std_cmd[] = {
-	"dgst",
-	"help",
-	"version",
-	NULL
+	NULL,
+	[DGST] = "dgst",
+	[HELP] = "help",
+	[VER] = "version",
 };
 
-enum	e_dgsts
-{
+enum	e_dgsts {
 	INVAL,
 	MD5,
 	SHA1,
@@ -116,10 +115,12 @@ enum	e_dgsts
 	SHA384,
 	SHA512,
 	SHA512224,
-	SHA512256
+	SHA512256,
+	MAX_MDCMD
 };
 
 static char	*g_dgst_cmd[] = {
+	NULL,
 	"md5",
 	"sha1",
 	"sha224",
@@ -128,7 +129,6 @@ static char	*g_dgst_cmd[] = {
 	"sha512",
 	"sha512-224",
 	"sha512-256",
-	NULL
 };
 
 static char	*g_enc_cmd[] = {

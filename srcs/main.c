@@ -35,6 +35,22 @@ void	ft_ssl_command_usage(t_ssl_env *h)
 	!h->shell ? exit(EXIT_FAILURE) : 0;
 }
 
+int		get_md_opt(t_ssl_env *env, char *arg)
+{
+	int		ii;
+
+	ii = 0;
+	while (g_dgst_cmd[ii] != 0)
+	{
+		if (ft_strequ(arg, g_dgst_cmd[ii]))
+		{
+			env->digest = ii;
+			return (1);
+		}
+	}
+	return (INVAL);
+}
+
 int		ft_ssl_getopt(t_ssl_env *env)
 {
 	int ii;
@@ -62,6 +78,8 @@ int		ft_ssl_getopt(t_ssl_env *env)
 				exit(panic_(-3, "-s missing argument"));
 			env->strarg = env->av[++ii];
 		}
+		else if (get_md_opt(env, env->av[ii]))
+			continue ;
 		else
 			ft_ssl_command_usage(env);
 		ii++;
@@ -77,9 +95,6 @@ void	init_ssl_env(t_ssl_env *h)
 		h->id = get_command_(h, h->av[h->shell]);
 	if (h->ac >= 2)
 		ft_ssl_getopt(h);
-	// while (h->ac > 2 && (c = ft_getopt(h->ac - 1, h->av + 1, "chpqrs:")) != -1)
-	// 	doopt(h, c);
-	// h->shell = (optind == h->ac && h->ac < 3 && h->id.x && !h->string) ? 1 : h->shell;
 	assert(h->id.x >= 0 && h->id.x < 9);
 	h->init = g_init[h->id.x];
 	h->update = g_update[h->id.x];
@@ -127,7 +142,7 @@ static void	(*g_process[])(t_ssl_env*) = {
 	std_process,
 	NULL
 };
-
+/* BEGIN STRSPLIT */
 #define BITOP_A(a,b) ((a)[(size_t)(b) / (8 * sizeof(*(a)))])
 #define BITOP_B(a,b) ((size_t)1 << ((size_t)(b) % (8 * sizeof(*(a)))))
 #define BITOP_AND(a,b) (BITOP_A(a,b) & BITOP_B(a,b))
@@ -232,9 +247,28 @@ char **strsplit_str(const char *str, const char *sep)
 	}
 	ret[jj] = 0;
 	return (ret);
+} /* END STRSPLIT */
+
+int		get_std_cmd(t_ssl_env *env, const char *cmd) {
+	int		ii;
+
+	ii = MAX_MDCMD;
+	while (g_dgst_cmd[--ii] != 0)
+		if (ft_strequ(cmd, g_dgst_cmd[ii])) {
+			env->std_cmd = DGST;
+			env->md_cmd = ii + 1;
+			return (DGST);
+		}
+	ii = MAX_STDCMD;
+	while (g_std_cmd[++ii] != 0)
+		if (ft_strequ(cmd, g_std_cmd[ii])) {
+			env->std_cmd = ii;
+			return (ii);
+		}
+	return (-1);
 }
 
-void	shell_prompt(t_ssl_env *h)
+void	shell_prompt(t_ssl_env *env)
 {
 	ssize_t	linelen;
 	size_t	lcap=0;
@@ -242,23 +276,24 @@ void	shell_prompt(t_ssl_env *h)
 
 	while (1)
 	{
-		h->shell = 1;
-		h->help = 0;
+		env->shell = 1;
+		env->help = 0;
 		ft_putstr("ft_ssl> ");
 		/* if ((get_next_line(0, &ln)) > 0) */
-		linelen = getline(&ln, &lcap, stdin);
-		if (linelen > 0)
+		if ((linelen = getline(&ln, &lcap, stdin)) > 0)
 		{
 			if (linelen > 0 && ln[linelen - 1] == '\n')
 				ln[linelen - 1] = 0;
-			h->av = strsplit_str(ln, "\t ");
-			h->ac = len_strtab(h->av);
-			h->id = get_command_(h, h->av[0]);
-			// if (h->id.y == 1)
+			env->av = strsplit_str(ln, "\t ");
+			env->ac = len_strtab(env->av);
+			if (get_std_cmd(env, *env->av) == -1)
+				ft_ssl_command_usage(env);
+			env->id = get_command_(env, env->av[0]);
+			// if (env->id.y == 1)
 			// 	hashcmd_to_dgst(h);
-			if (g_process[h->id.y] != NULL)
-				g_process[h->id.y](h);
-			ft_free_strtab(&h->av);
+			if (g_process[env->id.y] != NULL)
+				g_process[env->id.y](env);
+			ft_free_strtab(&env->av);
 		}
 		else
 			break ;
@@ -268,16 +303,16 @@ void	shell_prompt(t_ssl_env *h)
 
 int		main(int ac, char **av)
 {
-	static t_ssl_env	hash;
+	static t_ssl_env	env;
 
 	if (ac == 1)
-		shell_prompt(&hash);
+		shell_prompt(&env);
 	if (ac >= 2)
 	{
-		hash.ac = ac;
-		hash.av = av;
-		hash.id = get_command_(&hash, hash.av[1]);
-		g_process[hash.id.y](&hash);
+		env.ac = ac;
+		env.av = av;
+		env.id = get_command_(&env, env.av[1]);
+		g_process[env.id.y](&env);
 	}
 	return (0);
 }

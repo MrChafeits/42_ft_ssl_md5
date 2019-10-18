@@ -96,12 +96,6 @@ re: fclean all
 tags:
 	ctags $(addsuffix *.h,$(INCDIR)/) $(addsuffix *.c,$(SRCDIR))
 
-# $(addprefix $(OBJDIR), %.o): $(addprefix $(SRCDIR), %.c)
-# 	@$(CC) $(INCFLAGS) $(CFLAGS) -o $@ -c $<
-
-# $(OBJDIR):
-# 	@mkdir -p $(OBJDIR)
-
 norme:
 	$(NRM) $(NORME)
 
