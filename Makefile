@@ -20,14 +20,21 @@ DFLAGS := -Wall -Wextra -g
 AFLAGS := $(DFLAGS) -fsanitize=address
 
 LIBDIR := libft
-INCDIR := includes
+INCDIR := include
 OBJDIR := .obj/
-SRCDIR := srcs/
+SRCDIR := src/
 
-INCLUDES := -I$(INCDIR) -I$(LIBDIR)/$(INCDIR)
+ifneq ($(shell test -d /usr/include; echo "$?"), "0")
+	SYSINCDIR := -I$(shell xcode-select -p)/SDKs/MacOSX.sdk/usr/include
+	CCFLAGS += -Wno-nullability-completeness
+	DFLAGS += -Wno-nullability-completeness
+	AFLAGS += -Wno-nullability-completeness
+else
+	SYSINCDIR :=
+endif
+
+INCLUDES := -I$(INCDIR) -I$(LIBDIR)/$(INCDIR) $(SYSINCDIR)
 LDFLAGS := -L$(LIBDIR) -lft
-DEBGLIBS := $(LIBDIR)/d_libft.a
-ASANLIBS := $(LIBDIR)/a_libft.a
 FRAMWRKS :=
 
 SRC := main.c ft_md5.c ft_sha1.c \
@@ -35,7 +42,7 @@ SRC := main.c ft_md5.c ft_sha1.c \
 	ft_sha256_transform.c ft_ssl_std_cmds.c \
 	ft_sha512.c ft_sha512_transform.c ft_ssl_utils.c \
 	ft_ssl_hash_utils.c ft_md5_utils.c ft_sha384_utils.c \
-	ft_hash_check_utils.c ft_ssl_cmd_utils.c ft_ssl_dgst_help.c
+	ft_hash_check_utils.c ft_ssl_cmd_utils.c ft_ssl_dgst_help.c strsplit_str.c
 
 # OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
 SRCS = $(addprefix $(SRCDIR), $(SRC))
@@ -67,19 +74,16 @@ j: debug
 
 k: dclean
 
-asan: CFLAGS = -Wall -Wextra -g -fsanitize=address $(INCLUDES) $(ASANLIBS)
+asan: CFLAGS = $(AFLAGS) $(INCLUDES) $(LDFLAGS)
 asan:
-	make -C libft asan
 	$(CC) $(CFLAGS) -o $(ANAM) $(addprefix $(SRCDIR), $(SRC))
 
-debug: CFLAGS = -Wall -Wextra -g $(INCLUDES) $(DEBGLIBS)
+debug: CFLAGS = $(DFLAGS) $(INCLUDES) $(LDFLAGS)
 debug:
-	make -C libft debug
 	$(CC) $(CFLAGS) -o $(DNAM) $(addprefix $(SRCDIR), $(SRC))
 
 dclean:
 	rm -rf $(DNAM) $(DNAM).dSYM $(ANAM) $(ANAM).dSYM
-	make -C libft dclean
 
 clean:
 	make -C libft clean

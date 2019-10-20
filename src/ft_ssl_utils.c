@@ -26,34 +26,6 @@ int		panic_(int fd, char *str)
 	return (1);
 }
 
-/*
-** If s is not std_cmd, check hash_cmd
-** md5 is same command as dgst
-** TODO: split get_command_ into separate functions for each command type
-*/
-
-t_i32v	get_command_(t_ssl_env *h, const char *s)
-{
-	static char	**cmds[] = {(char**)&g_std_cmd, (char**)&g_dgst_cmd, (char**)&g_enc_cmd};
-	t_i32v		i;
-
-	i.y = -1;
-	while (++i.y < 3)
-	{
-		i.x = -1;
-		while (cmds[i.y][++i.x])
-			if (ft_strequ(cmds[i.y][i.x], s))
-				break ;
-		if (!cmds[i.y][i.x])
-			continue ;
-		else
-			return ((t_i32v){i.x + (i.y == 1), i.y});
-	}
-	if (!cmds[i.y] || !cmds[i.y][i.x])
-		ft_ssl_command_usage(h);
-	return (i);
-}
-
 int		len_strtab(char **t)
 {
 	int i;
@@ -80,6 +52,20 @@ void	ft_free_strtab(char ***tab)
 	}
 }
 
+void	hash_process(t_ssl_env *h)
+{
+	int status;
+
+	status = 0;
+	if ((h->ac == 0 || h->echo) && !h->shell)
+		hash_print(h, STDIN_FILENO);
+	if (h->string)
+		hash_string_arg(h);
+	if (h->ac)
+		status = hash_digest_files(h);
+	!h->shell ? exit(status) : 0;
+}
+
 #define ECHOFMT "-p", "Echo stdin to stdout and append checksum to stdout"
 #define QSTR2 "  Overrides the -r option."
 #define QUIETSTR ("Quiet mode - only the checksum is printed out.")
@@ -87,15 +73,15 @@ void	ft_free_strtab(char ***tab)
 
 void	ft_ssl_command_help(t_ssl_env *h)
 {
-	if (h->id.y == 2 || (!h->id.y && h->id.x))
+	if (h->std_cmd == HELP || (!h->std_cmd && h->digest))
 	{
 		ft_dprintf(2, "Usage: %s [options]\n", h->av[1]);
 		ft_dprintf(2, " %-11s%s\n", "-h", "Display this summary");
 	}
-	else if (h->id.y == 1 || (!h->id.y && !h->id.x))
+	else if (h->std_cmd == DGST || (!h->std_cmd && !h->digest))
 		std_dgst_help(h);
 	if (h->shell == 0)
-		exit(0);
+		exit(EXIT_SUCCESS);
 }
 
 /*

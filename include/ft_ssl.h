@@ -48,7 +48,8 @@ struct	s_i32v {
 	int	x;
 	int	y;
 };
-
+#define DGSTLEN (512 / 8)
+#define BUFSIZE (1024 * DGSTLEN)
 struct	s_hash {
 	void		(*f)(t_ssl_env*);
 	void		(*init)();
@@ -59,8 +60,14 @@ struct	s_hash {
 	char		*path;
 	char		*cpth;
 	char		**av;
+	char		**to_free;
 	char		*strarg;
 	char		**t;
+	t_u8		md[DGSTLEN];
+	t_u8		buf[BUFSIZE];
+	int			*i;
+	int			chk1;
+	int			chk2;
 	int			std_cmd;
 	int			md_cmd;
 	struct stat	st;
@@ -107,7 +114,7 @@ static char	*g_std_cmd[] = {
 };
 
 enum	e_dgsts {
-	INVAL,
+	INVAL_MD,
 	MD5,
 	SHA1,
 	SHA224,

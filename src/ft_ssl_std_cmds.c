@@ -13,7 +13,7 @@
 #include "internal.h"
 #include "libft.h"
 
-#define FMTSTR ((!((i + 1) % 4) && i) ? "%-18s\n" : "%-18s")
+#define FMTSTR ((!((i) % 4) && i) ? "%-18s\n" : "%-18s")
 
 void	std_help(t_ssl_env *h)
 {
@@ -22,23 +22,23 @@ void	std_help(t_ssl_env *h)
 	if (h->ac <= 2 && !h->help)
 	{
 		ft_dprintf(2, "Standard commands:\n");
-		i = -1;
-		while (g_std_cmd[++i])
+		i = 0;
+		while (++i < MAX_STDCMD)
 			ft_dprintf(2, FMTSTR, g_std_cmd[i]);
-		(i + 1) % 4 ? ft_printf("\n") : ft_printf("\n\n");
+		(i) % 4 ? ft_printf("\n") : ft_printf("\n\n");
 		ft_dprintf(2, "Message Digest commands:\n");
-		i = -1;
-		while (g_dgst_cmd[++i])
+		i = 0;
+		while (++i < MAX_MDCMD)
 			ft_dprintf(2, FMTSTR, g_dgst_cmd[i]);
-		(i + 1) % 4 ? ft_printf("\n") : ft_printf("\n\n");
+		(i) % 4 ? ft_printf("\n") : ft_printf("\n\n");
 		ft_dprintf(2, "Cipher commands:\n");
 		i = -1;
 		while (g_enc_cmd[++i])
 			ft_dprintf(2, FMTSTR, g_enc_cmd[i]);
-		(i + 1) % 4 ? ft_printf("\n") : ft_printf("\n\n");
+		(i) % 4 ? ft_printf("\n") : ft_printf("\n\n");
 	}
-	!h->shell ? exit(0) : 0;
 	ft_printf("(int) h->shell = %d\n", h->shell);
+	!h->shell ? exit(0) : 0;
 }
 
 void	std_version(t_ssl_env *h)

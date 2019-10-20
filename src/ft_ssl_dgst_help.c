@@ -20,7 +20,7 @@
 
 void	std_dgst_help(t_ssl_env *h)
 {
-	ft_dprintf(2, "Usage: %s [options] [file...]\n", h->av[1] + h->hc2dgst);
+	ft_dprintf(2, "Usage: %s [options] [file...]\n", h->av[-1]);
 	ft_dprintf(2, "  file... files to digest (default is stdin)\n");
 	ft_dprintf(2, " %-11s%-11s\n", "-help", "Display this summary");
 	ft_dprintf(2, " %-11s%-11s\n", "-*", "Any supported digest");

@@ -58,27 +58,3 @@ int		cmp_hash_str(t_ssl_env *h, const char *s, t_u8 *md)
 	}
 	return (0);
 }
-
-void	doopt(t_ssl_env *h, int c)
-{
-	if (c == 'c')
-		h->check = 1;
-	else if (c == 'h')
-		ft_ssl_command_help(h);
-	else if (c == 'p')
-		h->echo = 1;
-	else if (c == 'q')
-	{
-		h->quiet = 1;
-		h->bsd = 0;
-	}
-	else if (c == 'r')
-		h->bsd = 1;
-	else if (c == 's')
-	{
-		h->string = 1;
-		h->strarg = optarg;
-	}
-	else
-		ft_ssl_command_usage(h);
-}

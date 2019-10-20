@@ -95,11 +95,11 @@ void	std_process(t_ssl_env *h);
 int		cmp_hash_str(t_ssl_env *h, const char *s, t_u8 *md);
 int		str_in_tab(const char *s, const char **t);
 int		ft_ssl_getopt(t_ssl_env *env);
-void	doopt(t_ssl_env *h, int c); //TODO: remove this function
 void	std_dgst_help(t_ssl_env *h);
-
+char	**strsplit_str(const char *s, const char *p);
 void	std_help(t_ssl_env *h);
 void	std_version(t_ssl_env *h);
+void	hash_process(t_ssl_env *h);
 void	std_nyimpl(t_ssl_env *h);
 
 #endif

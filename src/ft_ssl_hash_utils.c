@@ -35,41 +35,61 @@ void	*g_ctx[] = {
 };
 
 static char	*g_pfx[] = {
-	[INVAL] = "wot in ternation (%s) = ",
-	[MD5] = "MD5 (%s) = ",
-	[SHA1] = "SHA1 (%s) = ",
-	[SHA224] = "SHA224 (%s) = ",
-	[SHA256] = "SHA256 (%s) = ",
-	[SHA384] = "SHA384 (%s) = ",
-	[SHA512] = "SHA512 (%s) = ",
-	[SHA512224] = "SHA512-224 (%s) = ",
-	[SHA512256] = "SHA512-256 (%s) = ",
+	[INVAL] = "wot in ternation(%s)= ",
+	[MD5] = "MD5(%s)= ",
+	[SHA1] = "SHA1(%s)= ",
+	[SHA224] = "SHA224(%s)= ",
+	[SHA256] = "SHA256(%s)= ",
+	[SHA384] = "SHA384(%s)= ",
+	[SHA512] = "SHA512(%s)= ",
+	[SHA512224] = "SHA512-224(%s)= ",
+	[SHA512256] = "SHA512-256(%s)= ",
 	NULL
 };
 
 static char	*g_strfx[] = {
-	[INVAL] = "wot in ternation (\"%s\") = ",
-	[MD5] = "MD5 (\"%s\") = ",
-	[SHA1] = "SHA1 (\"%s\") = ",
-	[SHA224] = "SHA224 (\"%s\") = ",
-	[SHA256] = "SHA256 (\"%s\") = ",
-	[SHA384] = "SHA384 (\"%s\") = ",
-	[SHA512] = "SHA512 (\"%s\") = ",
-	[SHA512224] = "SHA512-224 (\"%s\") = ",
-	[SHA512256] = "SHA512-256 (\"%s\") = ",
+	[INVAL] = "wot in ternation(\"%s\")= ",
+	[MD5] = "MD5(\"%s\")= ",
+	[SHA1] = "SHA1(\"%s\")= ",
+	[SHA224] = "SHA224(\"%s\")= ",
+	[SHA256] = "SHA256(\"%s\")= ",
+	[SHA384] = "SHA384(\"%s\")= ",
+	[SHA512] = "SHA512(\"%s\")= ",
+	[SHA512224] = "SHA512-224(\"%s\")= ",
+	[SHA512256] = "SHA512-256(\"%s\")= ",
 	NULL
 };
 
+void	read_and_check(t_ssl_env *h)
+{
+	int br;
+
+	while (1)
+	{
+		if((br = read(h->cfd, h->buf, BUFSIZE)) <= 0)
+		{
+			close(h->cfd);
+			break;
+		}
+		h->update(g_ctx[h->digest], (t_u8*)&h->buf, br);
+	}
+	h->final(g_ctx[h->digest], (t_u8*)&h->md);
+	ft_printf(g_pfx[h->digest], h->cpth);
+	if (!cmp_hash_str(h, h->t[0], (t_u8*)&h->md))
+		ft_printf("OK\n");
+	else
+		ft_printf("FAILED\n");
+	free(h->cpth);
+	ft_free_strtab(&h->t);
+	ft_bzero(&g_ctxx, sizeof(t_ctx));
+}
+
 void	hash_digest_check(t_ssl_env *h, int fd)
 {
-	int				i[2];
-	t_u8			md[DGSTLEN];
-	static t_u8		buf[BUFSIZE];
-
 	h->err = 0;
-	while ((*i = get_next_line(fd, &h->cpth)) > 0)
+	while (get_next_line(fd, &h->cpth) > 0)
 	{
-		h->init(g_ctx[h->id.x]);
+		h->init(g_ctx[h->digest]);
 		h->t = ft_strsplit(h->cpth, ' ');
 		free(h->cpth);
 		h->cpth = ft_strdup(h->t[1] + (*h->t[1] == '*' || *h->t[1] == '?'));
@@ -83,24 +103,7 @@ void	hash_digest_check(t_ssl_env *h, int fd)
 			free(h->cpth);
 			continue;
 		}
-		while (1)
-		{
-			if((i[1] = read(h->cfd, buf, BUFSIZE)) <= 0)
-			{
-				close(h->cfd);
-				break;
-			}
-			h->update(g_ctx[h->id.x], (t_u8*)(&buf), i[1]);
-		}
-		h->final(g_ctx[h->id.x], (t_u8*)(&md));
-		ft_printf(g_pfx[h->id.x], h->cpth);
-		if (!cmp_hash_str(h, h->t[0], (t_u8*)(md)))
-			ft_printf("OK\n");
-		else
-			ft_printf("FAILED\n");
-		free(h->cpth);
-		ft_free_strtab(&h->t);
-		ft_bzero(&g_ctxx,sizeof(t_ctx));
+		read_and_check(h);
 	}
 }
 
@@ -110,18 +113,18 @@ void	hash_print(t_ssl_env *h, int fd)
 	t_u8			md[DGSTLEN];
 	static t_u8		buf[BUFSIZE];
 
-	h->init(g_ctx[h->id.x]);
+	h->init(g_ctx[h->digest]);
 	while (1)
 	{
 		if ((i = read(fd, buf, BUFSIZE)) <= 0)
 			break ;
-		h->update(g_ctx[h->id.x], (t_u8*)(&buf), i);
+		h->update(g_ctx[h->digest], (t_u8*)(&buf), i);
 	}
 	if (h->echo && fd == STDIN_FILENO)
 		ft_printf("%s", buf);
-	h->final(g_ctx[h->id.x], (t_u8*)(&md));
+	h->final(g_ctx[h->digest], (t_u8*)(&md));
 	if (!h->bsd && !h->quiet && fd != STDIN_FILENO)
-		ft_printf(g_pfx[h->id.x], h->path);
+		ft_printf(g_pfx[h->digest], h->path);
 	i = -1;
 	while (++i < h->dgst_len)
 		ft_printf("%02x", md[i]);
@@ -136,58 +139,44 @@ void	hash_print(t_ssl_env *h, int fd)
 
 int		hash_digest_files(t_ssl_env *h)
 {
-	int	i;
+	int	ii;
 	int	fd;
 
-	i = optind;
+	ii = -1;
 	h->err = 0;
-	while (++i < h->ac)
+	while (++ii < h->ac)
 	{
-		fd = open(h->av[i], O_RDONLY);
-		if (lstat(h->av[i], &h->st) || fd < 0 || CHK(h->st.st_mode))
+		fd = open(h->av[ii], O_RDONLY);
+		if (lstat(h->av[ii], &h->st) || fd < 0 || CHK(h->st.st_mode))
 		{
 			errno = S_ISDIR(h->st.st_mode) ? EISDIR : errno;
-			perror(h->av[i]);
+			perror(h->av[ii]);
 			h->err++;
 			continue ;
 		}
-		h->path = h->av[i];
+		h->path = h->av[ii];
 		h->check ? hash_digest_check(h, fd) : hash_print(h, fd);
 		close(fd);
 	}
 	return (h->err);
 }
 
-void	hash_string(t_ssl_env *h)
+void	hash_string_arg(t_ssl_env *h)
 {
 	int				i;
 	t_u8			md[DGSTLEN];
 	static t_u8		buf[BUFSIZE];
 
-	h->init(g_ctx[h->id.x]);
+	h->init(g_ctx[h->digest]);
 	ft_strncpy((char*)(&buf), h->strarg, BUFSIZE);
-	h->update(g_ctx[h->id.x], (t_u8*)(&buf), ft_strlen((char*)(&buf)));
-	h->final(g_ctx[h->id.x], (t_u8*)(&md));
+	h->update(g_ctx[h->digest], (t_u8*)(&buf), ft_strlen((char*)(&buf)));
+	h->final(g_ctx[h->digest], (t_u8*)(&md));
 	if (!h->bsd && !h->quiet)
-		ft_printf(g_strfx[h->id.x], h->strarg);
+		ft_printf(g_strfx[h->digest], h->strarg);
 	i = -1;
 	while (++i < h->dgst_len)
 		ft_printf("%02x", md[i]);
 	(h->bsd && !h->quiet) ? ft_printf(" \"%s\"\n", h->strarg) :
 		ft_putchar('\n');
 	ft_bzero(&g_ctxx, sizeof(t_ctx));
-}
-
-void	hash_process(t_ssl_env *h)
-{
-	int status;
-
-	status = 0;
-	if (h->ac <= optind || h->echo || !h->shell)
-		hash_print(h, STDIN_FILENO);
-	if (h->string)
-		hash_string(h);
-	if (h->ac - 1 > optind)
-		status = hash_digest_files(h);
-	!h->shell ? exit(status) : 0;
 }
