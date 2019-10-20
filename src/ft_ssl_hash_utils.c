@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 22:23:22 by callen            #+#    #+#             */
-/*   Updated: 2019/04/12 18:06:40 by callen           ###   ########.fr       */
+/*   Updated: 2019/10/19 23:14:53 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ int		hash_digest_files(t_ssl_env *h)
 		if (lstat(h->av[ii], &h->st) || fd < 0 || CHK(h->st.st_mode))
 		{
 			errno = S_ISDIR(h->st.st_mode) ? EISDIR : errno;
+			ft_dprintf(2, "%s: ", g_dgst_cmd[h->digest]);
 			perror(h->av[ii]);
 			h->err++;
 			continue ;

@@ -6,7 +6,7 @@
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 20:16:14 by callen            #+#    #+#             */
-/*   Updated: 2019/04/06 21:11:10 by callen           ###   ########.fr       */
+/*   Updated: 2019/10/19 21:45:27 by callen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,8 @@ void	std_help(t_ssl_env *h);
 void	std_version(t_ssl_env *h);
 void	hash_process(t_ssl_env *h);
 void	std_nyimpl(t_ssl_env *h);
+void	hash_print(t_ssl_env *h, int fd);
+int		hash_digest_files(t_ssl_env *h);
+void	hash_string_arg(t_ssl_env *h);
 
 #endif

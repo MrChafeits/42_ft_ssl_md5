@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: callen <callen@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/09/23 22:04:17 by callen            #+#    #+#              #
-#    Updated: 2019/04/16 08:19:41 by callen           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME := ft_ssl
 DNAM := d_$(NAME)
 ANAM := a_$(NAME)
@@ -67,7 +55,7 @@ $(LIBDIR)/libft.a:
 	make -C $(LIBDIR) all
 
 $(NAME): CFLAGS = $(CCFLAGS) $(INCLUDES)
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBDIR)/libft.a
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS)
 
 j: debug
@@ -75,11 +63,11 @@ j: debug
 k: dclean
 
 asan: CFLAGS = $(AFLAGS) $(INCLUDES) $(LDFLAGS)
-asan:
+asan: $(LIBDIR)/libft.a
 	$(CC) $(CFLAGS) -o $(ANAM) $(addprefix $(SRCDIR), $(SRC))
 
 debug: CFLAGS = $(DFLAGS) $(INCLUDES) $(LDFLAGS)
-debug:
+debug: $(LIBDIR)/libft.a
 	$(CC) $(CFLAGS) -o $(DNAM) $(addprefix $(SRCDIR), $(SRC))
 
 dclean:

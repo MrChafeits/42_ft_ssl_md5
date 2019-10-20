@@ -58,3 +58,6 @@ tags
 ft_ssl
 d_ft_ssl
 a_ft_ssl
+file
+inp
+.dir-locals.el
