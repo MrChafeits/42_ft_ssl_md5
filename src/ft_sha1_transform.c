@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_sha1.h>
+#include "ft_sha1.h"
+
 #define ROL(a, b) ((a << b) | (a >> (32 - b)))
 
 void	ft_sha1_transform_1(t_s1ctx *ctx, t_u8 *data, t_sql1 *s)

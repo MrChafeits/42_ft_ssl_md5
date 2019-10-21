@@ -11,21 +11,12 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-
+#include "internal.h"
+// NORME
 #define BITOP_A(a,b) ((a)[(size_t)(b) / (8 * sizeof(*(a)))])
 #define BITOP_B(a,b) ((size_t)1 << ((size_t)(b) % (8 * sizeof(*(a)))))
 #define BITOP_AND(a,b) (BITOP_A(a,b) & BITOP_B(a,b))
 #define BITOP_OREQ(a,b) (BITOP_A(a,b) |= BITOP_B(a,b))
-
-char	*ft_strchrnul(const char *s, int c)
-{
-	c = (unsigned char)c;
-	if (!c)
-		return ((char*)s + ft_strlen(s));
-	while (*s && *(unsigned char*)s != c)
-		s++;
-	return ((char*)s);
-}
 
 size_t	ft_strspn(const char *s, const char *c)
 {
@@ -74,7 +65,7 @@ char	*ft_strndup(const char *s1, size_t n)
 	return (s2);
 }
 
-int	wordcount(const char *str, const char *sep)
+int		wordcount(const char *str, const char *sep)
 {
 	int total;
 	int ii;
@@ -91,7 +82,7 @@ int	wordcount(const char *str, const char *sep)
 	return (total);
 }
 
-char **strsplit_str(const char *str, const char *sep)
+char	**strsplit_str(const char *str, const char *sep)
 {
 	char	**ret;
 	int		len;

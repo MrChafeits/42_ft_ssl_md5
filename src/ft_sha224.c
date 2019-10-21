@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
-#include <ft_sha256.h>
-
+#include "libft.h"
+#include "ft_sha256.h"
+// NORME
 void	ft_sha224_init(t_sha256 *c)
 {
 	c->state[0] = 0xc1059ed8U;

@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 
 #include <ft_sha512.h>
-#define BEP R1(q->w[i - 2]) + q->w[i - 7] + R0(q->w[i - 15]) + q->w[i - 16];
+// NORME
+#define SHUF R1(q->w[ii - 2]) + q->w[ii - 7] + R0(q->w[ii - 15]) + q->w[ii - 16]
 
 void		ft_sha512256_init(t_sha512 *s)
 {
@@ -28,23 +29,23 @@ void		ft_sha512256_init(t_sha512 *s)
 
 static void	processblock_1(t_sha512 *s, t_sql512 *q, const t_u8 *buf)
 {
-	int	i;
+	int	ii;
 
-	i = -1;
-	while (++i < 80)
-		if (i < 16)
+	ii = -1;
+	while (++ii < 80)
+		if (ii < 16)
 		{
-			q->w[i] = (t_u64)buf[8 * i] << 56;
-			q->w[i] |= (t_u64)buf[8 * i + 1] << 48;
-			q->w[i] |= (t_u64)buf[8 * i + 2] << 40;
-			q->w[i] |= (t_u64)buf[8 * i + 3] << 32;
-			q->w[i] |= (t_u64)buf[8 * i + 4] << 24;
-			q->w[i] |= (t_u64)buf[8 * i + 5] << 16;
-			q->w[i] |= (t_u64)buf[8 * i + 6] << 8;
-			q->w[i] |= buf[8 * i + 7];
+			q->w[ii] = (t_u64)buf[8 * ii] << 56;
+			q->w[ii] |= (t_u64)buf[8 * ii + 1] << 48;
+			q->w[ii] |= (t_u64)buf[8 * ii + 2] << 40;
+			q->w[ii] |= (t_u64)buf[8 * ii + 3] << 32;
+			q->w[ii] |= (t_u64)buf[8 * ii + 4] << 24;
+			q->w[ii] |= (t_u64)buf[8 * ii + 5] << 16;
+			q->w[ii] |= (t_u64)buf[8 * ii + 6] << 8;
+			q->w[ii] |= buf[8 * ii + 7];
 		}
-		else if (i < 80)
-			q->w[i] = BEP;
+		else if (ii < 80)
+			q->w[ii] = SHUF;
 	q->a = s->h[0];
 	q->b = s->h[1];
 	q->c = s->h[2];

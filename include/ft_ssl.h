@@ -48,8 +48,14 @@ struct	s_i32v {
 	int	x;
 	int	y;
 };
+
+/*
+** Absolutely abominable struct ahead
+*/
+
 #define DGSTLEN (512 / 8)
 #define BUFSIZE (1024 * DGSTLEN)
+
 struct	s_hash {
 	void		(*f)(t_ssl_env*);
 	void		(*init)();
@@ -66,6 +72,7 @@ struct	s_hash {
 	t_u8		md[DGSTLEN];
 	t_u8		buf[BUFSIZE];
 	int			*i;
+	int			ii;
 	int			chk1;
 	int			chk2;
 	int			std_cmd;

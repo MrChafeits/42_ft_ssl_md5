@@ -12,7 +12,7 @@
 
 #include "internal.h"
 #include "libft.h"
-
+// NORME
 /*
 ** Attempt to Mimic OpenSSL dgst command.
 */
@@ -77,41 +77,35 @@ int		get_md_opt(t_ssl_env *env, char *arg)
 	}
 	return (INVAL);
 }
-// 34
+
+#define WHY_NORMINETTE env->quiet=1, env->bsd=0
+#define YOU_ARE_TEARING_ME_APART env->strarg = env->av[++env->ii]
+#define LISA (env->ac <= env->ii) ? exit(panic_(-3, "-s missing argument")) : 0,
+#define WHYY LISA YOU_ARE_TEARING_ME_APART
+
 int		ft_ssl_getopt(t_ssl_env *env)
 {
-	int ii;
-
-	ii = 0;
-	while (ii < env->ac && *env->av[ii] == '-')
+	env->ii = -1;
+	while (++env->ii < env->ac && *env->av[env->ii] == '-')
 	{
-		if (ft_strequ(env->av[ii], "-c"))
+		if (ft_strequ(env->av[env->ii], "-c"))
 			env->check = 1;
-		else if (ft_strequ(env->av[ii], "-help"))
+		else if (ft_strequ(env->av[env->ii], "-help"))
 			ft_ssl_command_help(env);
-		else if (ft_strequ(env->av[ii], "-p"))
+		else if (ft_strequ(env->av[env->ii], "-p"))
 			env->echo = 1;
-		else if (ft_strequ(env->av[ii], "-q"))
-		{
-			env->quiet = 1;
-			env->bsd = 0;
-		}
-		else if (ft_strequ(env->av[ii], "-r"))
+		else if (ft_strequ(env->av[env->ii], "-q"))
+			WHY_NORMINETTE;
+		else if (ft_strequ(env->av[env->ii], "-r"))
 			env->bsd = 1;
-		else if (ft_strequ(env->av[ii], "-s"))
-		{
-			env->string = 1;
-			if (env->ac <= ii)
-				exit(panic_(-3, "-s missing argument"));
-			env->strarg = env->av[++ii];
-		}
-		else if (get_md_opt(env, env->av[ii] + 1))
+		else if (ft_strequ(env->av[env->ii], "-s"))
+			WHYY;
+		else if (get_md_opt(env, env->av[env->ii] + 1))
 			;
 		else
 			ft_ssl_command_usage(env);
-		ii++;
 	}
-	env->ac -= ii;
-	env->av += ii;
-	return (ii);
+	env->ac -= env->ii;
+	env->av += env->ii;
+	return (env->ii);
 }

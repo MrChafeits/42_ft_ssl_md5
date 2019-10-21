@@ -12,7 +12,7 @@
 
 #include <libft.h>
 #include <ft_sha512.h>
-
+// NORME
 static void	pad(t_sha512 *s)
 {
 	unsigned r;

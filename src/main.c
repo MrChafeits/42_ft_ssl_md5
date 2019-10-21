@@ -13,7 +13,7 @@
 #include "internal.h"
 #include "libft.h"
 #include <assert.h>
-
+// NORME
 void	init_ssl_env(t_ssl_env *h)
 {
 	if (h->ac >= 1 && *h->av[0] == '-')

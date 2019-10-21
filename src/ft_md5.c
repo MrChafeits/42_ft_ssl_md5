@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_md5.h>
-#include <libft.h>
+#include "ft_md5.h"
+#include "libft.h"
 #include <stdlib.h>
 
 static t_u8 g_padding[64] = {0x80, 0x00};
@@ -96,7 +96,8 @@ void	ft_md5_decode(t_u32 *output, t_u8 *input, t_u32 len)
 }
 
 /*
-** Macros for all four rounds of MD5, adapted from the md5-x86_64.pl asm script
+** Macros for all four rounds of MD5, adapted from the md5-x86_64.pl script used
+** by OpenSSL to generate platform specific assembly
 */
 
 #define F(x,y,z) (((x) & (y)) | (~(x) & (z)))

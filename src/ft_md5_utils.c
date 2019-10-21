@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_md5.h>
+#include "ft_md5.h"
 
 void	ft_md5_init(t_md5_ctx *c)
 {
 	c->count[0] = 0;
 	c->count[1] = 0;
-	c->state[0] = 0x67452301;
-	c->state[1] = 0xEFCDAB89;
-	c->state[2] = 0x98BADCFE;
-	c->state[3] = 0x10325476;
+	c->state[0] = 0x67452301U;
+	c->state[1] = 0xEFCDAB89U;
+	c->state[2] = 0x98BADCFEU;
+	c->state[3] = 0x10325476U;
 }

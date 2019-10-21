@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <fcntl.h>
-
+//NORME
 #define DGSTLEN (512 / 8)
 #define BUFSIZE (1024 * DGSTLEN)
 
@@ -48,7 +48,7 @@ static char	*g_pfx[] = {
 };
 
 static char	*g_strfx[] = {
-	[INVAL] = "wot in ternation(\"%s\")= ",
+	[INVAL] = "wot in hash calculation(\"%s\")= ",
 	[MD5] = "MD5(\"%s\")= ",
 	[SHA1] = "SHA1(\"%s\")= ",
 	[SHA224] = "SHA224(\"%s\")= ",

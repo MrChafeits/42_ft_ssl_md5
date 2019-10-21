@@ -105,4 +105,6 @@ void	hash_print(t_ssl_env *h, int fd);
 int		hash_digest_files(t_ssl_env *h);
 void	hash_string_arg(t_ssl_env *h);
 
+char	*ft_strchrnul(const char *s, int c);
+
 #endif

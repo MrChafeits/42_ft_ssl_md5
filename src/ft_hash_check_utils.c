@@ -13,7 +13,7 @@
 #include "libft.h"
 #include <stdlib.h>
 #include "internal.h"
-
+// NORME
 int		str_in_tab(const char *s, const char **t)
 {
 	int i;
@@ -57,4 +57,14 @@ int		cmp_hash_str(t_ssl_env *h, const char *s, t_u8 *md)
 		p += 2;
 	}
 	return (0);
+}
+
+char	*ft_strchrnul(const char *s, int c)
+{
+	c = (unsigned char)c;
+	if (!c)
+		return ((char*)s + ft_strlen(s));
+	while (*s && *(unsigned char*)s != c)
+		s++;
+	return ((char*)s);
 }

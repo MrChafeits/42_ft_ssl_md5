@@ -12,7 +12,7 @@
 
 #include "internal.h"
 #include "libft.h"
-
+// NORME
 #define FMTSTR ((!((i) % 4) && i) ? "%-18s\n" : "%-18s")
 
 void	std_help(t_ssl_env *h)

@@ -10,12 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
-#include <stdlib.h>
-#include <ft_ssl.h>
-#include <ft_sha512.h>
-#include <unistd.h>
-#include <fcntl.h>
+#include "ft_sha512.h"
 
 void	ft_sha384_init(t_sha512 *s)
 {
