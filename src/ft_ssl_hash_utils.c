@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <fcntl.h>
-//NORME
+
 #define DGSTLEN (512 / 8)
 #define BUFSIZE (1024 * DGSTLEN)
 
@@ -66,10 +66,10 @@ void	read_and_check(t_ssl_env *h)
 
 	while (1)
 	{
-		if((br = read(h->cfd, h->buf, BUFSIZE)) <= 0)
+		if ((br = read(h->cfd, h->buf, BUFSIZE)) <= 0)
 		{
 			close(h->cfd);
-			break;
+			break ;
 		}
 		h->update(g_ctx[h->digest], (t_u8*)&h->buf, br);
 	}

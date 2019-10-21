@@ -1,19 +1,19 @@
-NAME := ft_ssl
-DNAM := d_$(NAME)
-ANAM := a_$(NAME)
+NAME = ft_ssl
+DNAM = d_$(NAME)
+ANAM = a_$(NAME)
 
-# CC ?= clang
-CCFLAGS := -Wall -Wextra -Werror
-DFLAGS := -Wall -Wextra -g
-AFLAGS := $(DFLAGS) -fsanitize=address
+CCFLAGS = -Wall -Wextra -Werror
+DFLAGS = -Wall -Wextra -g
+AFLAGS = $(DFLAGS) -fsanitize=address
 
-LIBDIR := libft
-INCDIR := include
-OBJDIR := .obj/
-SRCDIR := src/
+LIBDIR = libft
+INCDIR = include
+OBJDIR = .obj/
+SRCDIR = src/
 
-ifneq ($(shell test -d /usr/include; echo "$?"), "0")
-	SYSINCDIR := -I$(shell xcode-select -p)/SDKs/MacOSX.sdk/usr/include
+HAVE_USR_INC = $(shell test -d /usr/include; echo "$$?")
+ifneq ("$(HAVE_USR_INC)", "0")
+	SYSINCDIR = -I$(shell xcode-select -p)/SDKs/MacOSX.sdk/usr/include
 	CCFLAGS += -Wno-nullability-completeness
 	DFLAGS += -Wno-nullability-completeness
 	AFLAGS += -Wno-nullability-completeness
@@ -21,23 +21,21 @@ else
 	SYSINCDIR :=
 endif
 
-INCLUDES := -I$(INCDIR) -I$(LIBDIR)/$(INCDIR) $(SYSINCDIR)
-LDFLAGS := -L$(LIBDIR) -lft
-FRAMWRKS :=
+INCLUDES = -I$(INCDIR) -I$(LIBDIR)/$(INCDIR) $(SYSINCDIR)
+LDFLAGS = -L$(LIBDIR) -lft
 
-SRC := main.c ft_md5.c ft_sha1.c \
+SRC = main.c ft_md5.c ft_sha1.c \
 	ft_sha1_transform.c ft_sha224.c ft_sha256.c \
 	ft_sha256_transform.c ft_ssl_std_cmds.c \
 	ft_sha512.c ft_sha512_transform.c ft_ssl_utils.c \
 	ft_ssl_hash_utils.c ft_md5_utils.c ft_sha384_utils.c \
 	ft_hash_check_utils.c ft_ssl_cmd_utils.c ft_ssl_dgst_help.c strsplit_str.c
 
-# OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
 SRCS = $(addprefix $(SRCDIR), $(SRC))
-OBJS := $(SRCS:.c=.o)
+OBJS = $(SRCS:.c=.o)
 
 
-NRM := $(shell which pynorme)
+NRM = $(shell which pynorme)
 ifeq ($(NRM),)
 	NRM = "$(shell \
 	if [ -d ~/.usr_bin ] && [ -x ~/.usr_bin/norminette.py ];\
@@ -74,13 +72,11 @@ dclean:
 	rm -rf $(DNAM) $(DNAM).dSYM $(ANAM) $(ANAM).dSYM
 
 clean:
-	make -C libft clean
+	make -s -C libft clean
 	$(RM) $(OBJS)
 
-# rm -Rf $(OBJDIR)
-
 fclean: clean
-	make -C libft fclean
+	make -s -C libft fclean
 	$(RM) $(NAME)
 
 re: fclean all

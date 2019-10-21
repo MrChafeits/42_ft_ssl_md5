@@ -12,7 +12,7 @@
 
 #include "libft.h"
 #include "internal.h"
-// NORME
+
 #define BITOP_A(a,b) ((a)[(size_t)(b) / (8 * sizeof(*(a)))])
 #define BITOP_B(a,b) ((size_t)1 << ((size_t)(b) % (8 * sizeof(*(a)))))
 #define BITOP_AND(a,b) (BITOP_A(a,b) & BITOP_B(a,b))

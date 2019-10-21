@@ -13,7 +13,7 @@
 #include "internal.h"
 #include "libft.h"
 #include <assert.h>
-// NORME
+
 void	init_ssl_env(t_ssl_env *h)
 {
 	if (h->ac >= 1 && *h->av[0] == '-')
@@ -67,21 +67,24 @@ static void	(*g_process[])(t_ssl_env*) = {
 	NULL
 };
 
-int		get_std_cmd(t_ssl_env *env, const char *cmd) {
+int		get_std_cmd(t_ssl_env *env, const char *cmd)
+{
 	int		ii;
 
 	ii = MAX_MDCMD;
 	while (g_dgst_cmd[--ii] != 0)
-		if (ft_strequ(cmd, g_dgst_cmd[ii])) {
+		if (ft_strequ(cmd, g_dgst_cmd[ii]))
+		{
 			env->std_cmd = DGST;
-			env->digest = env->md_cmd = ii;
+			env->digest = ii;
 			env->av++;
 			env->ac--;
 			return (DGST);
 		}
 	ii = MAX_STDCMD;
 	while (g_std_cmd[--ii] != 0)
-		if (ft_strequ(cmd, g_std_cmd[ii])) {
+		if (ft_strequ(cmd, g_std_cmd[ii]))
+		{
 			env->std_cmd = ii;
 			env->av++;
 			env->ac--;
@@ -90,6 +93,8 @@ int		get_std_cmd(t_ssl_env *env, const char *cmd) {
 		}
 	return (-1);
 }
+
+#define EXITCMD (ft_strequ(ln,"q")||ft_strequ("quit",ln)||ft_strequ("exit",ln))
 
 void	shell_prompt(t_ssl_env *env)
 {
@@ -101,7 +106,7 @@ void	shell_prompt(t_ssl_env *env)
 		env->shell = 1;
 		env->help = 0;
 		ft_putstr("ft_ssl> ");
-		if ((get_next_line(0, &ln)) > 0)
+		if ((get_next_line(0, &ln)) > 0 && !EXITCMD)
 		{
 			env->av = strsplit_str(ln, "\t ");
 			env->to_free = env->av;

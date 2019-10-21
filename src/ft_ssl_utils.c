@@ -12,7 +12,7 @@
 
 #include "internal.h"
 #include "libft.h"
-// NORME
+
 int		panic_(int fd, char *str)
 {
 	if (fd == -2 && !errno)

@@ -12,7 +12,7 @@
 
 #include "internal.h"
 #include "libft.h"
-// NORME
+
 #define ECHOFMT "-p", "Echo stdin to stdout and append checksum to stdout"
 #define QSTR2 "  Overrides the -r option."
 #define QUIETSTR ("Quiet mode - only the checksum is printed out.")

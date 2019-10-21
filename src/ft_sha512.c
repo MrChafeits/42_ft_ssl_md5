@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft.h>
-#include <ft_sha512.h>
-// NORME
+#include "libft.h"
+#include "ft_sha512.h"
+
 static void	pad(t_sha512 *s)
 {
 	unsigned r;

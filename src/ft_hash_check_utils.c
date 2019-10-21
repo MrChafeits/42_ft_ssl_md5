@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl_env_check_utils.c                              :+:      :+:    :+:   */
+/*   ft_hash_check_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: callen <callen@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -13,7 +13,7 @@
 #include "libft.h"
 #include <stdlib.h>
 #include "internal.h"
-// NORME
+
 int		str_in_tab(const char *s, const char **t)
 {
 	int i;

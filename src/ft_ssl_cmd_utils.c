@@ -12,7 +12,7 @@
 
 #include "internal.h"
 #include "libft.h"
-// NORME
+
 /*
 ** Attempt to Mimic OpenSSL dgst command.
 */
@@ -43,7 +43,8 @@ void	std_process(t_ssl_env *h)
 
 void	ft_ssl_command_usage(t_ssl_env *h)
 {
-	fprintf(stderr, "DEBUG: ac(%d) optind(%d) h->digest(%d)\n", h->ac, optind, h->digest);
+	fprintf(stderr, "DEBUG: ac(%d) optind(%d) h->digest(%d)\n",
+	h->ac, optind, h->digest);
 	if (h->ac && h->ac <= 2 && !h->digest)
 	{
 		ft_dprintf(2, "Invalid command \'%s\'; type \"help\" for a list.\n",
@@ -79,9 +80,9 @@ int		get_md_opt(t_ssl_env *env, char *arg)
 }
 
 #define WHY_NORMINETTE env->quiet=1, env->bsd=0
-#define YOU_ARE_TEARING_ME_APART env->strarg = env->av[++env->ii]
-#define LISA (env->ac <= env->ii) ? exit(panic_(-3, "-s missing argument")) : 0,
-#define WHYY LISA YOU_ARE_TEARING_ME_APART
+#define YOU_ARE_TEARING_ME_APART env->strarg = env->av[++env->ii];
+#define LISA if (env->ac <= env->ii){exit(panic_(-3, "-s missing argument"));}
+#define WHYY do {env->string=1; LISA YOU_ARE_TEARING_ME_APART} while (0)
 
 int		ft_ssl_getopt(t_ssl_env *env)
 {

@@ -26,18 +26,6 @@ union	u_ctx {
 	t_sha512	sha512;
 };
 
-enum e_cliflags {
-	ERROR = -1,
-	NONE = 0,
-	CLIHELP,
-	CLIDGST,
-	CLICHECK,
-	CLIPRINT,
-	CLIQUIET,
-	CLIREV,
-	CLISTRING
-};
-
 static void	(*g_init[])() = {
 	[INVAL] = ft_ssl_command_usage,
 	[MD5] = ft_md5_init,

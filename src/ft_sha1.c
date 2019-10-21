@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "ft_ssl.h"
 #include "ft_sha1.h"
-// NORME
+
 void		ft_sha1_transform(t_s1ctx *c, t_u8 *d)
 {
 	t_sql1	s;
